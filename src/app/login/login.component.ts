@@ -59,7 +59,7 @@ export class LoginComponent implements OnInit {
         console.log(authData)
       })
       .catch( authError => {
-        console.log(authError)
+        console.log(`Error: ${authError}`)
       })
   }
 }
