@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { LoginCredentials, LoginService } from '../services/login.service';
+import { LoginCredentials, LoginService } from '../services/login/login.service';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { KeepDataService } from '../services/keep-data.service'
+import { KeepDataService } from '../services/keep-data/keep-data.service'
 
 @Component({
   selector: 'app-login',
