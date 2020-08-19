@@ -19,7 +19,7 @@ export interface RequestAnswer {
 @Injectable({
   providedIn: 'root'
 })
-export class KeepDataService {
+export class AnswerService {
   answersRef: AngularFirestoreCollection<firebase.firestore.DocumentData>
   categoriesRef: AngularFirestoreCollection<firebase.firestore.DocumentData>
 
@@ -31,7 +31,7 @@ export class KeepDataService {
   }
 
   // palavras-chaves serão úteis para propósito de pesquisa
-  private generateKeyWords(string): Set<string> {
+  private generateAnswerKeyWords(string): Set<string> {
     // usamos conjuntos para não termos elementos repetidos
     let keyWords = new Set<string>()
     // captura o restante da string que segue o primeiro espaço
@@ -45,7 +45,7 @@ export class KeepDataService {
     if(substring) {
         // se houver uma substring conforme a regex definida, passaremos a função nessa substring, assim conseguiremos gerar mais possibilidades.
         // geramos um novo conjunto para unir com outro conjunto
-        keyWords = new Set<string>([...keyWords, ...this.generateKeyWords(substring[0])])
+        keyWords = new Set<string>([...keyWords, ...this.generateAnswerKeyWords(substring[0])])
     }
 
     return keyWords
@@ -57,7 +57,7 @@ export class KeepDataService {
     const name = answer.name.replace(/\s{2,}/g, " ").trim()
     const content = answer.content.replace(/\s{2,}/g, " ").trim()
     // convertemos o conjunto para array
-    const keyWords = [...this.generateKeyWords(name)]
+    const keyWords = [...this.generateAnswerKeyWords(name)]
     const adjustedAnswer: RequestAnswer = {name, content, keyWords}
 
     // Como a propriedade category, no Firestore, é do tipo reference, precisamos manter assim
@@ -118,7 +118,7 @@ export class KeepDataService {
     return this.answersRef.doc(answerDocID).delete()
   }
 
-  public searchByText(text: string): Observable<Answer[]> {
+  public searchAnswerByText(text: string): Observable<Answer[]> {
     const selectedAnswersCollection = this.angularFirestore.collection<Answer>( 'answers', answersRef => answersRef.where('keyWords', 'array-contains', text.toLowerCase()) )
     const answersObservable = selectedAnswersCollection.valueChanges({idField: 'id'})
 

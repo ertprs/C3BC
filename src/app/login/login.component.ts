@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LoginCredentials, LoginService } from '../services/login/login.service';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { KeepDataService } from '../services/keep-data/keep-data.service'
+import { AnswerService } from '../services/answer/answer.service'
 
 @Component({
   selector: 'app-login',
@@ -15,7 +15,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private _loginService: LoginService,
     private _router: Router,
-    keepData: KeepDataService,
+    keepData: AnswerService,
     formBuilder: FormBuilder
   ){
     // keepData.createAnswer({
