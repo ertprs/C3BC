@@ -15,7 +15,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private _loginService: LoginService,
     private _router: Router,
-    keepData: AnswerService,
+    answerService: AnswerService,
     formBuilder: FormBuilder
   ){
     // keepData.createAnswer({

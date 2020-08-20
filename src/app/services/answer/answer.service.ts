@@ -1,33 +1,21 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection, DocumentReference } from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreCollection, DocumentReference, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-
-export interface Answer {
-  id?: string;
-  name: string;
-  content: string;
-  category?: string;
-}
-
-export interface RequestAnswer {
-  name: string;
-  content: string;
-  keyWords: Array<string>
-  category?: DocumentReference;
-}
+import { Answer, StoredAnswer } from "../../shared/models/answer.model";
+import { StoredCategory } from "../../shared/models/category.model";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AnswerService {
-  answersRef: AngularFirestoreCollection<firebase.firestore.DocumentData>
-  categoriesRef: AngularFirestoreCollection<firebase.firestore.DocumentData>
+  answersCollection: AngularFirestoreCollection<firebase.firestore.DocumentData>
+  categoriesCollection: AngularFirestoreCollection<firebase.firestore.DocumentData>
 
   constructor(
     private angularFirestore: AngularFirestore
   ) {
-    this.answersRef = angularFirestore.collection("answers")
-    this.categoriesRef = angularFirestore.collection("categories")
+    this.answersCollection = angularFirestore.collection("answers")
+    this.categoriesCollection = angularFirestore.collection("categories")
   }
 
   // palavras-chaves serão úteis para propósito de pesquisa
@@ -51,32 +39,30 @@ export class AnswerService {
     return keyWords
   }
 
-  // Aqui iremos tratar da forma adequada para ir para o Firestore
-  private adjustAnswerToFirestore(answer: Answer): RequestAnswer {
-    // propriedades name e content são salvas sem espaços duplicados e desnecessários no início ou fim
+  // Aqui iremos ajustar as propriedades name e content para serem salvas sem espaços duplicados e desnecessários no início ou fim.
+  // Também adicionaremos palavras-chave
+  private adjustAnswerToFirestore(answer: Answer): StoredAnswer {
     const name = answer.name.replace(/\s{2,}/g, " ").trim()
     const content = answer.content.replace(/\s{2,}/g, " ").trim()
     // convertemos o conjunto para array
     const keyWords = [...this.generateAnswerKeyWords(name)]
-    const adjustedAnswer: RequestAnswer = {name, content, keyWords}
+    const adjustedAnswer: StoredAnswer = {name, content, keyWords}
 
-    // Como a propriedade category, no Firestore, é do tipo reference, precisamos manter assim
     if(answer.category){
-      const categoryRef: DocumentReference = this.categoriesRef.doc(answer.category).ref
-      adjustedAnswer.category = categoryRef
+      adjustedAnswer.category = answer.category
     }
 
     return adjustedAnswer
   }
 
   public createAnswer(answer: Answer): Promise<DocumentReference> {
-    const newAnswer: RequestAnswer = this.adjustAnswerToFirestore(answer)
+    const newAnswer: StoredAnswer = this.adjustAnswerToFirestore(answer)
 
-    return this.answersRef.ref.where("name", "==", newAnswer.name).get()
+    return this.answersCollection.ref.where("name", "==", newAnswer.name).get()
           .then(whereResult => {
             return new Promise( (resolve, reject) => {
               if(whereResult.empty){
-                resolve( this.answersRef.add(newAnswer) )
+                resolve( this.answersCollection.add(newAnswer) )
               } else
                 reject("Já há uma resposta com esse nome. Considere um nome que diferencie ou incrementar a resposta já existente.")
             })
@@ -88,14 +74,14 @@ export class AnswerService {
     // quando um componente requisitar a leitura das respostas, graças ao recurso idField, usado nos métodos de leitura aqui presentes. Por esse
     // motivo conseguimos pegar um id
     const answerID = answer.id
-    const updatedAnswer: RequestAnswer = this.adjustAnswerToFirestore(answer)
+    const updatedAnswer: StoredAnswer = this.adjustAnswerToFirestore(answer)
 
-    return this.answersRef.ref.where("name", "==", updatedAnswer.name).get()
+    return this.answersCollection.ref.where("name", "==", updatedAnswer.name).get()
           .then(whereResult => {
             return new Promise( (resolve, reject) => {
               if(whereResult.empty || ( whereResult.docs[0].ref.id == answerID)){
                 resolve(
-                  this.answersRef
+                  this.answersCollection
                     .doc(answerID)
                     .update(updatedAnswer)
                 )
@@ -106,16 +92,16 @@ export class AnswerService {
           })
   }
 
-  public readAnswersByCategory(category: string): Observable<Answer[]> {
-    const categoryRef = this.categoriesRef.doc(category).ref
+  public readAnswersByCategory(categoryDoc: AngularFirestoreDocument<StoredCategory>): Observable<Answer[]> {
+    const categoryRef = categoryDoc.ref
     const selectedAnswersCollection = this.angularFirestore.collection<Answer>('answers', answersRef => answersRef.where('category', '==', categoryRef))
     const answersObservable = selectedAnswersCollection.valueChanges({idField: 'id'})
 
     return answersObservable
   }
 
-  public deleteAnswer(answerDocID: string): Promise<void> {
-    return this.answersRef.doc(answerDocID).delete()
+  public deleteAnswer(answerID: string): Promise<void> {
+    return this.answersCollection.doc(answerID).delete()
   }
 
   public searchAnswerByText(text: string): Observable<Answer[]> {
