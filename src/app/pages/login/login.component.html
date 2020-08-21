@@ -1,26 +1,29 @@
-<mat-card class="main-card">
-    <img id="logo" mat-card-image src="assets\icons\logotipo-cod3r.png">
+<mat-toolbar class="logo-toolbar mat-elevation-z2" color="primary">
+    <a class="logo" href="https://www.cod3r.com.br/" target="_blank">
+        <img class="logo" src="assets\icons\logotipo-cod3r-white.png">
+    </a>
+</mat-toolbar>
 
+<mat-card class="main-card mat-elevation-z0">
     <mat-card>
         <mat-card-content>
-        <form [formGroup]="loginFormGroup">
-            <mat-form-field class="form-item">
-                <input matInput placeholder="E-mail" formControlName="email" type="username">
-            </mat-form-field>
+            <form [formGroup]="loginFormGroup">
+                <mat-form-field class="full-width">
+                    <input matInput placeholder="E-mail" formControlName="email" type="username">
+                </mat-form-field>
 
-            <mat-form-field class="form-item">
-                <input matInput placeholder="Senha" type="password" formControlName="password" type="password">
-            </mat-form-field>
+                <mat-form-field class="full-width">
+                    <input matInput placeholder="Senha" type="password" formControlName="password" type="password">
+                </mat-form-field>
 
-            <button
-                class="full-width"
-                mat-raised-button
-                color="primary"
-                [disabled]="loginFormGroup.invalid"
-                (click)="login()"
-                >Entrar</button>
-        </form>
-
+                <button
+                    class="full-width"
+                    mat-raised-button
+                    color="primary"
+                    [disabled]="loginFormGroup.invalid"
+                    (click)="login()"
+                    >Entrar</button>
+            </form>
         </mat-card-content>
     </mat-card>
-  </mat-card>
+</mat-card>

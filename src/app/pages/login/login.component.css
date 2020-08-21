@@ -1,9 +1,13 @@
 .main-card {
-    height: 100%;
+    padding-top: 10vh;
 }
 
-#logo {
+.logo-toolbar {
+    height: 25vh;
+}
+
+.logo {
     display: block;
     width: 80vw;
-    margin: 10vh auto 80px auto;
+    margin: auto;
 }
