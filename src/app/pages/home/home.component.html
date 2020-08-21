@@ -1,1 +1,25 @@
-<p>home works!</p>
+<mat-toolbar class="mat-elevation-z2" color="primary">
+    <mat-toolbar-row>
+      <a href="https://www.cod3r.com.br/" target="_blank">
+        <img id="logo" mat-card-image src="assets\icons\logotipo-cod3r-white.png">
+      </a>
+      <span class="spacer"></span>
+      <button mat-icon-button>
+        <mat-icon>menu</mat-icon>
+      </button>
+    </mat-toolbar-row>
+
+    <mat-toolbar-row id="secondRow">
+      <form class="full-width">
+        <mat-form-field class="search full-width">
+          <input matInput type="text" placeholder="Pesquisar">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </form>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-tab-group mat-stretch-tabs class="tab-group mat-elevation-z4">
+    <mat-tab label="Respostas"> Content 1 </mat-tab>
+    <mat-tab label="Categorias"> Content 2 </mat-tab>
+</mat-tab-group>

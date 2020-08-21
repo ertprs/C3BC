@@ -1,0 +1,16 @@
+#logo {
+    display: block;
+    width: 50vw;
+}
+
+#secondRow {
+    margin-top: 20px;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.search {
+    font-size: medium;
+}
