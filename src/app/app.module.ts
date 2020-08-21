@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './pages/login/login.component';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -19,6 +18,8 @@ import { AngularFireAuthModule } from "@angular/fire/auth";
 import { environment } from "src/environments/environment";
 import { HomeComponent } from './pages/home/home.component';
 
+import {MatTabsModule} from '@angular/material/tabs';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,6 +27,7 @@ import { HomeComponent } from './pages/home/home.component';
     HomeComponent
   ],
   imports: [
+    MatTabsModule,
     MatProgressSpinnerModule,
     MatButtonModule,
     MatCardModule,
@@ -35,8 +37,7 @@ import { HomeComponent } from './pages/home/home.component';
     AngularFireAuthModule,
     FormsModule,
     BrowserModule,
-    AppRoutingModule,
-    NoopAnimationsModule
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
