@@ -23,6 +23,9 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatListModule} from '@angular/material/list';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 @NgModule({
   declarations: [
@@ -31,6 +34,9 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     HomeComponent
   ],
   imports: [
+    MatExpansionModule,
+    MatDividerModule,
+    MatListModule,
     MatFormFieldModule,
     MatIconModule,
     MatToolbarModule,
