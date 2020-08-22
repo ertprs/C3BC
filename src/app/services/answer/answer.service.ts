@@ -8,14 +8,14 @@ import { StoredCategory } from "../../shared/models/category.model";
   providedIn: 'root'
 })
 export class AnswerService {
-  answersCollection: AngularFirestoreCollection<firebase.firestore.DocumentData>
-  categoriesCollection: AngularFirestoreCollection<firebase.firestore.DocumentData>
+  answersCollection: AngularFirestoreCollection<StoredAnswer>
+  categoriesCollection: AngularFirestoreCollection<StoredCategory>
 
   constructor(
     private angularFirestore: AngularFirestore
   ) {
-    this.answersCollection = angularFirestore.collection("answers")
-    this.categoriesCollection = angularFirestore.collection("categories")
+    this.answersCollection = angularFirestore.collection<StoredAnswer>("answers")
+    this.categoriesCollection = angularFirestore.collection<StoredCategory>("categories")
   }
 
   // palavras-chaves serão úteis para propósito de pesquisa
@@ -92,7 +92,11 @@ export class AnswerService {
           })
   }
 
-  public readAnswersByCategory(categoryDoc: AngularFirestoreDocument<StoredCategory>): Observable<Answer[]> {
+  public readAnswers(): Observable< (StoredAnswer & { id: string })[] > {
+    return this.answersCollection.valueChanges({idField: 'id'})
+  }
+
+  public readAnswersByCategory(categoryDoc: AngularFirestoreDocument<StoredCategory>): Observable< (Answer & { id: string })[]> {
     const categoryRef = categoryDoc.ref
     const selectedAnswersCollection = this.angularFirestore.collection<Answer>('answers', answersRef => answersRef.where('category', '==', categoryRef))
     const answersObservable = selectedAnswersCollection.valueChanges({idField: 'id'})
