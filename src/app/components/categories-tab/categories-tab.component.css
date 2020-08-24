@@ -1,0 +1,23 @@
+.answer-content {
+    color: grey;
+    font-size: small;
+}
+
+.mat-action-row {
+    justify-content: space-between;
+}
+
+.mat-action-row .edit-button {
+    color: #323d83e3;
+    margin-left: 0px;
+}
+
+.mat-action-row .delete-button {
+    color: #b73e35e3;
+    margin-left: 0px;
+}
+
+.mat-action-row .next-button {
+    margin-left: 0px;
+    padding-left: 12px;
+}

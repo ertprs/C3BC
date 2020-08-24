@@ -1,0 +1,37 @@
+<mat-accordion>
+    <mat-expansion-panel    #answerPainel
+                            *ngFor="let answer of answersObservable | async; let i = index"
+                            (opened)="setStep(i)"
+                            [expanded]="step === i">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                <mat-list-item>
+                    <div mat-line>{{answer.name}}</div>
+                    <div @fade-in *ngIf="!answerPainel.expanded" mat-line class="answer-content"> {{answer.content}}
+                    </div>
+                </mat-list-item>
+            </mat-panel-title>
+
+            <button mat-icon-button class="answer-notes-button" (click)="$event.stopPropagation();">
+                <mat-icon>notes</mat-icon>
+            </button>
+        </mat-expansion-panel-header>
+
+        <p>{{answer.content}}</p>
+
+        <mat-action-row>
+            <div>
+                <button class="edit-button" mat-icon-button>
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button class="delete-button" mat-icon-button>
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+            <div>
+                <button *ngIf="step > 0" mat-button color="warn" (click)="prevAnswer()">Anterior</button>
+                <button mat-button class="next-button" color="primary" (click)="nextAnswer()">Próxima</button>
+            </div>
+        </mat-action-row>
+    </mat-expansion-panel>
+</mat-accordion>
