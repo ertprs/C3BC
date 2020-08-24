@@ -11,6 +11,16 @@
     margin-top: 20px;
 }
 
+#footer {
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    bottom: 0;
+    z-index: 2;
+
+    background: #f1f3ff;
+}
+
 .search-input {
     font-size: medium;
 }
