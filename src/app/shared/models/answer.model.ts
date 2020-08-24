@@ -13,3 +13,7 @@ export interface StoredAnswer {
     keyWords: Array<string>
     category?: DocumentReference;
 }
+
+export interface StoredAnswerWithID extends StoredAnswer {
+    id: string
+}

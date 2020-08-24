@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, DocumentReference } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
-import { StoredCategory } from "../../shared/models/category.model";
+import { Observable, combineLatest} from 'rxjs';
+import { StoredCategory, storedCategoryWithAnswers } from "../../shared/models/category.model";
+import { AnswerService } from '../answer/answer.service';
+import { map, concatAll} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +12,7 @@ export class CategoryService {
   categoriesCollection: AngularFirestoreCollection<StoredCategory>
 
   constructor(
+    private answerService: AnswerService,
     angularFirestore: AngularFirestore
   ) {
     this.categoriesCollection = angularFirestore.collection<StoredCategory>("categories")
@@ -60,10 +63,37 @@ export class CategoryService {
           })
   }
 
-  public readCategories(): Observable<StoredCategory[]> {
-    const categoriesObservable = this.categoriesCollection.valueChanges()
+  public readCategoriesWithAnswers(): Observable<storedCategoryWithAnswers[]> {
+    const superiorOrderObservableOfCategoriesWithAnswers: Observable<Observable<storedCategoryWithAnswers[]>> = this.categoriesCollection.valueChanges().pipe(
+      map( (categories: StoredCategory[]) : Observable<storedCategoryWithAnswers[]> => {
 
-    return categoriesObservable
+        // para cada categoria, iremos acrescentar suas respectivas respostas
+        const categoriesWithAnswersObservable: Observable<storedCategoryWithAnswers>[] = categories.map( (category: StoredCategory) : Observable<storedCategoryWithAnswers> => {
+          const categoryID = category.name.toLowerCase()
+
+          // capturamos as respostas de uma categoria
+          const categoryWithAnswersObservable: Observable<storedCategoryWithAnswers> = this.answerService.readAnswersByCategoryID(categoryID).pipe(
+            map( (answers) : storedCategoryWithAnswers => {
+              return {
+                ...category,
+                answers: answers
+              }
+            })
+          )
+
+          return categoryWithAnswersObservable
+        })
+
+        // aqui, transformamos Observable<storedCategoryWithAnswers>[] em Observable<storedCategoryWithAnswers[]>
+        return combineLatest(categoriesWithAnswersObservable)
+      })
+    )
+
+    // aqui, transformamos um Observable<Observable<storedCategoryWithAnswers[]>> em Observable<storedCategoryWithAnswers[]>, ou seja, transformamos um Observable
+    // de ordem superior em um outro de primeira ordem
+    const firstOrderObservable: Observable<storedCategoryWithAnswers[]> = superiorOrderObservableOfCategoriesWithAnswers.pipe(concatAll());
+
+    return firstOrderObservable;
   }
 
   public deleteCategory(categoryName: string): Promise<void> {

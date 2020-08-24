@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, DocumentReference, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { Answer, StoredAnswer } from "../../shared/models/answer.model";
+import { Answer, StoredAnswer, StoredAnswerWithID } from "../../shared/models/answer.model";
 import { StoredCategory } from "../../shared/models/category.model";
 
 @Injectable({
@@ -92,13 +92,13 @@ export class AnswerService {
           })
   }
 
-  public readAnswers(): Observable< (StoredAnswer & { id: string })[] > {
+  public readAnswers(): Observable<StoredAnswerWithID[] > {
     return this.answersCollection.valueChanges({idField: 'id'})
   }
 
-  public readAnswersByCategory(categoryDoc: AngularFirestoreDocument<StoredCategory>): Observable< (Answer & { id: string })[]> {
-    const categoryRef = categoryDoc.ref
-    const selectedAnswersCollection = this.angularFirestore.collection<Answer>('answers', answersRef => answersRef.where('category', '==', categoryRef))
+  public readAnswersByCategoryID(categoryID: string): Observable<StoredAnswerWithID[]> {
+    const categoryRef = this.categoriesCollection.doc(categoryID).ref
+    const selectedAnswersCollection = this.angularFirestore.collection<StoredAnswer>('answers', answersRef => answersRef.where('category', '==', categoryRef))
     const answersObservable = selectedAnswersCollection.valueChanges({idField: 'id'})
 
     return answersObservable
@@ -108,8 +108,8 @@ export class AnswerService {
     return this.answersCollection.doc(answerID).delete()
   }
 
-  public searchAnswerByText(text: string): Observable<Answer[]> {
-    const selectedAnswersCollection = this.angularFirestore.collection<Answer>( 'answers', answersRef => answersRef.where('keyWords', 'array-contains', text.toLowerCase()) )
+  public searchAnswerByText(text: string): Observable<StoredAnswerWithID[]> {
+    const selectedAnswersCollection = this.angularFirestore.collection<StoredAnswer>( 'answers', answersRef => answersRef.where('keyWords', 'array-contains', text.toLowerCase()) )
     const answersObservable = selectedAnswersCollection.valueChanges({idField: 'id'})
 
     return answersObservable
