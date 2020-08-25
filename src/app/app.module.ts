@@ -28,6 +28,7 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatExpansionModule} from '@angular/material/expansion';
 import { AnswersTabComponent } from './components/answers-tab/answers-tab.component';
 import { CategoriesTabComponent } from './components/categories-tab/categories-tab.component';
+import { HeaderComponent } from './components/header/header.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { CategoriesTabComponent } from './components/categories-tab/categories-t
     LoginComponent,
     HomeComponent,
     AnswersTabComponent,
-    CategoriesTabComponent
+    CategoriesTabComponent,
+    HeaderComponent
   ],
   imports: [
     MatExpansionModule,
