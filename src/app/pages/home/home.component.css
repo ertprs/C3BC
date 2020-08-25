@@ -1,17 +1,4 @@
-#first-toolbar-row {
-    justify-content: space-between;
-}
-
-#logo {
-    display: block;
-    width: 50vw;
-}
-
-#second-toolbar-row {
-    margin-top: 20px;
-}
-
-#footer {
+#add-button {
     display: flex;
     justify-content: center;
     position: fixed;
@@ -19,36 +6,4 @@
     z-index: 2;
 
     background: #f1f3ff;
-}
-
-.search-input {
-    font-size: medium;
-}
-
-.answer-notes-button {
-    margin-right: 12px;
-}
-
-.answer-content {
-    color: grey;
-    font-size: small;
-}
-
-.mat-action-row {
-    justify-content: space-between;
-}
-
-.mat-action-row .edit-button {
-    color: #323d83e3;
-    margin-left: 0px;
-}
-
-.mat-action-row .delete-button {
-    color: #b73e35e3;
-    margin-left: 0px;
-}
-
-.mat-action-row .next-button {
-    margin-left: 0px;
-    padding-left: 12px;
 }
