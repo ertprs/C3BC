@@ -3,6 +3,8 @@ import { Observable } from 'rxjs';
 import { StoredAnswer } from 'src/app/shared/models/answer.model';
 import { AnswerService } from 'src/app/services/answer/answer.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { MatDialog } from '@angular/material/dialog';
+import { DeleteAnswerDialogComponent } from '../delete-answer-dialog/delete-answer-dialog.component';
 
 @Component({
   selector: 'app-answers-tab',
@@ -25,7 +27,8 @@ export class AnswersTabComponent implements OnInit {
   step = 0;
 
   constructor(
-    answerService: AnswerService,
+    private _dialog: MatDialog,
+    answerService: AnswerService
   ) {
     this.answersObservable = answerService.readAnswers();
   }
@@ -43,5 +46,9 @@ export class AnswersTabComponent implements OnInit {
 
   prevAnswer() {
     this.step--;
+  }
+
+  openDialog(answerID: string) {
+    this._dialog.open(DeleteAnswerDialogComponent, {data: {answerID}});
   }
 }

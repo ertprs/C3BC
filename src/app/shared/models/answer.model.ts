@@ -17,3 +17,7 @@ export interface StoredAnswer {
 export interface StoredAnswerWithID extends StoredAnswer {
     id: string
 }
+
+export interface AnswerDialogData {
+    answerID: string;
+}

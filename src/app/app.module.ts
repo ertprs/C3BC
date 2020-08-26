@@ -29,6 +29,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import { AnswersTabComponent } from './components/answers-tab/answers-tab.component';
 import { CategoriesTabComponent } from './components/categories-tab/categories-tab.component';
 import { HeaderComponent } from './components/header/header.component';
+import { DeleteAnswerDialogComponent } from './components/delete-answer-dialog/delete-answer-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -37,9 +39,11 @@ import { HeaderComponent } from './components/header/header.component';
     HomeComponent,
     AnswersTabComponent,
     CategoriesTabComponent,
-    HeaderComponent
+    HeaderComponent,
+    DeleteAnswerDialogComponent
   ],
   imports: [
+    MatDialogModule,
     MatExpansionModule,
     MatDividerModule,
     MatListModule,
