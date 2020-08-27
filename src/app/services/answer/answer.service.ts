@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection, DocumentReference, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreCollection, DocumentReference } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Answer, StoredAnswer, StoredAnswerWithID } from "../../shared/models/answer.model";
 import { StoredCategory } from "../../shared/models/category.model";
@@ -106,12 +106,5 @@ export class AnswerService {
 
   public deleteAnswer(answerID: string): Promise<void> {
     return this.answersCollection.doc(answerID).delete()
-  }
-
-  public searchAnswerByText(text: string): Observable<StoredAnswerWithID[]> {
-    const selectedAnswersCollection = this.angularFirestore.collection<StoredAnswer>( 'answers', answersRef => answersRef.where('keyWords', 'array-contains', text.toLowerCase()) )
-    const answersObservable = selectedAnswersCollection.valueChanges({idField: 'id'})
-
-    return answersObservable
   }
 }
