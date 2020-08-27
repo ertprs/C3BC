@@ -9,3 +9,7 @@ export interface StoredCategory {
 export interface storedCategoryWithAnswers extends StoredCategory {
     answers: StoredAnswerWithID[]
 }
+
+export interface CategoryDialogData {
+    categoryName: string;
+}

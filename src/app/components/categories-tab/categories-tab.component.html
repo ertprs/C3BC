@@ -21,7 +21,7 @@
             <button class="edit-button" mat-icon-button>
             <mat-icon>edit</mat-icon>
             </button>
-            <button class="delete-button" mat-icon-button>
+            <button class="delete-button" mat-icon-button (click)="openDialog(category.name)">
             <mat-icon>delete</mat-icon>
             </button>
         </div>

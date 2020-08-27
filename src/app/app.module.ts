@@ -31,6 +31,7 @@ import { CategoriesTabComponent } from './components/categories-tab/categories-t
 import { HeaderComponent } from './components/header/header.component';
 import { DeleteAnswerDialogComponent } from './components/delete-answer-dialog/delete-answer-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { DeleteCategoryDialogComponent } from './components/delete-category-dialog/delete-category-dialog.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     AnswersTabComponent,
     CategoriesTabComponent,
     HeaderComponent,
-    DeleteAnswerDialogComponent
+    DeleteAnswerDialogComponent,
+    DeleteCategoryDialogComponent
   ],
   imports: [
     MatDialogModule,
