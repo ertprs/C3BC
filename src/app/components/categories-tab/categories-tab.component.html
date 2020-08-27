@@ -5,11 +5,11 @@
                             [expanded]="step === i">
         <mat-expansion-panel-header>
         <mat-panel-title>
-            {{category.name}}
+            {{(category | async)?.name}}
         </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <mat-list *ngFor="let answer of category.answers">
+        <mat-list *ngFor="let answer of (category | async)?.answers">
         <mat-list-item >
             <div mat-line>{{answer.name}}</div>
             <div mat-line class="answer-content"> {{answer.content}} </div>
@@ -21,7 +21,7 @@
             <button class="edit-button" mat-icon-button>
             <mat-icon>edit</mat-icon>
             </button>
-            <button class="delete-button" mat-icon-button (click)="openDialog(category.name)">
+            <button class="delete-button" mat-icon-button (click)="openDialog(category)">
             <mat-icon>delete</mat-icon>
             </button>
         </div>

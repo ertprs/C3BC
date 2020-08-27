@@ -3,7 +3,7 @@ import { AngularFirestore, AngularFirestoreCollection, DocumentReference } from 
 import { Observable, combineLatest} from 'rxjs';
 import { StoredCategory, storedCategoryWithAnswers } from "../../shared/models/category.model";
 import { AnswerService } from '../answer/answer.service';
-import { map, concatAll} from 'rxjs/operators';
+import { map, concatAll, tap} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -63,12 +63,13 @@ export class CategoryService {
           })
   }
 
-  public readCategoriesWithAnswers(): Observable<storedCategoryWithAnswers[]> {
-    const superiorOrderObservableOfCategoriesWithAnswers: Observable<Observable<storedCategoryWithAnswers[]>> = this.categoriesCollection.valueChanges().pipe(
-      map( (categories: StoredCategory[]) : Observable<storedCategoryWithAnswers[]> => {
-
+  // provisório
+  public readCategoriesWithAnswers(): Observable<Observable<storedCategoryWithAnswers>[]> {
+    const superiorOrderObservableOfCategoriesWithAnswers: Observable<Observable<storedCategoryWithAnswers>[]> = this.categoriesCollection.valueChanges().pipe(
+      map( (categories: StoredCategory[]) : Observable<storedCategoryWithAnswers>[] => {
         // para cada categoria, iremos acrescentar suas respectivas respostas
         const categoriesWithAnswersObservable: Observable<storedCategoryWithAnswers>[] = categories.map( (category: StoredCategory) : Observable<storedCategoryWithAnswers> => {
+
           const categoryID = category.name.toLowerCase()
 
           // capturamos as respostas de uma categoria
@@ -85,13 +86,13 @@ export class CategoryService {
         })
 
         // aqui, transformamos Observable<storedCategoryWithAnswers>[] em Observable<storedCategoryWithAnswers[]>
-        return combineLatest(categoriesWithAnswersObservable)
+        return categoriesWithAnswersObservable
       })
     )
 
     // aqui, transformamos um Observable<Observable<storedCategoryWithAnswers[]>> em Observable<storedCategoryWithAnswers[]>, ou seja, transformamos um Observable
     // de ordem superior em um outro de primeira ordem
-    const firstOrderObservable: Observable<storedCategoryWithAnswers[]> = superiorOrderObservableOfCategoriesWithAnswers.pipe(concatAll());
+    const firstOrderObservable: Observable<Observable<storedCategoryWithAnswers>[]> = superiorOrderObservableOfCategoriesWithAnswers;
 
     return firstOrderObservable;
   }
