@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SearchService } from '../../services/search/search.service';
 import { Subscription } from 'rxjs';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 @Component({
   selector: 'app-header',
@@ -9,11 +10,13 @@ import { Subscription } from 'rxjs';
 })
 export class HeaderComponent implements OnInit {
   private _showSearchToolbarSubscription: Subscription;
+  private _userIsLoggedSubscription: Subscription;
   showSearchToolbar: boolean;
-  userIsLogged: boolean = true;
+  userIsLogged: boolean;
 
   constructor(
-    private _searchService: SearchService
+    private _searchService: SearchService,
+    private _angularFireAuth: AngularFireAuth
   ) {
     this.showSearchToolbar = _searchService.showSearchToolbar.value
   }
@@ -22,10 +25,15 @@ export class HeaderComponent implements OnInit {
     this._showSearchToolbarSubscription = this._searchService.showSearchToolbar.subscribe( newValue => {
       this.showSearchToolbar = newValue;
     })
+
+    this._userIsLoggedSubscription = this._angularFireAuth.authState.subscribe( auth => {
+      this.userIsLogged = auth ? true : false;
+    })
   }
 
   ngOnDestroy() {
     this._showSearchToolbarSubscription.unsubscribe()
+    this._userIsLoggedSubscription.unsubscribe()
   }
 
   get logoClass() {
