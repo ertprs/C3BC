@@ -12,7 +12,7 @@ export class HeaderComponent implements OnInit {
   private _showSearchToolbarSubscription: Subscription;
   private _userIsLoggedSubscription: Subscription;
   showSearchToolbar: boolean;
-  userIsLogged: boolean;
+  userIsLogged: boolean = true;
 
   constructor(
     private _searchService: SearchService,
