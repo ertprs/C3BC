@@ -32,6 +32,9 @@ import { HeaderComponent } from './components/header/header.component';
 import { DeleteAnswerDialogComponent } from './components/delete-answer-dialog/delete-answer-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DeleteCategoryDialogComponent } from './components/delete-category-dialog/delete-category-dialog.component';
+import { CreateAnswerComponent } from './pages/create-answer/create-answer.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -42,9 +45,12 @@ import { DeleteCategoryDialogComponent } from './components/delete-category-dial
     CategoriesTabComponent,
     HeaderComponent,
     DeleteAnswerDialogComponent,
-    DeleteCategoryDialogComponent
+    DeleteCategoryDialogComponent,
+    CreateAnswerComponent
   ],
   imports: [
+    MatCheckboxModule,
+    MatSelectModule,
     MatDialogModule,
     MatExpansionModule,
     MatDividerModule,

@@ -1,9 +1,13 @@
 #add-button {
     display: flex;
     justify-content: center;
-    position: fixed;
+    position: sticky;
     bottom: 0;
     z-index: 2;
 
     background: #f1f3ff;
+}
+
+.mat-tab-group {
+    height: 412px;
 }

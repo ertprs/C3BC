@@ -25,3 +25,9 @@
     margin-left: 0px;
     padding-left: 12px;
 }
+
+p {
+    padding: 0 12px 16px;
+    overflow-wrap: break-word;
+    text-align: justify;
+}
