@@ -3,7 +3,7 @@ import { StoredAnswerWithID } from './answer.model';
 
 export interface StoredCategory {
     name: string;
-    parent?: DocumentReference;
+    parents?: DocumentReference[];
 }
 
 export interface storedCategoryWithAnswers extends StoredCategory {
