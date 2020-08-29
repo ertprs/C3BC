@@ -4,14 +4,14 @@ export interface Answer {
     id?: string;
     name: string;
     content: string;
-    category?: DocumentReference;
+    categories?: [DocumentReference];
 }
 
 export interface StoredAnswer {
     name: string;
     content: string;
     keyWords: Array<string>
-    category?: DocumentReference;
+    categories?: [DocumentReference];
 }
 
 export interface StoredAnswerWithID extends StoredAnswer {

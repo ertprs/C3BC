@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, DocumentReference } from '@angular/fire/firestore';
-import { Observable, combineLatest} from 'rxjs';
+import { Observable } from 'rxjs';
 import { StoredCategory, storedCategoryWithAnswers } from "../../shared/models/category.model";
 import { AnswerService } from '../answer/answer.service';
-import { map, concatAll, tap} from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -61,6 +61,10 @@ export class CategoryService {
               }
             })
           })
+  }
+
+  public readCategories(): Observable<StoredCategory[]> {
+    return this.categoriesCollection.valueChanges()
   }
 
   // provisório

@@ -48,8 +48,8 @@ export class AnswerService {
     const keyWords = [...this.generateAnswerKeyWords(name)]
     const adjustedAnswer: StoredAnswer = {name, content, keyWords}
 
-    if(answer.category){
-      adjustedAnswer.category = answer.category
+    if(answer.categories){
+      adjustedAnswer.categories = answer.categories
     }
 
     return adjustedAnswer
