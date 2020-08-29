@@ -22,7 +22,7 @@ export class CreateCategoryComponent implements OnInit {
     this.categoriesObservable = _categoryService.readCategories();
 
     this.categoryFormGroup = formBuilder.group({
-      name: ["", Validators.required],
+      name: [ , Validators.required],
       parents: [ , ]
     })
   }

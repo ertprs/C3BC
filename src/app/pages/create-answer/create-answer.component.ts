@@ -25,9 +25,9 @@ export class CreateAnswerComponent implements OnInit {
     this.categoriesObservable = categoryService.readCategories();
 
     this.answerFormGroup = formBuilder.group({
-      name: ["", Validators.required],
-      content: [ , Validators.required],
-      categories: [ , [Validators.required]]
+      name: [ , Validators.required],
+      categories: [ , [Validators.required]],
+      content: [ , Validators.required]
     })
   }
 
