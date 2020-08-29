@@ -9,43 +9,44 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class CategoryService {
-  categoriesCollection: AngularFirestoreCollection<StoredCategory>
+  categoriesCollection: AngularFirestoreCollection<StoredCategory>;
 
   constructor(
     private answerService: AnswerService,
     angularFirestore: AngularFirestore
   ) {
-    this.categoriesCollection = angularFirestore.collection<StoredCategory>("categories")
+    this.categoriesCollection = angularFirestore.collection<StoredCategory>("categories");
   }
 
   private adjustCategoryToFirestore(category: StoredCategory): StoredCategory {
-    const name = category.name.replace(/\s{2,}/g, " ").trim()
-    const adjustedCategory: StoredCategory = {name}
+    const name = category.name.replace(/\s{2,}/g, " ").trim().toUpperCase();
+    const adjustedCategory: StoredCategory = {name};
 
-    if(category.parent) {
-      adjustedCategory.parent = category.parent
+    if(category.parents) {
+      adjustedCategory.parents = category.parents;
     }
 
-    return adjustedCategory
+    return adjustedCategory;
   }
 
-  public createCategory(category: StoredCategory): Promise<DocumentReference> {
-    const newCategory: StoredCategory = this.adjustCategoryToFirestore(category)
+  public createCategory(category: StoredCategory): Promise<void> {
+    const newCategory: StoredCategory = this.adjustCategoryToFirestore(category);
+    const newCategoryID = newCategory.name.toLowerCase();
 
     return this.categoriesCollection.ref.where("name", "==", newCategory.name).get()
           .then(whereResult => {
             return new Promise( (resolve, reject) => {
               if(whereResult.empty){
-                resolve( this.categoriesCollection.add(newCategory) )
+                resolve( this.categoriesCollection.doc(newCategoryID).set(newCategory) );
               } else
-                reject("Já há uma categoria com esse nome.")
+                reject("Já há uma categoria com esse nome.");
             })
           })
   }
 
   public updateCategory(category: StoredCategory): Promise<void> {
-    const categoryID = category.name.toLowerCase()
-    const updatedCategory: StoredCategory = this.adjustCategoryToFirestore(category)
+    const categoryID = category.name.toLowerCase();
+    const updatedCategory: StoredCategory = this.adjustCategoryToFirestore(category);
 
     return this.categoriesCollection.ref.where("name", "==", updatedCategory.name).get()
           .then(whereResult => {
@@ -55,16 +56,16 @@ export class CategoryService {
                   this.categoriesCollection
                     .doc(categoryID)
                     .update(updatedCategory)
-                )
+                );
               } else {
-                reject("Já há uma categoria com esse nome.")
+                reject("Já há uma categoria com esse nome.");
               }
             })
           })
   }
 
   public readCategories(): Observable<StoredCategory[]> {
-    return this.categoriesCollection.valueChanges()
+    return this.categoriesCollection.valueChanges();
   }
 
   // provisório
@@ -74,7 +75,7 @@ export class CategoryService {
         // para cada categoria, iremos acrescentar suas respectivas respostas
         const categoriesWithAnswersObservable: Observable<storedCategoryWithAnswers>[] = categories.map( (category: StoredCategory) : Observable<storedCategoryWithAnswers> => {
 
-          const categoryID = category.name.toLowerCase()
+          const categoryID = category.name.toLowerCase();
 
           // capturamos as respostas de uma categoria
           const categoryWithAnswersObservable: Observable<storedCategoryWithAnswers> = this.answerService.readAnswersByCategoryID(categoryID).pipe(
@@ -84,13 +85,13 @@ export class CategoryService {
                 answers: answers
               }
             })
-          )
+          );
 
-          return categoryWithAnswersObservable
+          return categoryWithAnswersObservable;
         })
 
         // aqui, transformamos Observable<storedCategoryWithAnswers>[] em Observable<storedCategoryWithAnswers[]>
-        return categoriesWithAnswersObservable
+        return categoriesWithAnswersObservable;
       })
     )
 
@@ -102,8 +103,8 @@ export class CategoryService {
   }
 
   public deleteCategory(categoryName: string): Promise<void> {
-    const categoryID = categoryName.toLowerCase()
+    const categoryID = categoryName.toLowerCase();
 
-    return this.categoriesCollection.doc(categoryID).delete()
+    return this.categoriesCollection.doc(categoryID).delete();
   }
 }
