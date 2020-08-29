@@ -1,22 +1,20 @@
 /* You can add global styles to this file, and also import other style files */
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
 /* Tamanho do browser action */
-body { width:360px; height:501px; }
+html, body { width:360px; height:600px; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 ::-webkit-scrollbar {
     height: 4px;
-    width: 3px;
+    width: 5px;
 }
 
 ::-webkit-scrollbar-track {
-    background-color: #3f51b5;
+    background-color: #f1f3ff;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #f1f3ff;
+    background: #3f51b5;
 }
 
 .full-width {
