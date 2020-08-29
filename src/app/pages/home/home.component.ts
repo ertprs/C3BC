@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { MatTabGroup, MatTabChangeEvent } from '@angular/material/tabs';
 import { SearchService } from 'src/app/services/search/search.service';
 
@@ -9,36 +9,46 @@ import { SearchService } from 'src/app/services/search/search.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  private _addButtonMessage = new BehaviorSubject<string>("Adicionar resposta");
   private _selectedTabChangeSubscription: Subscription;
+  private _currentTabTextLabel: string;
   @ViewChild("tabGroup") tabGroup: MatTabGroup;
 
   constructor(
     private searchService: SearchService
-  ) { }
+  ) {
+    this._currentTabTextLabel = 'respostas'
+  }
 
   ngOnInit(): void {
-    this.searchService.enableSearchToolbar()
+    this.searchService.enableSearchToolbar();
   }
 
   ngAfterViewInit() {
     this._selectedTabChangeSubscription = this.tabGroup.selectedTabChange.subscribe( (selectedTabChange: MatTabChangeEvent) => {
-      this.buttonMessage = selectedTabChange.tab.textLabel
+      this._currentTabTextLabel = selectedTabChange.tab.textLabel;
     })
   }
 
   ngOnDestroy() {
-    this.searchService.disableSearchToolbar()
-    this._selectedTabChangeSubscription.unsubscribe()
+    this.searchService.disableSearchToolbar();
+    this._selectedTabChangeSubscription.unsubscribe();
   }
 
   get buttonMessage(): string {
-    return this._addButtonMessage.value
+    return `Adicionar ${this._currentTabTextLabel.slice(0, -1).toLowerCase()}`;
   }
 
-  set buttonMessage(tabName: string) {
-    const newTabName = tabName.slice(0, -1).toLowerCase()
+  get currentTabRoute() {
+    let route;
 
-    this._addButtonMessage.next(`Adicionar ${newTabName}`)
+    switch(this._currentTabTextLabel.toLowerCase()) {
+      case 'respostas':
+        route = 'create-answer';
+        break;
+      case 'categorias':
+        route = 'create-category';
+    };
+
+    return route;
   }
 }

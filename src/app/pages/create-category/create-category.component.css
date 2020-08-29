@@ -1,0 +1,29 @@
+#nameInput {
+    text-transform: uppercase;
+}
+
+.form-container{
+    margin: 8px;
+}
+
+mat-form-field {
+    display: block;
+}
+
+.button-group{
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    bottom: 0;
+    z-index: 2;
+
+    background: #f1f3ff;
+}
+
+.button-group button{
+    flex-grow: 1;
+}
+
+.button-group button:first-child{
+    margin-right: 8px;
+}

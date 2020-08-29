@@ -9,5 +9,5 @@
 </mat-tab-group>
 
 <mat-toolbar id="add-button">
-  <button mat-stroked-button class="full-width" color="primary" routerLink="create-answer">{{buttonMessage}}</button>
+  <button mat-stroked-button class="full-width" color="primary" [routerLink]="currentTabRoute">{{buttonMessage }}</button>
 </mat-toolbar>

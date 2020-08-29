@@ -5,6 +5,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { CanEnterHomeGuard } from './guards/home/can-enter-home.guard';
 import { CanEnterLoginGuard } from './guards/login/can-enter-login.guard';
 import { CreateAnswerComponent } from './pages/create-answer/create-answer.component';
+import { CreateCategoryComponent } from './pages/create-category/create-category.component';
 
 const routes: Routes = [
   {
@@ -22,6 +23,10 @@ const routes: Routes = [
       {
         path: 'create-answer',
         component: CreateAnswerComponent
+      },
+      {
+        path: 'create-category',
+        component: CreateCategoryComponent
       },
     ],
     canActivate: [CanEnterHomeGuard]
