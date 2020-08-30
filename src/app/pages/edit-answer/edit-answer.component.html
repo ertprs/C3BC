@@ -1,0 +1,28 @@
+<mat-card class="form-container mat-elevation-z2">
+    <mat-card-title>Alterar resposta</mat-card-title>
+    <mat-card-content>
+      <form [formGroup]="answerFormGroup">
+        <mat-form-field>
+          <mat-label>Nome</mat-label>
+          <input formControlName="name" matInput placeholder="Ex. Como o this funciona">
+        </mat-form-field>
+  
+        <mat-form-field>
+          <mat-label>Categorias</mat-label>
+          <mat-select formControlName="categories" multiple>
+            <mat-option *ngFor="let category of categoriesObservable | async" [value]="category">{{category.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+  
+        <mat-form-field>
+          <mat-label>Resposta</mat-label>
+          <textarea formControlName="content" matInput placeholder="Ex. O this no contexto de função..."></textarea>
+        </mat-form-field>
+      </form>
+    </mat-card-content>
+  </mat-card>
+  
+  <mat-toolbar class="button-group">
+    <button mat-stroked-button color="primary" routerLink="/home">Cancelar</button>
+    <button mat-stroked-button color="primary" [disabled]="answerFormGroup.invalid" (click)="editAnswer()">Salvar</button>
+  </mat-toolbar>

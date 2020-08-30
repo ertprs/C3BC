@@ -36,6 +36,7 @@ import { CreateAnswerComponent } from './pages/create-answer/create-answer.compo
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CreateCategoryComponent } from './pages/create-category/create-category.component';
+import { EditAnswerComponent } from './pages/edit-answer/edit-answer.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { CreateCategoryComponent } from './pages/create-category/create-category
     DeleteAnswerDialogComponent,
     DeleteCategoryDialogComponent,
     CreateAnswerComponent,
-    CreateCategoryComponent
+    CreateCategoryComponent,
+    EditAnswerComponent
   ],
   imports: [
     MatCheckboxModule,

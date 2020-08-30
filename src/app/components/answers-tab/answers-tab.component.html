@@ -20,7 +20,7 @@
 
         <mat-action-row>
             <div>
-                <button class="edit-button" mat-icon-button>
+                <button class="edit-button" mat-icon-button (click)="navigateToEditAnswer(answer)">
                     <mat-icon>edit</mat-icon>
                 </button>
                 <button class="delete-button" mat-icon-button (click)="openDialog(answer.id)">

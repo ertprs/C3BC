@@ -26,7 +26,7 @@ export class CreateAnswerComponent implements OnInit {
 
     this.answerFormGroup = formBuilder.group({
       name: [ , Validators.required],
-      categories: [ , [Validators.required]],
+      categories: [ , Validators.required],
       content: [ , Validators.required]
     })
   }
@@ -35,7 +35,7 @@ export class CreateAnswerComponent implements OnInit {
   }
 
   createAnswer() {
-    const newAnswer: Answer = this.answerFormGroup.value
+    const newAnswer: Omit<Answer, "id"> = this.answerFormGroup.value
 
     this._answerService.createAnswer(newAnswer)
     this._router.navigate(["/home"])

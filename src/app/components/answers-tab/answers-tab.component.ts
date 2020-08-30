@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { StoredAnswer } from 'src/app/shared/models/answer.model';
+import { Answer, AnswerWithCategoriesName } from 'src/app/shared/models/answer.model';
 import { AnswerService } from 'src/app/services/answer/answer.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteAnswerDialogComponent } from '../delete-answer-dialog/delete-answer-dialog.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-answers-tab',
@@ -23,12 +24,13 @@ import { DeleteAnswerDialogComponent } from '../delete-answer-dialog/delete-answ
   ]
 })
 export class AnswersTabComponent implements OnInit {
-  answersObservable: Observable<StoredAnswer[]>;
+  answersObservable: Observable<Answer[]>;
   step = 0;
 
   constructor(
     private _dialog: MatDialog,
-    answerService: AnswerService
+    private _router: Router,
+    answerService: AnswerService,
   ) {
     this.answersObservable = answerService.readAnswers();
   }
@@ -50,5 +52,14 @@ export class AnswersTabComponent implements OnInit {
 
   openDialog(answerID: string) {
     this._dialog.open(DeleteAnswerDialogComponent, {data: {answerID}});
+  }
+
+  navigateToEditAnswer(answer: Answer) {
+    const categoriesName: string[] = answer.categories.map( category => category.name)
+    delete answer.categories
+    const answerWithCategoriesName: AnswerWithCategoriesName = {...answer, categoriesName}
+
+    //Aqui, estamos navegando e mandando dados para a página chamada
+    this._router.navigate(["/home/edit-answer"], {state: {answerWithCategoriesName}})
   }
 }
