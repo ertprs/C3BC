@@ -1,13 +1,12 @@
-import { DocumentReference } from '@angular/fire/firestore';
-import { StoredAnswerWithID } from './answer.model';
+import { Answer } from './answer.model';
 
 export interface StoredCategory {
     name: string;
-    parents?: DocumentReference[];
+    parents?: StoredCategory[];
 }
 
 export interface storedCategoryWithAnswers extends StoredCategory {
-    answers: StoredAnswerWithID[]
+    answers: Answer[]
 }
 
 export interface CategoryDialogData {

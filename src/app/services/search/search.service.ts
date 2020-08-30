@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { StoredAnswerWithID, StoredAnswer } from '../../shared/models/answer.model';
+import { StoredAnswer, Answer, removeKeyWordsProperties } from '../../shared/models/answer.model';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +14,9 @@ export class SearchService {
     private angularFirestore: AngularFirestore
   ) { }
   
-  public searchAnswerByText(text: string): Observable<StoredAnswerWithID[]> {
+  public searchAnswerByText(text: string): Observable<Answer[]> {
     const selectedAnswersCollection = this.angularFirestore.collection<StoredAnswer>( 'answers', answersRef => answersRef.where('keyWords', 'array-contains', text.toLowerCase()) )
-    const answersObservable = selectedAnswersCollection.valueChanges({idField: 'id'})
+    const answersObservable = selectedAnswersCollection.valueChanges({idField: 'id'}).pipe(map(removeKeyWordsProperties))
 
     return answersObservable
   }

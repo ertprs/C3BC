@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, DocumentReference } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { Answer, StoredAnswer, StoredAnswerWithID } from "../../shared/models/answer.model";
+import { Answer, StoredAnswer, removeKeyWordsProperties } from "../../shared/models/answer.model";
 import { StoredCategory } from "../../shared/models/category.model";
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,7 @@ export class AnswerService {
   }
 
   // palavras-chaves serão úteis para propósito de pesquisa
-  private generateAnswerKeyWords(string): Set<string> {
+  private generateAnswerKeyWords(string: string): Set<string> {
     // usamos conjuntos para não termos elementos repetidos
     let keyWords = new Set<string>()
     // captura o restante da string que segue o primeiro espaço
@@ -41,7 +42,7 @@ export class AnswerService {
 
   // Aqui iremos ajustar as propriedades name e content para serem salvas sem espaços duplicados e desnecessários no início ou fim.
   // Também adicionaremos palavras-chave
-  private adjustAnswerToFirestore(answer: Answer): StoredAnswer {
+  private adjustAnswerToFirestore(answer: Answer | Omit<Answer, "id">): StoredAnswer {
     const name = answer.name.replace(/\s{2,}/g, " ").trim()
     const content = answer.content.replace(/\s{2,}/g, " ").trim()
     // convertemos o conjunto para array
@@ -55,7 +56,7 @@ export class AnswerService {
     return adjustedAnswer
   }
 
-  public createAnswer(answer: Answer): Promise<DocumentReference> {
+  public createAnswer(answer: Omit<Answer, "id">): Promise<DocumentReference> {
     const newAnswer: StoredAnswer = this.adjustAnswerToFirestore(answer)
 
     return this.answersCollection.ref.where("name", "==", newAnswer.name).get()
@@ -92,14 +93,14 @@ export class AnswerService {
           })
   }
 
-  public readAnswers(): Observable<StoredAnswerWithID[] > {
-    return this.answersCollection.valueChanges({idField: 'id'})
+  public readAnswers(): Observable<Answer[] > {
+    return this.answersCollection.valueChanges({idField: 'id'}).pipe(map(removeKeyWordsProperties));
   }
 
-  public readAnswersByCategoryID(categoryID: string): Observable<StoredAnswerWithID[]> {
+  public readAnswersByCategoryID(categoryID: string): Observable<Answer[]> {
     const categoryRef = this.categoriesCollection.doc(categoryID).ref
     const selectedAnswersCollection = this.angularFirestore.collection<StoredAnswer>('answers', answersRef => answersRef.where('category', '==', categoryRef))
-    const answersObservable = selectedAnswersCollection.valueChanges({idField: 'id'})
+    const answersObservable = selectedAnswersCollection.valueChanges({idField: 'id'}).pipe(map(removeKeyWordsProperties));
 
     return answersObservable
   }
