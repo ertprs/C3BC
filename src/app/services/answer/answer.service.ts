@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, DocumentReference } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Answer, StoredAnswer, removeKeyWordsProperties } from "../../shared/models/answer.model";
-import { StoredCategory } from "../../shared/models/category.model";
+import { Category } from "../../shared/models/category.model";
 import { map } from 'rxjs/operators';
 
 @Injectable({
@@ -10,13 +10,13 @@ import { map } from 'rxjs/operators';
 })
 export class AnswerService {
   answersCollection: AngularFirestoreCollection<StoredAnswer>
-  categoriesCollection: AngularFirestoreCollection<StoredCategory>
+  categoriesCollection: AngularFirestoreCollection<Category>
 
   constructor(
     private angularFirestore: AngularFirestore
   ) {
     this.answersCollection = angularFirestore.collection<StoredAnswer>("answers")
-    this.categoriesCollection = angularFirestore.collection<StoredCategory>("categories")
+    this.categoriesCollection = angularFirestore.collection<Category>("categories")
   }
 
   // palavras-chaves serão úteis para propósito de pesquisa

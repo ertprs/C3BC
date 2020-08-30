@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CategoryService } from 'src/app/services/category/category.service';
 import { Observable } from 'rxjs';
-import { StoredCategory } from 'src/app/shared/models/category.model';
+import { Category } from 'src/app/shared/models/category.model';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Answer, AnswerWithCategoriesName } from 'src/app/shared/models/answer.model';
 import { AnswerService } from 'src/app/services/answer/answer.service';
@@ -15,7 +15,7 @@ import { tap } from 'rxjs/operators';
 })
 export class EditAnswerComponent implements OnInit {
   answerFormGroup: FormGroup;
-  categoriesObservable: Observable<StoredCategory[]>;
+  categoriesObservable: Observable<Category[]>;
   answerWithCategoriesName: AnswerWithCategoriesName
 
   constructor(
@@ -35,7 +35,7 @@ export class EditAnswerComponent implements OnInit {
     this.categoriesObservable = categoryService.readCategories().pipe(
       tap( categories => {
         // aqui, estamos filtrando somente as categorias que têm a resposta já tem, para depois adicionarmos como valores ao formControl categories
-        const selectedCategories: StoredCategory[] = categories.filter( category => this.answerWithCategoriesName.categoriesName.includes(category.name) )
+        const selectedCategories: Category[] = categories.filter( category => this.answerWithCategoriesName.categoriesName.includes(category.name) )
         
         this.answerFormGroup.controls['categories'].setValue(selectedCategories)
       })

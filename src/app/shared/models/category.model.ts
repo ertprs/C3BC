@@ -1,11 +1,11 @@
 import { Answer } from './answer.model';
 
-export interface StoredCategory {
+export interface Category {
     name: string;
-    parents?: StoredCategory[];
+    parents?: Category[];
 }
 
-export interface storedCategoryWithAnswers extends StoredCategory {
+export interface CategoryWithAnswers extends Category {
     answers: Answer[]
 }
 

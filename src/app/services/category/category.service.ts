@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, DocumentReference } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { StoredCategory, storedCategoryWithAnswers } from "../../shared/models/category.model";
+import { Category, CategoryWithAnswers } from "../../shared/models/category.model";
 import { AnswerService } from '../answer/answer.service';
 import { map } from 'rxjs/operators';
 
@@ -9,18 +9,18 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class CategoryService {
-  categoriesCollection: AngularFirestoreCollection<StoredCategory>;
+  categoriesCollection: AngularFirestoreCollection<Category>;
 
   constructor(
     private answerService: AnswerService,
     angularFirestore: AngularFirestore
   ) {
-    this.categoriesCollection = angularFirestore.collection<StoredCategory>("categories");
+    this.categoriesCollection = angularFirestore.collection<Category>("categories");
   }
 
-  private adjustCategoryToFirestore(category: StoredCategory): StoredCategory {
+  private adjustCategoryToFirestore(category: Category): Category {
     const name = category.name.replace(/\s{2,}/g, " ").trim().toUpperCase();
-    const adjustedCategory: StoredCategory = {name};
+    const adjustedCategory: Category = {name};
 
     if(category.parents) {
       adjustedCategory.parents = category.parents;
@@ -29,8 +29,8 @@ export class CategoryService {
     return adjustedCategory;
   }
 
-  public createCategory(category: StoredCategory): Promise<void> {
-    const newCategory: StoredCategory = this.adjustCategoryToFirestore(category);
+  public createCategory(category: Category): Promise<void> {
+    const newCategory: Category = this.adjustCategoryToFirestore(category);
     const newCategoryID = newCategory.name.toLowerCase();
 
     return this.categoriesCollection.ref.where("name", "==", newCategory.name).get()
@@ -44,9 +44,9 @@ export class CategoryService {
           })
   }
 
-  public updateCategory(category: StoredCategory): Promise<void> {
+  public updateCategory(category: Category): Promise<void> {
     const categoryID = category.name.toLowerCase();
-    const updatedCategory: StoredCategory = this.adjustCategoryToFirestore(category);
+    const updatedCategory: Category = this.adjustCategoryToFirestore(category);
 
     return this.categoriesCollection.ref.where("name", "==", updatedCategory.name).get()
           .then(whereResult => {
@@ -64,22 +64,22 @@ export class CategoryService {
           })
   }
 
-  public readCategories(): Observable<StoredCategory[]> {
+  public readCategories(): Observable<Category[]> {
     return this.categoriesCollection.valueChanges();
   }
 
   // provisório
-  public readCategoriesWithAnswers(): Observable<Observable<storedCategoryWithAnswers>[]> {
-    const superiorOrderObservableOfCategoriesWithAnswers: Observable<Observable<storedCategoryWithAnswers>[]> = this.categoriesCollection.valueChanges().pipe(
-      map( (categories: StoredCategory[]) : Observable<storedCategoryWithAnswers>[] => {
+  public readCategoriesWithAnswers(): Observable<Observable<CategoryWithAnswers>[]> {
+    const superiorOrderObservableOfCategoriesWithAnswers: Observable<Observable<CategoryWithAnswers>[]> = this.categoriesCollection.valueChanges().pipe(
+      map( (categories: Category[]) : Observable<CategoryWithAnswers>[] => {
         // para cada categoria, iremos acrescentar suas respectivas respostas
-        const categoriesWithAnswersObservable: Observable<storedCategoryWithAnswers>[] = categories.map( (category: StoredCategory) : Observable<storedCategoryWithAnswers> => {
+        const categoriesWithAnswersObservable: Observable<CategoryWithAnswers>[] = categories.map( (category: Category) : Observable<CategoryWithAnswers> => {
 
           const categoryID = category.name.toLowerCase();
 
           // capturamos as respostas de uma categoria
-          const categoryWithAnswersObservable: Observable<storedCategoryWithAnswers> = this.answerService.readAnswersByCategoryID(categoryID).pipe(
-            map( (answers) : storedCategoryWithAnswers => {
+          const categoryWithAnswersObservable: Observable<CategoryWithAnswers> = this.answerService.readAnswersByCategoryID(categoryID).pipe(
+            map( (answers) : CategoryWithAnswers => {
               return {
                 ...category,
                 answers: answers
@@ -97,7 +97,7 @@ export class CategoryService {
 
     // aqui, transformamos um Observable<Observable<storedCategoryWithAnswers[]>> em Observable<storedCategoryWithAnswers[]>, ou seja, transformamos um Observable
     // de ordem superior em um outro de primeira ordem
-    const firstOrderObservable: Observable<Observable<storedCategoryWithAnswers>[]> = superiorOrderObservableOfCategoriesWithAnswers;
+    const firstOrderObservable: Observable<Observable<CategoryWithAnswers>[]> = superiorOrderObservableOfCategoriesWithAnswers;
 
     return firstOrderObservable;
   }

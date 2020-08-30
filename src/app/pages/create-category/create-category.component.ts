@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { StoredCategory } from 'src/app/shared/models/category.model';
+import { Category } from 'src/app/shared/models/category.model';
 import { Router } from '@angular/router';
 import { CategoryService } from 'src/app/services/category/category.service';
 
@@ -12,7 +12,7 @@ import { CategoryService } from 'src/app/services/category/category.service';
 })
 export class CreateCategoryComponent implements OnInit {
   categoryFormGroup: FormGroup;
-  categoriesObservable: Observable<StoredCategory[]>;
+  categoriesObservable: Observable<Category[]>;
 
   constructor(
     private _categoryService: CategoryService,
@@ -31,7 +31,7 @@ export class CreateCategoryComponent implements OnInit {
   }
 
   createCategory() {
-    const newCategory: StoredCategory = this.categoryFormGroup.value
+    const newCategory: Category = this.categoryFormGroup.value
 
     this._categoryService.createCategory(newCategory)
     this._router.navigate(["/home"])

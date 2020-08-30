@@ -1,4 +1,4 @@
-import { StoredCategory } from './category.model';
+import { Category } from './category.model';
 
 export function removeKeyWordsProperties(storedAnswersWithKeyWords: (Answer & { keyWords: Array<string> })[]): Answer[] {
     return storedAnswersWithKeyWords.map(answer => {
@@ -12,14 +12,14 @@ export interface Answer {
     id: string;
     name: string;
     content: string;
-    categories?: StoredCategory[];
+    categories?: Category[];
 }
 
 export interface StoredAnswer {
     name: string;
     content: string;
     keyWords: Array<string>
-    categories?: StoredCategory[];
+    categories?: Category[];
 }
 
 export interface AnswerDialogData {

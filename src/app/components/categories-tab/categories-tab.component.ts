@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CategoryService } from 'src/app/services/category/category.service';
 import { Observable } from 'rxjs';
-import { storedCategoryWithAnswers } from 'src/app/shared/models/category.model';
+import { CategoryWithAnswers } from 'src/app/shared/models/category.model';
 import { MatDialog } from '@angular/material/dialog';
 import { take, tap } from 'rxjs/operators';
 import { DeleteCategoryDialogComponent } from '../delete-category-dialog/delete-category-dialog.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-categories-tab',
@@ -12,7 +13,7 @@ import { DeleteCategoryDialogComponent } from '../delete-category-dialog/delete-
   styleUrls: ['./categories-tab.component.css']
 })
 export class CategoriesTabComponent implements OnInit {
-  categoriesWithAnswersObservable: Observable<Observable<storedCategoryWithAnswers>[]>
+  categoriesWithAnswersObservable: Observable<Observable<CategoryWithAnswers>[]>
   step = 0;
 
   constructor(
@@ -38,10 +39,10 @@ export class CategoriesTabComponent implements OnInit {
   }
 
   // provisório
-  openDialog(categoryObservable: Observable<storedCategoryWithAnswers>) {
+  openDialog(categoryObservable: Observable<CategoryWithAnswers>) {
     categoryObservable.pipe(
       take(1),
-      tap( (category: storedCategoryWithAnswers) => {
+      tap( (category: CategoryWithAnswers) => {
         this._dialog.open(DeleteCategoryDialogComponent, {data: {categoryName: category.name}});
       })
     ).subscribe()
