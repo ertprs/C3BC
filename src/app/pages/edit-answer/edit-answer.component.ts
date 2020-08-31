@@ -34,7 +34,7 @@ export class EditAnswerComponent implements OnInit {
 
     this.categoriesObservable = categoryService.readCategories().pipe(
       tap( categories => {
-        // aqui, estamos filtrando somente as categorias que têm a resposta já tem, para depois adicionarmos como valores ao formControl categories
+        // aqui, estamos filtrando somente as categorias as quais a resposta pertence, para depois adicionarmos como valores ao formControl categories
         const selectedCategories: Category[] = categories.filter( category => this.answerWithCategoriesName.categoriesName.includes(category.name) )
         
         this.answerFormGroup.controls['categories'].setValue(selectedCategories)
