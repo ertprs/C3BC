@@ -45,13 +45,11 @@ export class AnswerService {
   private adjustAnswerToFirestore(answer: Answer | Omit<Answer, "id">): StoredAnswer {
     const name = answer.name.replace(/\s{2,}/g, " ").trim()
     const content = answer.content.replace(/\s{2,}/g, " ").trim()
+    const categories = answer.categories || []
     // convertemos o conjunto para array
     const keyWords = [...this.generateAnswerKeyWords(name)]
-    const adjustedAnswer: StoredAnswer = {name, content, keyWords}
 
-    if(answer.categories){
-      adjustedAnswer.categories = answer.categories
-    }
+    const adjustedAnswer: StoredAnswer = {name, content, categories, keyWords}
 
     return adjustedAnswer
   }

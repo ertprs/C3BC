@@ -24,7 +24,7 @@ export class DeleteCategoryDialogComponent implements OnInit {
   }
 
   deleteCategory() {
-    this._categoryService.deleteCategory(this._data.categoryName)
+    this._categoryService.deleteCategory(this._data.categoryID)
     this.onNoClick()
   }
 }

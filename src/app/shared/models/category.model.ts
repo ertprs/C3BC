@@ -1,6 +1,12 @@
 import { Answer } from './answer.model';
 
 export interface Category {
+    id: string;
+    name: string;
+    parents?: Category[];
+}
+
+export interface StoredCategory {
     name: string;
     parents?: Category[];
 }
@@ -10,10 +16,11 @@ export interface CategoryWithAnswers extends Category {
 }
 
 export interface CategoryDialogData {
-    categoryName: string;
+    categoryID: string;
 }
 
-export interface CategoryWithParentsName {
+export interface CategoryWithParentsID {
+    id: string;
     name: string;
-    parentsName?: string[];
+    parentsID?: string[];
 }

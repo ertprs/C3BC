@@ -12,14 +12,14 @@ export interface Answer {
     id: string;
     name: string;
     content: string;
-    categories?: Category[];
+    categories: Category[];
 }
 
 export interface StoredAnswer {
     name: string;
     content: string;
+    categories: Category[];
     keyWords: Array<string>
-    categories?: Category[];
 }
 
 export interface AnswerDialogData {

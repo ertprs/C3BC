@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CategoryService } from 'src/app/services/category/category.service';
 import { Observable } from 'rxjs';
-import { Category, CategoryWithAnswers, CategoryWithParentsName } from 'src/app/shared/models/category.model';
+import { Category, CategoryWithAnswers, CategoryWithParentsID } from 'src/app/shared/models/category.model';
 import { MatDialog } from '@angular/material/dialog';
 import { take, tap } from 'rxjs/operators';
 import { DeleteCategoryDialogComponent } from '../delete-category-dialog/delete-category-dialog.component';
@@ -44,17 +44,17 @@ export class CategoriesTabComponent implements OnInit {
     categoryObservable.pipe(
       take(1),
       tap( (category: CategoryWithAnswers) => {
-        this._dialog.open(DeleteCategoryDialogComponent, {data: {categoryName: category.name}});
+        this._dialog.open(DeleteCategoryDialogComponent, {data: {categoryID: category.id}});
       })
     ).subscribe()
   }
 
   navigateToEditCategory(categoryObservable: Observable<Category>) {
     categoryObservable.pipe(take(1)).subscribe( category => {
-      const categoryWithParentsName: CategoryWithParentsName = {name: category.name}
+      const categoryWithParentsName: CategoryWithParentsID = {id: category.id, name: category.name}
       
       if(category.parents){
-        categoryWithParentsName.parentsName = category.parents.map( parent => parent.name);
+        categoryWithParentsName.parentsID = category.parents.map( parent => parent.id);
       }
       
       this._router.navigate(["/home/edit-category"], {state: {categoryWithParentsName}})

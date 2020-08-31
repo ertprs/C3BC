@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CategoryService } from 'src/app/services/category/category.service';
 import { Observable } from 'rxjs';
-import { Category, CategoryWithParentsName } from 'src/app/shared/models/category.model';
+import { Category, CategoryWithParentsID } from 'src/app/shared/models/category.model';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-edit-category',
@@ -14,7 +14,7 @@ import { tap } from 'rxjs/operators';
 export class EditCategoryComponent implements OnInit {
   categoryFormGroup: FormGroup;
   categoriesObservable: Observable<Category[]>;
-  categoryWithParentsName: CategoryWithParentsName;
+  categoryWithParentsName: CategoryWithParentsID;
 
   constructor(
     private _categoryService: CategoryService,
@@ -29,9 +29,10 @@ export class EditCategoryComponent implements OnInit {
     })
     
     this.categoriesObservable = _categoryService.readCategories().pipe(
+      map( categories => categories.filter( category => this.categoryWithParentsName.id != category.id ) ),
       tap( categories => {
-        if(this.categoryWithParentsName.parentsName){
-          const selectedParents: Category[] = categories.filter( category => this.categoryWithParentsName.parentsName.includes(category.name) );
+        if(this.categoryWithParentsName.parentsID){
+          const selectedParents: Category[] = categories.filter( category => this.categoryWithParentsName.parentsID.includes(category.id) );
           
           this.categoryFormGroup.controls['parents'].setValue(selectedParents)
         }
@@ -43,7 +44,7 @@ export class EditCategoryComponent implements OnInit {
   }
 
   editCategory() {
-    const updatedCategory: Category = {id: this.categoryWithParentsName.name.toLowerCase(), ...this.categoryFormGroup.value}
+    const updatedCategory: Category = {id: this.categoryWithParentsName.id, ...this.categoryFormGroup.value}
 
     this._categoryService.updateCategory(updatedCategory)
     this._router.navigate(["/home"])
