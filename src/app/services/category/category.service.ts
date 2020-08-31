@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection, DocumentReference } from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Category, CategoryWithAnswers } from "../../shared/models/category.model";
 import { AnswerService } from '../answer/answer.service';
@@ -44,8 +44,8 @@ export class CategoryService {
           })
   }
 
-  public updateCategory(category: Category): Promise<void> {
-    const categoryID = category.name.toLowerCase();
+  public updateCategory(category: any): Promise<void> {
+    const categoryID = category.id;
     const updatedCategory: Category = this.adjustCategoryToFirestore(category);
 
     return this.categoriesCollection.ref.where("name", "==", updatedCategory.name).get()

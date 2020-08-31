@@ -7,6 +7,7 @@ import { CanEnterLoginGuard } from './guards/login/can-enter-login.guard';
 import { CreateAnswerComponent } from './pages/create-answer/create-answer.component';
 import { CreateCategoryComponent } from './pages/create-category/create-category.component';
 import { EditAnswerComponent } from './pages/edit-answer/edit-answer.component';
+import { EditCategoryComponent } from './pages/edit-category/edit-category.component';
 
 const routes: Routes = [
   {
@@ -32,6 +33,10 @@ const routes: Routes = [
       {
         path: 'create-category',
         component: CreateCategoryComponent
+      },
+      {
+        path: 'edit-category',
+        component: EditCategoryComponent
       },
     ],
     canActivate: [CanEnterHomeGuard]

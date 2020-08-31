@@ -12,3 +12,8 @@ export interface CategoryWithAnswers extends Category {
 export interface CategoryDialogData {
     categoryName: string;
 }
+
+export interface CategoryWithParentsName {
+    name: string;
+    parentsName?: string[];
+}
