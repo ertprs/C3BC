@@ -1,34 +1,28 @@
-import { Category } from './category.model';
+import { DocumentReference } from '@angular/fire/firestore';
 
-export function removeKeyWordsProperties(storedAnswersWithKeyWords: (Answer & { keyWords: Array<string> })[]): Answer[] {
-    return storedAnswersWithKeyWords.map(answer => {
-        delete answer.keyWords;
+export function storedAnswerWithIDTypeToAnswerType( storedAnswers: (StoredAnswer & {id: string})[] ): Answer[] {
+    return storedAnswers.map( storedAnswer => {
+      const categoriesID = storedAnswer.categoriesRef.map( categoryRef => categoryRef.id);
 
-        return answer
-    })
+      const answer: Answer = {id: storedAnswer.id, name: storedAnswer.name, content: storedAnswer.content, categoriesID};
+      return answer;
+    });
 }
 
 export interface Answer {
     id: string;
     name: string;
     content: string;
-    categories: Category[];
+    categoriesID: string[];
 }
 
 export interface StoredAnswer {
     name: string;
     content: string;
-    categories: Category[];
+    categoriesRef: DocumentReference[];
     keyWords: Array<string>
 }
 
 export interface AnswerDialogData {
     answerID: string;
-}
-
-export interface AnswerWithCategoriesName {
-    id: string;
-    name: string;
-    content: string;
-    categoriesName: string[];
 }

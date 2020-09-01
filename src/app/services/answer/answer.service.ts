@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, DocumentReference } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { Answer, StoredAnswer, removeKeyWordsProperties } from "../../shared/models/answer.model";
+import { Answer, StoredAnswer, storedAnswerWithIDTypeToAnswerType } from "../../shared/models/answer.model";
 import { Category } from "../../shared/models/category.model";
 import { map } from 'rxjs/operators';
 
@@ -40,30 +40,35 @@ export class AnswerService {
     return keyWords
   }
 
+  private adjustToCategoryRef(categoriesID: string[]): DocumentReference[] {
+    return categoriesID.map( categoryID => this.categoriesCollection.doc(categoryID).ref );
+  }
+
   // Aqui iremos ajustar as propriedades name e content para serem salvas sem espaços duplicados e desnecessários no início ou fim.
   // Também adicionaremos palavras-chave
   private adjustAnswerToFirestore(answer: Answer | Omit<Answer, "id">): StoredAnswer {
-    const name = answer.name.replace(/\s{2,}/g, " ").trim()
-    const content = answer.content.replace(/\s{2,}/g, " ").trim()
-    const categories = answer.categories || []
+    const name = answer.name.replace(/\s{2,}/g, " ").trim();
+    const content = answer.content.replace(/\s{2,}/g, " ").trim();
+    const categories = this.adjustToCategoryRef(answer.categoriesID);
+
     // convertemos o conjunto para array
-    const keyWords = [...this.generateAnswerKeyWords(name)]
+    const keyWords = [...this.generateAnswerKeyWords(name)];
 
-    const adjustedAnswer: StoredAnswer = {name, content, categories, keyWords}
+    const adjustedAnswer: StoredAnswer = {name, content, categoriesRef: categories, keyWords};
 
-    return adjustedAnswer
+    return adjustedAnswer;
   }
 
   public createAnswer(answer: Omit<Answer, "id">): Promise<DocumentReference> {
-    const newAnswer: StoredAnswer = this.adjustAnswerToFirestore(answer)
+    const newAnswer: StoredAnswer = this.adjustAnswerToFirestore(answer);
 
     return this.answersCollection.ref.where("name", "==", newAnswer.name).get()
           .then(whereResult => {
             return new Promise( (resolve, reject) => {
               if(whereResult.empty){
-                resolve( this.answersCollection.add(newAnswer) )
+                resolve( this.answersCollection.add(newAnswer) );
               } else
-                reject("Já há uma resposta com esse nome. Considere um nome que diferencie ou incrementar a resposta já existente.")
+                reject("Já há uma resposta com esse nome. Considere um nome que diferencie ou incrementar a resposta já existente.");
             })
           })
   }
@@ -92,18 +97,18 @@ export class AnswerService {
   }
 
   public readAnswers(): Observable<Answer[] > {
-    return this.answersCollection.valueChanges({idField: 'id'}).pipe(map(removeKeyWordsProperties));
+    return this.answersCollection.valueChanges({idField: 'id'}).pipe(map(storedAnswerWithIDTypeToAnswerType));
   }
 
   public readAnswersByCategoryID(categoryID: string): Observable<Answer[]> {
-    const categoryRef = this.categoriesCollection.doc(categoryID).ref
-    const selectedAnswersCollection = this.angularFirestore.collection<StoredAnswer>('answers', answersRef => answersRef.where('category', '==', categoryRef))
-    const answersObservable = selectedAnswersCollection.valueChanges({idField: 'id'}).pipe(map(removeKeyWordsProperties));
+    const categoryRef = this.categoriesCollection.doc(categoryID).ref;
+    const selectedAnswersCollection = this.angularFirestore.collection<StoredAnswer>('answers', answersRef => answersRef.where('categoriesRef', 'array-contains', categoryRef));
+    const answersObservable = selectedAnswersCollection.valueChanges({idField: 'id'}).pipe(map(storedAnswerWithIDTypeToAnswerType));
 
-    return answersObservable
+    return answersObservable;
   }
 
   public deleteAnswer(answerID: string): Promise<void> {
-    return this.answersCollection.doc(answerID).delete()
+    return this.answersCollection.doc(answerID).delete();
   }
 }

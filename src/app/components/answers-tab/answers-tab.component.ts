@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Answer, AnswerWithCategoriesName } from 'src/app/shared/models/answer.model';
+import { Answer } from 'src/app/shared/models/answer.model';
 import { AnswerService } from 'src/app/services/answer/answer.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { MatDialog } from '@angular/material/dialog';
@@ -55,11 +55,7 @@ export class AnswersTabComponent implements OnInit {
   }
 
   navigateToEditAnswer(answer: Answer) {
-    const categoriesName: string[] = answer.categories.map( category => category.name)
-    delete answer.categories
-    const answerWithCategoriesName: AnswerWithCategoriesName = {...answer, categoriesName}
-
     //Aqui, estamos navegando e mandando dados para a página chamada
-    this._router.navigate(["/home/edit-answer"], {state: {answerWithCategoriesName}})
+    this._router.navigate(["/home/edit-answer"], {state: {answer}})
   }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CategoryService } from 'src/app/services/category/category.service';
 import { Observable } from 'rxjs';
-import { Category, CategoryWithParentsID } from 'src/app/shared/models/category.model';
+import { Category } from 'src/app/shared/models/category.model';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { tap, map } from 'rxjs/operators';
@@ -14,37 +14,38 @@ import { tap, map } from 'rxjs/operators';
 export class EditCategoryComponent implements OnInit {
   categoryFormGroup: FormGroup;
   categoriesObservable: Observable<Category[]>;
-  categoryWithParentsName: CategoryWithParentsID;
+  category: Category;
 
   constructor(
     private _categoryService: CategoryService,
     private _router: Router,
     formBuilder: FormBuilder,
   ) {
-    this.categoryWithParentsName = _router.getCurrentNavigation().extras.state.categoryWithParentsName
+    this.category = _router.getCurrentNavigation().extras.state.category;
     
     this.categoryFormGroup = formBuilder.group({
-      name: [this.categoryWithParentsName.name, Validators.required],
+      name: [this.category.name, Validators.required],
       parents: [ , ]
     })
     
     this.categoriesObservable = _categoryService.readCategories().pipe(
-      map( categories => categories.filter( category => this.categoryWithParentsName.id != category.id ) ),
+      map( categories => categories.filter( category => this.category.id != category.id ) ),
       tap( categories => {
-        if(this.categoryWithParentsName.parentsID){
-          const selectedParents: Category[] = categories.filter( category => this.categoryWithParentsName.parentsID.includes(category.id) );
+        if(this.category.parentsID){
+          const selectedParents: Category[] = categories.filter( category => this.category.parentsID.includes(category.id) );
           
-          this.categoryFormGroup.controls['parents'].setValue(selectedParents)
+          this.categoryFormGroup.controls['parents'].setValue(selectedParents);
         }
       })
-    )
+    );
   }
 
   ngOnInit(): void {
   }
 
   editCategory() {
-    const updatedCategory: Category = {id: this.categoryWithParentsName.id, ...this.categoryFormGroup.value}
+    const parentsID = this.categoryFormGroup.value.parents?.map( category => category.id )
+    const updatedCategory: Category = {id: this.category.id, name: this.categoryFormGroup.value.name, parentsID}
 
     this._categoryService.updateCategory(updatedCategory)
     this._router.navigate(["/home"])

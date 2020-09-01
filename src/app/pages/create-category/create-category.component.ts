@@ -31,7 +31,8 @@ export class CreateCategoryComponent implements OnInit {
   }
 
   createCategory() {
-    const newCategory: Category = this.categoryFormGroup.value
+    const parentsID = this.categoryFormGroup.value.parents?.map( category => category.id )
+    const newCategory: Omit<Category, "id"> = { name: this.categoryFormGroup.value.name, parentsID }
 
     this._categoryService.createCategory(newCategory)
     this._router.navigate(["/home"])

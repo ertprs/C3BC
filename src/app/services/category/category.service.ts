@@ -18,11 +18,15 @@ export class CategoryService {
     this.categoriesCollection = angularFirestore.collection<StoredCategory>("categories");
   }
 
+  private adjustToCategoryRef(categoriesID: string[]): DocumentReference[] {
+    return categoriesID.map( categoryID => this.categoriesCollection.doc(categoryID).ref );
+  }
+
   private adjustCategoryToFirestore(category: Category | Omit<Category, "id">): StoredCategory {
     const name = category.name.replace(/\s{2,}/g, " ").trim().toUpperCase();
-    const parents = category.parents || []
-    
-    const adjustedCategory: StoredCategory = {name, parents};
+    const parents = category.parentsID ? this.adjustToCategoryRef(category.parentsID) : [];
+
+    const adjustedCategory: StoredCategory = {name, parentsRef: parents};
 
     return adjustedCategory;
   }
@@ -62,12 +66,21 @@ export class CategoryService {
   }
 
   public readCategories(): Observable<Category[]> {
-    return this.categoriesCollection.valueChanges({idField: "id"});
+    return this.categoriesCollection.valueChanges({idField: "id"}).pipe(
+      map( storedCategories => {
+        return storedCategories.map( storedCategory => {
+          const parentsID = storedCategory.parentsRef.map( parentRef => parentRef.id);
+          const category: Category = {id: storedCategory.id, name: storedCategory.name, parentsID};
+          
+          return category;
+        });
+      })
+    );
   }
 
   // provisório
   public readCategoriesWithAnswers(): Observable<Observable<CategoryWithAnswers>[]> {
-    const superiorOrderObservableOfCategoriesWithAnswers: Observable<Observable<CategoryWithAnswers>[]> = this.categoriesCollection.valueChanges({idField: "id"}).pipe(
+    const superiorOrderObservableOfCategoriesWithAnswers: Observable<Observable<CategoryWithAnswers>[]> = this.readCategories().pipe(
       map( (categories: Category[]) : Observable<CategoryWithAnswers>[] => {
         // para cada categoria, iremos acrescentar suas respectivas respostas
         const categoriesWithAnswersObservable: Observable<CategoryWithAnswers>[] = categories.map( (category: Category) : Observable<CategoryWithAnswers> => {
