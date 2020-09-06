@@ -58,4 +58,12 @@ export class AnswersTabComponent implements OnInit {
     //Aqui, estamos navegando e mandando dados para a página chamada
     this._router.navigate(["/home/edit-answer"], {state: {answer}})
   }
+
+  callInsertAnswer(answerContent: string) {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      chrome.tabs.sendMessage(tabs[0].id, {answerContent}, function(response) {
+        console.log(response.farewell);
+      });
+    });
+  }
 }

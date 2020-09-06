@@ -1,18 +1,142 @@
-// chrome.extension.sendMessage({}, function(response) {
-	const checkIfTheFormWasLoaded = () => document.getElementById('rich-text-editor-anchor-dropdown-1')
+function checkIfTheFormWasLoaded() {
+	return document.querySelector('#br > div.main-content-wrapper > div.main-content > div > div > div.main_container > div > div > div.question-answer--question-answer-content--s7QRB.question-answer--two-pane-mode--1Biaw > div > div.two-pane--container__right-pane--2xMVx > div > div.reply-form--reply-form--GZtNK.reply-form--reply-form--content--1eWln > form');
+}
 
-	const readyFormCheckInterval = setInterval(function() {
-	if ( document.readyState === "complete" && checkIfTheFormWasLoaded() ){
-		const cod3rButton = document.createElement('button');
-		cod3rButton.innerHTML = 'Cod3r'
-		cod3rButton.className = "btn";
+function checkIfTheC3BCDialogIsOpen() {
+	return document.querySelector("dialog[id='C3BC-dialog'][open]");
+}
+
+function addC3BCButton() {
+		const cod3rButton = document.createElement("button");
+		cod3rButton.innerHTML = "Cod3r";
+		cod3rButton.classList.add("btn");
+		cod3rButton.setAttribute("type", "button");
+		cod3rButton.setAttribute("id", "cod3r-button");
+		cod3rButton.onclick = clickEvent => {
+			clickEvent.preventDefault();
+			showC3CBDialog();
+		}
 
 		// aqui está sendo capturado um botão e depois pegando o seu pai porque, dentro da div abaixo cuja propriedade data-purpose é igual a "menu-bar",
 		// há duas divs que têm como classe btn-group. A que apresenta algum botão dentro é o nosso alvo. 
-		const formButtonsGroup = document.querySelector('div[data-purpose="menu-bar"] div.btn-group button').parentNode
-		formButtonsGroup.insertAdjacentElement('beforeend', cod3rButton);
+		const formButtonsGroup = document.querySelector("div[data-purpose='menu-bar'] div.btn-group button").parentNode;
+		formButtonsGroup.insertAdjacentElement("beforeend", cod3rButton);
 
-		clearInterval(readyFormCheckInterval);
+		addC3CBDialog();
+}
+
+function positionDialog() {
+	const C3CBDDialogElementInDOM = document.getElementById("C3BC-dialog");
+	const replyFormSelector = "#br > div.main-content-wrapper > div.main-content > div > div > div.main_container > div > div > div.question-answer--question-answer-content--s7QRB.question-answer--two-pane-mode--1Biaw > div > div.two-pane--container__right-pane--2xMVx > div > div.reply-form--reply-form--GZtNK";
+	
+	const replyFormRect = document.querySelector(replyFormSelector).getBoundingClientRect();
+	const cod3rButtonRect = document.getElementById("cod3r-button").getBoundingClientRect();
+
+	C3CBDDialogElementInDOM.style.top = `${replyFormRect.top-600}px`;
+
+	if( (cod3rButtonRect.right + 360) < document.body.getBoundingClientRect().width)
+		C3CBDDialogElementInDOM.style.left = `${cod3rButtonRect.right}px`;
+	else if( (cod3rButtonRect.right - cod3rButtonRect.width/2 +  180) < document.body.getBoundingClientRect().width || (cod3rButtonRect.left - 360) < 0 )
+		C3CBDDialogElementInDOM.style.left = `${cod3rButtonRect.right - cod3rButtonRect.width/2 - 180}px`;
+	else
+		C3CBDDialogElementInDOM.style.left = `${cod3rButtonRect.left - 360}px`;
+}
+
+function addC3CBDialog() {
+	const C3CBDialogElement = document.createElement("dialog");
+	C3CBDialogElement.id = "C3BC-dialog";
+	C3CBDialogElement.setAttribute(
+		"style",
+		`	
+			position: fixed;
+			height:600px;
+			width:360px;
+			margin: 0;
+			padding: 0;
+			border: none;
+			border-radius: 10px;
+			background-color:white;
+			box-shadow: 0px 12px 48px rgba(29, 5, 64, 0.32);
+		`
+	);
+
+	C3CBDialogElement.innerHTML = `<iframe src=${chrome.extension.getURL("index.html")} style="height:100%; width:100%;" frameBorder="0"></iframe>`;
+	C3CBDialogElement.addEventListener("click", dialogClickOutsideHandler);
+
+	document.body.appendChild(C3CBDialogElement);
+	
+	positionDialog();
+	window.addEventListener("resize", positionDialog);
+}
+
+const addC3CBButtonAndDialogCheckInterval = setInterval( () => {
+	if (document.readyState === "complete" && checkIfTheFormWasLoaded()) {
+		addC3BCButton();
+		addC3CBDialog();
+
+		clearInterval(addC3CBButtonAndDialogCheckInterval);
 	}
-	}, 10);
-// });
+}, 20);
+
+function showC3CBDialog() {
+	const C3CBDDialogElementInDOM = document.getElementById("C3BC-dialog");
+	positionDialog();
+	C3CBDDialogElementInDOM.showModal();
+
+	const C3BCDialogIsOpenCheckInterval = setInterval( () => {
+		if(checkIfTheC3BCDialogIsOpen()){
+			setTimeout(setCSSToReplyFormOpen, 30);
+			clearInterval(C3BCDialogIsOpenCheckInterval);
+		}
+	}, 10)
+}
+
+function setCSSToReplyFormOpen() {
+	const replyFormSelector = "#br > div.main-content-wrapper > div.main-content > div > div > div.main_container > div > div > div.question-answer--question-answer-content--s7QRB.question-answer--two-pane-mode--1Biaw > div > div.two-pane--container__right-pane--2xMVx > div > div.reply-form--reply-form--GZtNK";
+	const replyFormElement = document.querySelector(replyFormSelector);
+	const style = "reply-form--reply-form--content--1eWln";
+	replyFormElement.classList.add(style);
+
+	const proseMirrorSelector = "#br > div.main-content-wrapper > div.main-content > div > div > div.main_container > div > div > div.question-answer--question-answer-content--s7QRB.question-answer--two-pane-mode--1Biaw > div > div.two-pane--container__right-pane--2xMVx > div > div.reply-form--reply-form--GZtNK > form > div.form-group > div > div.rt-editor.rt-editor--wysiwyg-mode > div";
+	const proseMirrorElement = document.querySelector(proseMirrorSelector);
+	const style2 = "ProseMirror-focused";
+	proseMirrorElement.classList.add(style2);
+}
+
+function insertAnswer(answer) {
+		const answerContentSelector = "#br > div.main-content-wrapper > div.main-content > div > div > div.main_container > div > div > div.question-answer--question-answer-content--s7QRB.question-answer--two-pane-mode--1Biaw > div > div.two-pane--container__right-pane--2xMVx > div > div.reply-form--reply-form--GZtNK > form > div.form-group > div > div.rt-editor.rt-editor--wysiwyg-mode > div > p";
+		const answerContentElement = document.querySelector(answerContentSelector);
+
+		if(answerContentElement.querySelector("br"))
+			answerContentElement.innerHTML = answer;
+		else
+			answerContentElement.innerHTML += answer;
+
+		setCSSToReplyFormOpen();
+}
+
+chrome.runtime.onMessage.addListener(
+	function(request, sender, sendResponse) {
+		console.log(sender.tab ?
+					"from a content script:" + sender.tab.url :
+					"from the extension");
+		insertAnswer(request.answerContent);
+		sendResponse({farewell: "Respota adicionada"});
+});
+
+// fonte: https://stackoverflow.com/questions/50037663/how-to-close-a-native-html-dialog-when-clicking-outside-with-javascript
+function dialogClickOutsideHandler(event) {
+    if (event.target.tagName !== 'DIALOG') // previne problema com formulários
+        return;
+
+    const rect = event.target.getBoundingClientRect();
+
+    const clickedInDialog = (
+        rect.top <= event.clientY &&
+        event.clientY <= rect.top + rect.height &&
+        rect.left <= event.clientX &&
+        event.clientX <= rect.left + rect.width
+    );
+
+    if (!clickedInDialog) event.target.close();
+}

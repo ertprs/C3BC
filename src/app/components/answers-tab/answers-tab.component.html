@@ -11,7 +11,7 @@
                 </mat-list-item>
             </mat-panel-title>
 
-            <button mat-icon-button class="answer-notes-button" (click)="$event.stopPropagation();">
+            <button mat-icon-button class="answer-notes-button" (click)="$event.stopPropagation();" (click)="callInsertAnswer(answer.content)">
                 <mat-icon>notes</mat-icon>
             </button>
         </mat-expansion-panel-header>
