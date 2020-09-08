@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MatTabGroup, MatTabChangeEvent } from '@angular/material/tabs';
 import { SearchService } from 'src/app/services/search/search.service';
+import { ScriptContextService } from 'src/app/services/scriptContext/script-context.service';
 
 @Component({
   selector: 'app-home',
@@ -14,7 +15,8 @@ export class HomeComponent implements OnInit {
   @ViewChild("tabGroup") tabGroup: MatTabGroup;
 
   constructor(
-    private searchService: SearchService
+    private searchService: SearchService,
+    public scriptContext: ScriptContextService
   ) {
     this._currentTabTextLabel = 'respostas'
   }

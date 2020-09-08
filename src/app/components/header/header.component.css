@@ -4,8 +4,16 @@
     z-index: 2;
 }
 
-#second-toolbar-row {
+.header-in-content-script {
+    border-radius: 10px 10px 0 0;
+}
+
+.second-toolbar-row-browser-script {
     margin-top: 20px;
+}
+
+.second-toolbar-row-content-script {
+    margin-top: 8px;
 }
 
 #search-input {

@@ -1,3 +1,6 @@
+const contentScriptHeight = 476;
+const contentScriptWidth = 360;
+
 function checkIfTheFormWasLoaded() {
 	return document.querySelector('#br > div.main-content-wrapper > div.main-content > div > div > div.main_container > div > div > div.question-answer--question-answer-content--s7QRB.question-answer--two-pane-mode--1Biaw > div > div.two-pane--container__right-pane--2xMVx > div > div.reply-form--reply-form--GZtNK.reply-form--reply-form--content--1eWln > form');
 }
@@ -13,8 +16,8 @@ function checkIfTheC3BCDialogIsOpen() {
 		"style",
 		`	
 			position: fixed;
-			height:600px;
-			width:360px;
+			height:${contentScriptHeight}px;
+			width:${contentScriptWidth}px;
 			margin: 0;
 			padding: 0;
 			border: none;
@@ -37,14 +40,14 @@ function positionDialog() {
 	const replyFormRect = document.querySelector(replyFormSelector).getBoundingClientRect();
 	const cod3rButtonRect = document.getElementById("cod3r-button").getBoundingClientRect();
 
-	C3CBDDialogElementInDOM.style.top = `${replyFormRect.top-600}px`;
+	C3CBDDialogElementInDOM.style.top = `${replyFormRect.top-contentScriptHeight}px`;
 
-	if( (cod3rButtonRect.right + 360) < document.body.getBoundingClientRect().width)
+	if( (cod3rButtonRect.right + contentScriptWidth) < document.body.getBoundingClientRect().width)
 		C3CBDDialogElementInDOM.style.left = `${cod3rButtonRect.right}px`;
-	else if( (cod3rButtonRect.right - cod3rButtonRect.width/2 +  180) < document.body.getBoundingClientRect().width || (cod3rButtonRect.left - 360) < 0 )
-		C3CBDDialogElementInDOM.style.left = `${cod3rButtonRect.right - cod3rButtonRect.width/2 - 180}px`;
+	else if( (cod3rButtonRect.right - cod3rButtonRect.width/2 + contentScriptWidth/2) < document.body.getBoundingClientRect().width || (cod3rButtonRect.left - contentScriptWidth) < 0 )
+		C3CBDDialogElementInDOM.style.left = `${cod3rButtonRect.right - cod3rButtonRect.width/2 - contentScriptWidth/2}px`;
 	else
-		C3CBDDialogElementInDOM.style.left = `${cod3rButtonRect.left - 360}px`;
+		C3CBDDialogElementInDOM.style.left = `${cod3rButtonRect.left - contentScriptWidth}px`;
 }
 
 function showC3CBDialog() {

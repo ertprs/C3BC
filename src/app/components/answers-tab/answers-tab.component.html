@@ -18,8 +18,8 @@
 
         <p>{{answer.content}}</p>
 
-        <mat-action-row>
-            <div>
+        <mat-action-row [class]="scriptContext.isBroswerActionScript ? 'mat-action-row-browser-action' : 'mat-action-row-content-script'">
+            <div *ngIf="scriptContext.isBroswerActionScript">
                 <button class="edit-button" mat-icon-button (click)="navigateToEditAnswer(answer)">
                     <mat-icon>edit</mat-icon>
                 </button>

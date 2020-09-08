@@ -16,19 +16,19 @@
         </mat-list-item>
         </mat-list>
 
-        <mat-action-row>
-        <div>
-            <button class="edit-button" mat-icon-button (click)="navigateToEditCategory(category)">
-            <mat-icon>edit</mat-icon>
-            </button>
-            <button class="delete-button" mat-icon-button (click)="openDialog(category)">
-            <mat-icon>delete</mat-icon>
-            </button>
-        </div>
-        <div>
-            <button *ngIf="step > 0" mat-button color="warn" (click)="prevCategory()">Anterior</button>
-            <button mat-button class="next-button" color="primary" (click)="nextCategory()">Próxima</button>
-        </div>
+        <mat-action-row [class]="scriptContext.isBroswerActionScript ? 'mat-action-row-browser-action' : 'mat-action-row-content-script'">
+            <div *ngIf="scriptContext.isBroswerActionScript">
+                <button class="edit-button" mat-icon-button (click)="navigateToEditCategory(category)">
+                <mat-icon>edit</mat-icon>
+                </button>
+                <button class="delete-button" mat-icon-button (click)="openDialog(category)">
+                <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+            <div>
+                <button *ngIf="step > 0" mat-button color="warn" (click)="prevCategory()">Anterior</button>
+                <button mat-button class="next-button" color="primary" (click)="nextCategory()">Próxima</button>
+            </div>
         </mat-action-row>
     </mat-expansion-panel>
 </mat-accordion>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SearchService } from '../../services/search/search.service';
 import { Subscription } from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { ScriptContextService } from '../../services/scriptContext/script-context.service';
 
 @Component({
   selector: 'app-header',
@@ -16,7 +17,8 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     private _searchService: SearchService,
-    private _angularFireAuth: AngularFireAuth
+    private _angularFireAuth: AngularFireAuth,
+    public scriptContext: ScriptContextService
   ) {
     this.showSearchToolbar = _searchService.showSearchToolbar.value
   }

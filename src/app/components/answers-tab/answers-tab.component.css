@@ -7,8 +7,12 @@
     font-size: small;
 }
 
-.mat-action-row {
+.mat-action-row-browser-action {
     justify-content: space-between;
+}
+
+.mat-action-row-content-script {
+    justify-content: flex-end;
 }
 
 .mat-action-row .edit-button {

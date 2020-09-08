@@ -1,6 +1,9 @@
-<mat-toolbar    id="header" class="mat-elevation-z2"
+<mat-toolbar    id="header"
+                class="mat-elevation-z2"
+                [class.header-in-content-script]="scriptContext.isContentScript"
                 color="primary">
-    <mat-toolbar-row    id="main-toolbar-row"
+    <mat-toolbar-row    *ngIf="scriptContext.isBroswerActionScript"
+                        id="main-toolbar-row"
                         [class]="mainToolbarClass">
       <a [class.logo-login-page]="!userIsLogged" href="https://www.cod3r.com.br/" target="_blank">
         <img [class]="logoClass" src="assets\icons\logotipo-cod3r-white.png">
@@ -11,7 +14,8 @@
       </button>
     </mat-toolbar-row>
 
-    <mat-toolbar-row *ngIf="userIsLogged && showSearchToolbar" id="second-toolbar-row">
+    <mat-toolbar-row  *ngIf="userIsLogged && showSearchToolbar"
+                      [class]="scriptContext.isBroswerActionScript ? 'second-toolbar-row-browser-script' : 'second-toolbar-row-content-script'">
       <form class="full-width">
         <mat-form-field id="search-input" class="full-width">
           <input matInput type="search" placeholder="Pesquisar">

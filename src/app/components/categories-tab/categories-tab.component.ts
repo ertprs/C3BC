@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { take, tap } from 'rxjs/operators';
 import { DeleteCategoryDialogComponent } from '../delete-category-dialog/delete-category-dialog.component';
 import { Router } from '@angular/router';
+import { ScriptContextService } from 'src/app/services/scriptContext/script-context.service';
 
 @Component({
   selector: 'app-categories-tab',
@@ -19,6 +20,7 @@ export class CategoriesTabComponent implements OnInit {
   constructor(
     private _dialog: MatDialog,
     private _router: Router,
+    public scriptContext: ScriptContextService,
     categoryService: CategoryService
   ) {
     this.categoriesWithAnswersObservable = categoryService.readCategoriesWithAnswers();

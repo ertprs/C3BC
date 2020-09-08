@@ -8,6 +8,6 @@
   </mat-tab>
 </mat-tab-group>
 
-<mat-toolbar id="add-button">
+<mat-toolbar *ngIf="scriptContext.isBroswerActionScript"  id="add-button">
   <button mat-stroked-button class="full-width" color="primary" [routerLink]="currentTabRoute">{{buttonMessage }}</button>
 </mat-toolbar>

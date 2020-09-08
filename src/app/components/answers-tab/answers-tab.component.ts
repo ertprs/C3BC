@@ -6,6 +6,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteAnswerDialogComponent } from '../delete-answer-dialog/delete-answer-dialog.component';
 import { Router } from '@angular/router';
+import { ScriptContextService } from 'src/app/services/scriptContext/script-context.service';
 
 @Component({
   selector: 'app-answers-tab',
@@ -30,6 +31,7 @@ export class AnswersTabComponent implements OnInit {
   constructor(
     private _dialog: MatDialog,
     private _router: Router,
+    public scriptContext: ScriptContextService,
     answerService: AnswerService,
   ) {
     this.answersObservable = answerService.readAnswers();
