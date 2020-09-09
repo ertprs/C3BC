@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MatTabGroup, MatTabChangeEvent } from '@angular/material/tabs';
 import { SearchService } from 'src/app/services/search/search.service';
 import { ScriptContextService } from 'src/app/services/scriptContext/script-context.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
@@ -11,29 +12,43 @@ import { ScriptContextService } from 'src/app/services/scriptContext/script-cont
 })
 export class HomeComponent implements OnInit {
   private _selectedTabChangeSubscription: Subscription;
+  private _contentScriptJustClosedSubscription: Subscription;
   private _currentTabTextLabel: string;
   @ViewChild("tabGroup") tabGroup: MatTabGroup;
+  selectedTab = new FormControl(0);
 
   constructor(
-    private searchService: SearchService,
+    private _searchService: SearchService,
+    private _changeDetector: ChangeDetectorRef,
     public scriptContext: ScriptContextService
   ) {
-    this._currentTabTextLabel = 'respostas'
+    this._currentTabTextLabel = 'respostas';
   }
 
   ngOnInit(): void {
-    this.searchService.enableSearchToolbar();
+    this._searchService.enableSearchToolbar();
   }
 
   ngAfterViewInit() {
     this._selectedTabChangeSubscription = this.tabGroup.selectedTabChange.subscribe( (selectedTabChange: MatTabChangeEvent) => {
       this._currentTabTextLabel = selectedTabChange.tab.textLabel;
     })
+
+    if(this.scriptContext.isContentScript) {
+      this._contentScriptJustClosedSubscription = this.scriptContext.contentScriptJustClosed.subscribe( () => {
+        // a primeira aba é selecionada novamente quando o usuário abrir o content script novamente após fechá-lo
+        this.selectedTab.setValue(0);
+
+        // como as mudanças partem de um outro contexto, é necessário que forcemos a detecção de mudanças, para que haja também atualização no template
+        this._changeDetector.detectChanges();
+      })
+    }
   }
 
   ngOnDestroy() {
-    this.searchService.disableSearchToolbar();
+    this._searchService.disableSearchToolbar();
     this._selectedTabChangeSubscription.unsubscribe();
+    this._contentScriptJustClosedSubscription?.unsubscribe()
   }
 
   get buttonMessage(): string {

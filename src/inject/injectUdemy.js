@@ -119,7 +119,7 @@ chrome.runtime.onMessage.addListener(
 					"from a content script:" + sender.tab.url :
 					"from the extension");
 		insertAnswer(request.answerContent);
-		sendResponse({farewell: "Respota adicionada"});
+		sendResponse({farewell: "Resposta adicionada"});
 });
 
 // fonte: https://stackoverflow.com/questions/50037663/how-to-close-a-native-html-dialog-when-clicking-outside-with-javascript
@@ -136,5 +136,8 @@ function dialogClickOutsideHandler(event) {
         event.clientX <= rect.left + rect.width
     );
 
-    if (!clickedInDialog) event.target.close();
+    if (!clickedInDialog) {
+		chrome.runtime.sendMessage({message: "resetar tabGroup"});
+		event.target.close();
+	}
 }

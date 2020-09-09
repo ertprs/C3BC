@@ -1,4 +1,8 @@
-<mat-tab-group #tabGroup mat-stretch-tabs class="mat-elevation-z4">
+<mat-tab-group  #tabGroup
+                mat-stretch-tabs
+                class="mat-elevation-z4"
+                [selectedIndex]="selectedTab.value"
+                (selectedIndexChange)="selectedTab.setValue($event)">
   <mat-tab label="Respostas">  
     <app-answers-tab></app-answers-tab>
   </mat-tab>

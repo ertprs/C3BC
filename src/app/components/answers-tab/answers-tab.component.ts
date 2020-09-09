@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { Answer } from 'src/app/shared/models/answer.model';
 import { AnswerService } from 'src/app/services/answer/answer.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
@@ -25,12 +25,14 @@ import { ScriptContextService } from 'src/app/services/scriptContext/script-cont
   ]
 })
 export class AnswersTabComponent implements OnInit {
+  private _contentScriptJustClosedSubscription: Subscription;
   answersObservable: Observable<Answer[]>;
   step = 0;
 
   constructor(
     private _dialog: MatDialog,
     private _router: Router,
+    private _changeDetector: ChangeDetectorRef,
     public scriptContext: ScriptContextService,
     answerService: AnswerService,
   ) {
@@ -38,6 +40,19 @@ export class AnswersTabComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // sempre que o usuário fechar contentScript, a seleção voltará para a primeira resposta
+    if(this.scriptContext.isContentScript) {
+      this._contentScriptJustClosedSubscription = this.scriptContext.contentScriptJustClosed.subscribe( () => {
+        this.step = 0;
+
+        // como as mudanças partem de um outro contexto, é necessário que forcemos a detecção de mudanças, para que haja também atualização no template
+        this._changeDetector.detectChanges();
+      });
+    }
+  }
+
+  ngOnDestroy() {
+    this._contentScriptJustClosedSubscription?.unsubscribe()
   }
 
   setStep(index: number) {
