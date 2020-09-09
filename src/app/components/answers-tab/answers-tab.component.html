@@ -7,7 +7,7 @@
             <mat-panel-title>
                 <mat-list-item>
                     <div mat-line>{{answer.name.length > 25 ? answer.name.substring(0, 25) + '...' : answer.name}}</div>
-                    <div @fade-in *ngIf="!answerPainel.expanded" mat-line class="answer-content"> {{answer.content.substring(0, 30) + '...'}}</div>
+                    <div [hidden]="answerPainel.expanded" mat-line class="answer-content"> {{answer.content.substring(0, 30) + '...'}}</div>
                 </mat-list-item>
             </mat-panel-title>
 

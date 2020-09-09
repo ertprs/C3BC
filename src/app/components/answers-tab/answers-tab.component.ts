@@ -2,7 +2,6 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { Answer } from 'src/app/shared/models/answer.model';
 import { AnswerService } from 'src/app/services/answer/answer.service';
-import { trigger, state, style, transition, animate } from '@angular/animations';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteAnswerDialogComponent } from '../delete-answer-dialog/delete-answer-dialog.component';
 import { Router } from '@angular/router';
@@ -11,18 +10,7 @@ import { ScriptContextService } from 'src/app/services/scriptContext/script-cont
 @Component({
   selector: 'app-answers-tab',
   templateUrl: './answers-tab.component.html',
-  styleUrls: ['./answers-tab.component.css'],
-  animations: [
-    trigger('fade-in', [
-      state('start', style({
-        opacity: 0
-      })),
-      transition(':enter', [
-        style({ opacity: '0' }),
-        animate(400)
-      ])
-    ])
-  ]
+  styleUrls: ['./answers-tab.component.css']
 })
 export class AnswersTabComponent implements OnInit {
   private _contentScriptJustClosedSubscription: Subscription;
