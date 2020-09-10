@@ -102,13 +102,18 @@ function setCSSToReplyFormOpen() {
 }
 
 function insertAnswer(answer) {
-		const answerContentSelector = "#br > div.main-content-wrapper > div.main-content > div > div > div.main_container > div > div > div.question-answer--question-answer-content--s7QRB.question-answer--two-pane-mode--1Biaw > div > div.two-pane--container__right-pane--2xMVx > div > div.reply-form--reply-form--GZtNK > form > div.form-group > div > div.rt-editor.rt-editor--wysiwyg-mode > div > p";
+		const answerContentSelector = "#br > div.main-content-wrapper > div.main-content > div > div > div.main_container > div > div > div.question-answer--question-answer-content--s7QRB.question-answer--two-pane-mode--1Biaw > div > div.two-pane--container__right-pane--2xMVx > div > div.reply-form--reply-form--GZtNK > form > div.form-group > div > div.rt-editor.rt-editor--wysiwyg-mode > div > p:last-child";
 		const answerContentElement = document.querySelector(answerContentSelector);
 
 		if(answerContentElement.querySelector("br"))
 			answerContentElement.innerHTML = answer;
 		else
 			answerContentElement.innerHTML += answer;
+
+		const breakRowElement = document.createElement('p')
+		breakRowElement.appendChild(document.createElement('br'))
+
+		answerContentElement.parentElement.appendChild(breakRowElement)
 
 		setCSSToReplyFormOpen();
 }
