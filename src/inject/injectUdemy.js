@@ -40,7 +40,7 @@ function positionDialog() {
 	const replyFormRect = document.querySelector(replyFormSelector).getBoundingClientRect();
 	const cod3rButtonRect = document.getElementById("cod3r-button").getBoundingClientRect();
 
-	C3CBDDialogElementInDOM.style.top = `${replyFormRect.top-contentScriptHeight}px`;
+	C3CBDDialogElementInDOM.style.top = replyFormRect.top-contentScriptHeight < 0 ? `0px` : `${replyFormRect.top-contentScriptHeight}px`;
 
 	if( (cod3rButtonRect.right + contentScriptWidth) < document.body.getBoundingClientRect().width)
 		C3CBDDialogElementInDOM.style.left = `${cod3rButtonRect.right}px`;
