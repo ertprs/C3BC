@@ -13,6 +13,9 @@
         <mat-list-item >
             <div mat-line>{{answer.name}}</div>
             <div mat-line class="answer-content"> {{answer.content}} </div>
+            <button mat-icon-button class="answer-notes-button" (click)="$event.stopPropagation();" (click)="scriptContext.insertAnswer(answer.content)">
+                <mat-icon>notes</mat-icon>
+            </button>
         </mat-list-item>
         </mat-list>
 
