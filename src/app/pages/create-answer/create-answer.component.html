@@ -14,10 +14,8 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field>
-        <mat-label>Resposta</mat-label>
-        <textarea formControlName="content" matInput placeholder="Ex. O this no contexto de função..."></textarea>
-      </mat-form-field>
+      <mat-label>Resposta</mat-label>
+      <quill-editor formControlName="content" placeholder="Ex. O this no contexto de função..."></quill-editor>
     </form>
   </mat-card-content>
 </mat-card>

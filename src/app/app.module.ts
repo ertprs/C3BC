@@ -38,6 +38,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { CreateCategoryComponent } from './pages/create-category/create-category.component';
 import { EditAnswerComponent } from './pages/edit-answer/edit-answer.component';
 import { EditCategoryComponent } from './pages/edit-category/edit-category.component';
+import { QuillModule } from 'ngx-quill'
 
 @NgModule({
   declarations: [
@@ -75,7 +76,8 @@ import { EditCategoryComponent } from './pages/edit-category/edit-category.compo
     FormsModule,
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    QuillModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

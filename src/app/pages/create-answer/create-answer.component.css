@@ -6,10 +6,6 @@ mat-form-field {
     display: block;
 }
 
-textarea {
-    height: 257px;
-}
-
 .button-group{
     display: flex;
     justify-content: center;
