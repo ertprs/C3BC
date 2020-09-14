@@ -34,4 +34,5 @@ p {
     padding: 0 12px 16px;
     overflow-wrap: break-word;
     text-align: justify;
+    white-space: pre-wrap;
 }

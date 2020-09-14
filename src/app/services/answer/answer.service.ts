@@ -48,7 +48,8 @@ export class AnswerService {
   // Também adicionaremos palavras-chave
   private adjustAnswerToFirestore(answer: Answer | Omit<Answer, "id">): StoredAnswer {
     const name = answer.name.replace(/\s{2,}/g, " ").trim();
-    const content = answer.content.replace(/\s{2,}/g, " ").trim();
+    // aqui, capturamos todos os espaços em branco consecultivos, porém não capturamos as quebras de linha
+    const content = answer.content.replace(/[^\S\r\n]{2,}/g, " ").trim();
     const categories = this.adjustToCategoryRef(answer.categoriesID);
 
     // convertemos o conjunto para array
