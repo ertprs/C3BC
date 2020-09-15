@@ -1,4 +1,4 @@
-<mat-card class="form-container mat-elevation-z2">
+<mat-card class="form-container mat-elevation-z1">
   <mat-card-title>Nova resposta</mat-card-title>
   <mat-card-content>
     <form [formGroup]="answerFormGroup">
@@ -14,8 +14,9 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-label>Resposta</mat-label>
-      <quill-editor formControlName="content" placeholder="Ex. O this no contexto de função..."></quill-editor>
+      <quill-editor
+        [modules]="richEditorConfig"
+        placeholder="Digite aqui a resposta..."></quill-editor>
     </form>
   </mat-card-content>
 </mat-card>

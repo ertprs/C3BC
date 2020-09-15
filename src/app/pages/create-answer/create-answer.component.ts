@@ -6,6 +6,7 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Answer } from 'src/app/shared/models/answer.model';
 import { AnswerService } from 'src/app/services/answer/answer.service';
 import { Router } from '@angular/router';
+import { QuillModule } from 'ngx-quill';
 
 @Component({
   selector: 'app-create-answer',
@@ -15,6 +16,7 @@ import { Router } from '@angular/router';
 export class CreateAnswerComponent implements OnInit {
   answerFormGroup: FormGroup;
   categoriesObservable: Observable<Category[]>;
+  richEditorConfig: QuillModule;
 
   constructor(
     private _answerService: AnswerService,
@@ -29,6 +31,18 @@ export class CreateAnswerComponent implements OnInit {
       categories: [ , Validators.required],
       content: [ , Validators.required]
     })
+
+    this.richEditorConfig = {
+      toolbar: {
+        container: [
+          ['bold', 'italic', 'underline'],            // botões toggle
+          ['link'],
+          ['code-block'],
+          // [{ 'indent': '-1'}, { 'indent': '+1' }],
+          ['clean'],                                  // botão para remover formatação
+        ]
+      }
+    }
   }
 
   ngOnInit(): void {
