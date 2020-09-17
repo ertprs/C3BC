@@ -19,7 +19,8 @@
           formControlName="content"
           [modules]="richEditorConfig"
           (onSelectionChanged)="onSelectionChanged($event)"
-          placeholder="Digite aqui a resposta..."></quill-editor>
+          placeholder="Digite aqui a resposta..."
+          [preserveWhitespace]="true"></quill-editor>
     </form>
   </mat-card-content>
 </mat-card>

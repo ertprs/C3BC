@@ -44,18 +44,16 @@ export class AnswerService {
     return categoriesID.map( categoryID => this.categoriesCollection.doc(categoryID).ref );
   }
 
-  // Aqui iremos ajustar as propriedades name e content para serem salvas sem espaços duplicados e desnecessários no início ou fim.
+  // Aqui iremos ajustar a propriedade name para ser salva sem espaços duplicados e desnecessários no início ou fim.
   // Também adicionaremos palavras-chave
   private adjustAnswerToFirestore(answer: Answer | Omit<Answer, "id">): StoredAnswer {
     const name = answer.name.replace(/\s{2,}/g, " ").trim();
-    // aqui, capturamos todos os espaços em branco consecultivos, porém não capturamos as quebras de linha
-    const content = answer.content.replace(/[^\S\r\n]{2,}/g, " ").trim();
     const categories = this.adjustToCategoryRef(answer.categoriesID);
 
     // convertemos o conjunto para array
     const keyWords = [...this.generateAnswerKeyWords(name)];
 
-    const adjustedAnswer: StoredAnswer = {name, content, categoriesRef: categories, keyWords};
+    const adjustedAnswer: StoredAnswer = {name, content: answer.content, categoriesRef: categories, keyWords};
 
     return adjustedAnswer;
   }
