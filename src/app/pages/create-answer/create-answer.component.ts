@@ -17,6 +17,7 @@ export class CreateAnswerComponent implements OnInit {
   answerFormGroup: FormGroup;
   categoriesObservable: Observable<Category[]>;
   richEditorConfig: QuillModule;
+  useCustomInvalidClass: boolean;
 
   constructor(
     private _answerService: AnswerService,
@@ -54,5 +55,26 @@ export class CreateAnswerComponent implements OnInit {
 
     this._answerService.createAnswer(newAnswer)
     this._router.navigate(["/home"])
+  }
+
+  onSelectionChanged = (event) =>{
+    if(event.oldRange == null){
+      this.onFocus();
+    }
+    if(event.range == null){
+      this.onBlur();
+      this.useCustomInvalidClass = true;
+    }
+  }
+
+  onContentChanged = (event) =>{
+    console.log(event.html);
+  }
+
+  onFocus = () =>{
+    console.log("On Focus");
+  }
+  onBlur = () =>{
+    console.log("Blurred");
   }
 }
