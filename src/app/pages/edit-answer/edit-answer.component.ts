@@ -7,6 +7,7 @@ import { Answer } from 'src/app/shared/models/answer.model';
 import { AnswerService } from 'src/app/services/answer/answer.service';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
+import { QuillModule } from 'ngx-quill';
 
 @Component({
   selector: 'app-edit-answer',
@@ -16,7 +17,9 @@ import { tap } from 'rxjs/operators';
 export class EditAnswerComponent implements OnInit {
   answerFormGroup: FormGroup;
   categoriesObservable: Observable<Category[]>;
-  answer: Answer
+  answer: Answer;
+  richEditorConfig: QuillModule;
+  useCustomInvalidClass: boolean;
 
   constructor(
     private _answerService: AnswerService,
@@ -40,6 +43,18 @@ export class EditAnswerComponent implements OnInit {
         this.answerFormGroup.controls['categories'].setValue(selectedCategories)
       })
     )
+
+    this.richEditorConfig = {
+      toolbar: {
+        container: [
+          ['bold', 'italic', 'underline'],            // botões toggle
+          ['link'],
+          ['code-block'],
+          // [{ 'indent': '-1'}, { 'indent': '+1' }],
+          ['clean'],                                  // botão para remover formatação
+        ]
+      }
+    }
   }
 
   ngOnInit(): void {
@@ -51,5 +66,15 @@ export class EditAnswerComponent implements OnInit {
 
     this._answerService.updateAnswer(updatedAnswer)
     this._router.navigate(["/home"])
+  }
+
+  onSelectionChanged = (event) =>{
+    if(event.range == null){
+      this.onBlur();
+    }
+  }
+
+  onBlur = () =>{
+    this.useCustomInvalidClass = true;
   }
 }

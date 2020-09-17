@@ -14,10 +14,12 @@
           </mat-select>
         </mat-form-field>
   
-        <mat-form-field>
-          <mat-label>Resposta</mat-label>
-          <textarea formControlName="content" matInput placeholder="Ex. O this no contexto de função..."></textarea>
-        </mat-form-field>
+        <quill-editor
+          [ngClass]="{'custom-invalid': useCustomInvalidClass}"
+          formControlName="content"
+          [modules]="richEditorConfig"
+          (onSelectionChanged)="onSelectionChanged($event)"
+          placeholder="Digite aqui a resposta..."></quill-editor>
       </form>
     </mat-card-content>
   </mat-card>

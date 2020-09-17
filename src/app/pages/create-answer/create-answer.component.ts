@@ -58,23 +58,19 @@ export class CreateAnswerComponent implements OnInit {
   }
 
   onSelectionChanged = (event) =>{
-    if(event.oldRange == null){
-      this.onFocus();
-    }
+    // if(event.oldRange == null){
+    //   this.onFocus();
+    // }
     if(event.range == null){
       this.onBlur();
-      this.useCustomInvalidClass = true;
     }
   }
 
-  onContentChanged = (event) =>{
-    console.log(event.html);
-  }
+  // onContentChanged = (event) =>{
+  //   console.log(event.html);
+  // }
 
-  onFocus = () =>{
-    console.log("On Focus");
-  }
   onBlur = () =>{
-    console.log("Blurred");
+    this.useCustomInvalidClass = true;
   }
 }
