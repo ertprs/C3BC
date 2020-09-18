@@ -6,8 +6,8 @@
         <mat-expansion-panel-header>
             <mat-panel-title>
                 <mat-list-item>
-                    <div mat-line>{{answer.name.length > 25 ? answer.name.substring(0, 25) + '...' : answer.name}}</div>
-                    <div [hidden]="answerPainel.expanded" mat-line class="answer-content"> {{answer.content.substring(0, 30) + '...'}}</div>
+                    <div mat-line>{{answer.name}}</div>
+                    <div [hidden]="answerPainel.expanded" mat-line class="answer-content-preview" [innerHTML]="byPassHTML(answer.content)"></div>
                 </mat-list-item>
             </mat-panel-title>
 
@@ -16,7 +16,9 @@
             </button>
         </mat-expansion-panel-header>
 
-        <p>{{answer.content}}</p>
+        <div class="ql-container ql-snow" style="border-width: 0;">
+            <div style="width: 100%" class="ql-editor" [innerHTML]="byPassHTML(answer.content)"></div>
+        </div>
 
         <mat-action-row [class]="scriptContext.isBroswerActionScript ? 'mat-action-row-browser-action' : 'mat-action-row-content-script'">
             <div *ngIf="scriptContext.isBroswerActionScript">

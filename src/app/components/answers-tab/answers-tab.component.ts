@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DeleteAnswerDialogComponent } from '../delete-answer-dialog/delete-answer-dialog.component';
 import { Router } from '@angular/router';
 import { ScriptContextService } from 'src/app/services/scriptContext/script-context.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-answers-tab',
@@ -21,6 +22,7 @@ export class AnswersTabComponent implements OnInit {
     private _dialog: MatDialog,
     private _router: Router,
     private _changeDetector: ChangeDetectorRef,
+    private _domSanitizer: DomSanitizer,
     public scriptContext: ScriptContextService,
     answerService: AnswerService,
   ) {
@@ -40,7 +42,7 @@ export class AnswersTabComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this._contentScriptJustClosedSubscription?.unsubscribe()
+    this._contentScriptJustClosedSubscription?.unsubscribe();
   }
 
   setStep(index: number) {
@@ -61,6 +63,11 @@ export class AnswersTabComponent implements OnInit {
 
   navigateToEditAnswer(answer: Answer) {
     //Aqui, estamos navegando e mandando dados para a página chamada
-    this._router.navigate(["/home/edit-answer"], {state: {answer}})
+    this._router.navigate(["/home/edit-answer"], {state: {answer}});
+  }
+
+  // ajuda a prevenir erros de Cross Site Scripting Security (XSS) ao limpar os valores para serem seguros para uso
+  byPassHTML(html: string) {
+    return this._domSanitizer.bypassSecurityTrustHtml(html);
   }
 }

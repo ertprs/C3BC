@@ -2,9 +2,19 @@
     margin-right: 12px;
 }
 
-.answer-content {
+.answer-content-preview, :host ::ng-deep div.answer-content-preview > * {
     color: grey;
     font-size: small;
+    white-space: nowrap;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+}
+
+.mat-line, :host ::ng-deep div.answer-content-preview > * {
+    width: 236px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .mat-action-row-browser-action {
@@ -28,11 +38,4 @@
 .mat-action-row .next-button {
     margin-left: 0px;
     padding-left: 12px;
-}
-
-p {
-    padding: 0 12px 16px;
-    overflow-wrap: break-word;
-    text-align: justify;
-    white-space: pre-wrap;
 }

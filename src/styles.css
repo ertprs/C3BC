@@ -18,14 +18,14 @@ quill-editor.ng-invalid.custom-invalid  {
     outline: 1px dashed red;
 }
 
-/*caixa de resposta*/
+/*caixa de resposta no editor rico*/
 [quill-editor-element].ql-container {
     font-size: 14px;
     height: 259px;
 }
 
-/* deixar trechos de código do editor rico parecido com o da Udemy */
-[quill-editor-element].ql-container > div.ql-editor > pre.ql-syntax {
+/* deixar trechos de código parecidos com o da Udemy */
+.ql-container > div.ql-editor > pre.ql-syntax {
     padding: 10px;
     border: 1px solid #ccc;
     color: #505763;
