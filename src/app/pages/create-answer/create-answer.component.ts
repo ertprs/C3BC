@@ -7,6 +7,7 @@ import { Answer } from 'src/app/shared/models/answer.model';
 import { AnswerService } from 'src/app/services/answer/answer.service';
 import { Router } from '@angular/router';
 import { QuillModule } from 'ngx-quill';
+import 'quill-emoji/dist/quill-emoji.js'
 
 @Component({
   selector: 'app-create-answer',
@@ -41,8 +42,12 @@ export class CreateAnswerComponent implements OnInit {
           ['code-block'],
           // [{ 'indent': '-1'}, { 'indent': '+1' }],
           ['clean'],                                  // botão para remover formatação
+          ['emoji']
         ]
-      }
+      },
+      "emoji-shortname": true,
+      "emoji-textarea": false,
+      "emoji-toolbar": true,
     }
   }
 

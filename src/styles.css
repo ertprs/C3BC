@@ -58,3 +58,14 @@ div.ql-editor.ql-blank::before {
     display: flex;
     align-items: center;
 }
+
+/* posição da caixa de emojis */
+#emoji-palette {
+    top: -5px !important;
+    left: 50px !important;
+}
+
+/* correção de estilo que quill-emoji.css dá a ql-editor */
+div.ql-editor {
+    padding-right: 15px;
+}
