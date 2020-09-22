@@ -48,7 +48,7 @@ export class AnswerService {
   // Também adicionaremos palavras-chave
   private adjustAnswerToFirestore(answer: Answer | Omit<Answer, "id">): StoredAnswer {
     const name = answer.name.replace(/\s{2,}/g, " ").trim();
-    const categories = this.adjustToCategoryRef(answer.categoriesID);
+    const categories = this.adjustToCategoryRef(answer.categoryIDs);
 
     // convertemos o conjunto para array
     const keyWords = [...this.generateAnswerKeyWords(name)];

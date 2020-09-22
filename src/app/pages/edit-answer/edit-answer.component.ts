@@ -38,7 +38,7 @@ export class EditAnswerComponent implements OnInit {
     this.categoriesObservable = categoryService.readCategories().pipe(
       tap( categories => {
         // aqui, estamos filtrando somente as categorias as quais a resposta pertence, para depois adicionarmos como valores ao formControl categories
-        const selectedCategories: Category[] = categories.filter( category => this.answer.categoriesID.includes(category.id) )
+        const selectedCategories: Category[] = categories.filter( category => this.answer.categoryIDs.includes(category.id) )
         
         this.answerFormGroup.controls['categories'].setValue(selectedCategories)
       })
@@ -62,7 +62,7 @@ export class EditAnswerComponent implements OnInit {
 
   editAnswer() {
     const categoriesID = this.answerFormGroup.value.categories?.map( answer => answer.id )
-    const updatedAnswer: Answer = {id: this.answer.id, name: this.answerFormGroup.value.name, content: this.answerFormGroup.value.content,  categoriesID}
+    const updatedAnswer: Answer = {id: this.answer.id, name: this.answerFormGroup.value.name, content: this.answerFormGroup.value.content,  categoryIDs: categoriesID}
 
     this._answerService.updateAnswer(updatedAnswer)
     this._router.navigate(["/home"])

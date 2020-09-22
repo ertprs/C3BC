@@ -56,7 +56,7 @@ export class CreateAnswerComponent implements OnInit {
 
   createAnswer() {
     const categoriesID = this.answerFormGroup.value.categories?.map( category => category.id )
-    const newAnswer: Omit<Answer, "id"> = { name: this.answerFormGroup.value.name, content: this.answerFormGroup.value.content, categoriesID }
+    const newAnswer: Omit<Answer, "id"> = { name: this.answerFormGroup.value.name, content: this.answerFormGroup.value.content, categoryIDs: categoriesID }
 
     this._answerService.createAnswer(newAnswer)
     this._router.navigate(["/home"])

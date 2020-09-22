@@ -2,9 +2,9 @@ import { DocumentReference } from '@angular/fire/firestore';
 
 export function storedAnswerWithIDTypeToAnswerType( storedAnswers: (StoredAnswer & {id: string})[] ): Answer[] {
     return storedAnswers.map( storedAnswer => {
-      const categoriesID = storedAnswer.categoriesRef.map( categoryRef => categoryRef.id);
+      const categoryIDs = storedAnswer.categoriesRef.map( categoryRef => categoryRef.id);
 
-      const answer: Answer = {id: storedAnswer.id, name: storedAnswer.name, content: storedAnswer.content, categoriesID};
+      const answer: Answer = {id: storedAnswer.id, name: storedAnswer.name, content: storedAnswer.content, categoryIDs: categoryIDs};
       return answer;
     });
 }
@@ -13,7 +13,7 @@ export interface Answer {
     id: string;
     name: string;
     content: string;
-    categoriesID: string[];
+    categoryIDs: string[];
 }
 
 export interface StoredAnswer {
