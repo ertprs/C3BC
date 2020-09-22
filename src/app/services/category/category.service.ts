@@ -24,9 +24,9 @@ export class CategoryService {
 
   private adjustCategoryToFirestore(category: Category | Omit<Category, "id">): StoredCategory {
     const name = category.name.replace(/\s{2,}/g, " ").trim().toUpperCase();
-    const parents = category.parentsID ? this.adjustToCategoryRef(category.parentsID) : [];
+    const parents = category.parentIDs ? this.adjustToCategoryRef(category.parentIDs) : [];
 
-    const adjustedCategory: StoredCategory = {name, parentsRef: parents};
+    const adjustedCategory: StoredCategory = {name, parentRefs: parents};
 
     return adjustedCategory;
   }
@@ -69,8 +69,8 @@ export class CategoryService {
     return this.categoriesCollection.valueChanges({idField: "id"}).pipe(
       map( storedCategories => {
         return storedCategories.map( storedCategory => {
-          const parentsID = storedCategory.parentsRef.map( parentRef => parentRef.id);
-          const category: Category = {id: storedCategory.id, name: storedCategory.name, parentsID};
+          const parentIDs = storedCategory.parentRefs.map( parentRef => parentRef.id);
+          const category: Category = {id: storedCategory.id, name: storedCategory.name, parentIDs};
           
           return category;
         });

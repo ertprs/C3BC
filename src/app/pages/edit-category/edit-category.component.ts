@@ -31,8 +31,8 @@ export class EditCategoryComponent implements OnInit {
     this.categoriesObservable = _categoryService.readCategories().pipe(
       map( categories => categories.filter( category => this.category.id != category.id ) ),
       tap( categories => {
-        if(this.category.parentsID){
-          const selectedParents: Category[] = categories.filter( category => this.category.parentsID.includes(category.id) );
+        if(this.category.parentIDs){
+          const selectedParents: Category[] = categories.filter( category => this.category.parentIDs.includes(category.id) );
           
           this.categoryFormGroup.controls['parents'].setValue(selectedParents);
         }
@@ -44,8 +44,8 @@ export class EditCategoryComponent implements OnInit {
   }
 
   editCategory() {
-    const parentsID = this.categoryFormGroup.value.parents?.map( category => category.id )
-    const updatedCategory: Category = {id: this.category.id, name: this.categoryFormGroup.value.name, parentsID}
+    const parentIDs = this.categoryFormGroup.value.parents?.map( category => category.id )
+    const updatedCategory: Category = {id: this.category.id, name: this.categoryFormGroup.value.name, parentIDs}
 
     this._categoryService.updateCategory(updatedCategory)
     this._router.navigate(["/home"])

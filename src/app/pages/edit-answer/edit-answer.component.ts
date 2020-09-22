@@ -62,7 +62,7 @@ export class EditAnswerComponent implements OnInit {
 
   editAnswer() {
     const categoryIDs = this.answerFormGroup.value.categories?.map( answer => answer.id )
-    const updatedAnswer: Answer = {id: this.answer.id, name: this.answerFormGroup.value.name, content: this.answerFormGroup.value.content,  categoryIDs: categoryIDs}
+    const updatedAnswer: Answer = {id: this.answer.id, name: this.answerFormGroup.value.name, content: this.answerFormGroup.value.content,  categoryIDs}
 
     this._answerService.updateAnswer(updatedAnswer)
     this._router.navigate(["/home"])

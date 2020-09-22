@@ -4,7 +4,7 @@ export function storedAnswerWithIDTypeToAnswerType( storedAnswers: (StoredAnswer
     return storedAnswers.map( storedAnswer => {
       const categoryIDs = storedAnswer.categoryRefs.map( categoryRef => categoryRef.id);
 
-      const answer: Answer = {id: storedAnswer.id, name: storedAnswer.name, content: storedAnswer.content, categoryIDs: categoryIDs};
+      const answer: Answer = {id: storedAnswer.id, name: storedAnswer.name, content: storedAnswer.content, categoryIDs};
       return answer;
     });
 }

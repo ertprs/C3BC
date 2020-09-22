@@ -6,14 +6,14 @@ import { DocumentReference } from '@angular/fire/firestore';
 export interface Category {
     id: string;
     name: string;
-    parentsID: string[];
+    parentIDs: string[];
 }
 
 // embora um categoria não tenha, necessáriamente, uma outra categoria pai, exigiremos o atributo, mesmo que um array vazio, pois o método update do firestore só irá atualizar
 // caso o atributo exista
 export interface StoredCategory {
     name: string;
-    parentsRef: DocumentReference[];
+    parentRefs: DocumentReference[];
 }
 
 export interface CategoryWithAnswers extends Category {
