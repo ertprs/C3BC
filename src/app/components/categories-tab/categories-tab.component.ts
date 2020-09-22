@@ -7,6 +7,7 @@ import { take, tap } from 'rxjs/operators';
 import { DeleteCategoryDialogComponent } from '../delete-category-dialog/delete-category-dialog.component';
 import { Router } from '@angular/router';
 import { ScriptContextService } from 'src/app/services/scriptContext/script-context.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-categories-tab',
@@ -22,6 +23,7 @@ export class CategoriesTabComponent implements OnInit {
     private _dialog: MatDialog,
     private _router: Router,
     private _changeDetector: ChangeDetectorRef,
+    private _domSanitizer: DomSanitizer,
     public scriptContext: ScriptContextService,
     categoryService: CategoryService
   ) {
@@ -70,5 +72,10 @@ export class CategoriesTabComponent implements OnInit {
     categoryObservable.pipe(take(1)).subscribe( category => {
       this._router.navigate(["/home/edit-category"], {state: {category}})
     })
+  }
+
+  // ajuda a prevenir erros de Cross Site Scripting Security (XSS) ao limpar os valores para serem seguros para uso
+  byPassHTML(html: string) {
+    return this._domSanitizer.bypassSecurityTrustHtml(html);
   }
 }

@@ -3,6 +3,10 @@
     font-size: small;
 }
 
+.answer-content-card {
+    padding: 0;
+}
+
 .mat-action-row-browser-action {
     justify-content: space-between;
 }
