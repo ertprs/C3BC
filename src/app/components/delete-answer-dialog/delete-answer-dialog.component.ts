@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { AnswerService } from 'src/app/services/answer/answer.service';
+import { AnswerService } from 'src/app/shared/services/answer/answer.service';
 import { AnswerDialogData } from 'src/app/shared/models/answer.model';
 
 @Component({

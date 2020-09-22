@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, DocumentReference } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { Category, CategoryWithAnswers, StoredCategory } from "../../shared/models/category.model";
+import { Category, CategoryWithAnswers, StoredCategory } from "../../models/category.model";
 import { AnswerService } from '../answer/answer.service';
 import { map } from 'rxjs/operators';
 

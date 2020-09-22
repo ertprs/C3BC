@@ -1,12 +1,12 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CategoryService } from 'src/app/services/category/category.service';
+import { CategoryService } from 'src/app/shared/services/category/category.service';
 import { Observable, Subscription } from 'rxjs';
 import { Category, CategoryWithAnswers } from 'src/app/shared/models/category.model';
 import { MatDialog } from '@angular/material/dialog';
 import { take, tap } from 'rxjs/operators';
 import { DeleteCategoryDialogComponent } from '../delete-category-dialog/delete-category-dialog.component';
 import { Router } from '@angular/router';
-import { ScriptContextService } from 'src/app/services/scriptContext/script-context.service';
+import { ScriptContextService } from 'src/app/shared/services/scriptContext/script-context.service';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({

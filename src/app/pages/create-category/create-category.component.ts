@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Category } from 'src/app/shared/models/category.model';
 import { Router } from '@angular/router';
-import { CategoryService } from 'src/app/services/category/category.service';
+import { CategoryService } from 'src/app/shared/services/category/category.service';
 
 @Component({
   selector: 'app-create-category',

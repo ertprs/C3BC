@@ -1,11 +1,11 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { Answer } from 'src/app/shared/models/answer.model';
-import { AnswerService } from 'src/app/services/answer/answer.service';
+import { AnswerService } from 'src/app/shared/services/answer/answer.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteAnswerDialogComponent } from '../delete-answer-dialog/delete-answer-dialog.component';
 import { Router } from '@angular/router';
-import { ScriptContextService } from 'src/app/services/scriptContext/script-context.service';
+import { ScriptContextService } from 'src/app/shared/services/scriptContext/script-context.service';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({

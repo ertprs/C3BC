@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, DocumentReference } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-import { Answer, StoredAnswer, storedAnswerWithIDTypeToAnswerType } from "../../shared/models/answer.model";
-import { Category } from "../../shared/models/category.model";
+import { Answer, StoredAnswer, storedAnswerWithIDTypeToAnswerType } from "../../models/answer.model";
+import { Category } from "../../models/category.model";
 import { map } from 'rxjs/operators';
 
 @Injectable({

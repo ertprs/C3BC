@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { SearchService } from '../../services/search/search.service';
+import { SearchService } from '../../shared/services/search/search.service';
 import { Subscription } from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { ScriptContextService } from '../../services/scriptContext/script-context.service';
+import { ScriptContextService } from '../../shared/services/scriptContext/script-context.service';
 
 @Component({
   selector: 'app-header',

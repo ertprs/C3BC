@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { CategoryService } from 'src/app/services/category/category.service';
+import { CategoryService } from 'src/app/shared/services/category/category.service';
 import { CategoryDialogData } from 'src/app/shared/models/category.model';
 
 @Component({

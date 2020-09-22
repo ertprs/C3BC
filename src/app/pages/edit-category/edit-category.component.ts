@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CategoryService } from 'src/app/services/category/category.service';
+import { CategoryService } from 'src/app/shared/services/category/category.service';
 import { Observable } from 'rxjs';
 import { Category } from 'src/app/shared/models/category.model';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';

@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { CategoryService } from 'src/app/services/category/category.service';
+import { CategoryService } from 'src/app/shared/services/category/category.service';
 import { Observable } from 'rxjs';
 import { Category } from 'src/app/shared/models/category.model';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Answer } from 'src/app/shared/models/answer.model';
-import { AnswerService } from 'src/app/services/answer/answer.service';
+import { AnswerService } from 'src/app/shared/services/answer/answer.service';
 import { Router } from '@angular/router';
 import { QuillModule } from 'ngx-quill';
 import 'quill-emoji/dist/quill-emoji.js'

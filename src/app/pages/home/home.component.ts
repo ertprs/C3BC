@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MatTabGroup, MatTabChangeEvent } from '@angular/material/tabs';
-import { SearchService } from 'src/app/services/search/search.service';
-import { ScriptContextService } from 'src/app/services/scriptContext/script-context.service';
+import { SearchService } from 'src/app/shared/services/search/search.service';
+import { ScriptContextService } from 'src/app/shared/services/scriptContext/script-context.service';
 import { FormControl } from '@angular/forms';
 
 @Component({
