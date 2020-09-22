@@ -40,8 +40,8 @@ export class AnswerService {
     return keyWords
   }
 
-  private adjustToCategoryRef(categoriesID: string[]): DocumentReference[] {
-    return categoriesID.map( categoryID => this.categoriesCollection.doc(categoryID).ref );
+  private adjustToCategoryRef(categoryIDs: string[]): DocumentReference[] {
+    return categoryIDs.map( categoryID => this.categoriesCollection.doc(categoryID).ref );
   }
 
   // Aqui iremos ajustar a propriedade name para ser salva sem espaços duplicados e desnecessários no início ou fim.
@@ -53,7 +53,7 @@ export class AnswerService {
     // convertemos o conjunto para array
     const keyWords = [...this.generateAnswerKeyWords(name)];
 
-    const adjustedAnswer: StoredAnswer = {name, content: answer.content, categoriesRef: categories, keyWords};
+    const adjustedAnswer: StoredAnswer = {name, content: answer.content, categoryRefs: categories, keyWords};
 
     return adjustedAnswer;
   }
@@ -101,7 +101,7 @@ export class AnswerService {
 
   public readAnswersByCategoryID(categoryID: string): Observable<Answer[]> {
     const categoryRef = this.categoriesCollection.doc(categoryID).ref;
-    const selectedAnswersCollection = this.angularFirestore.collection<StoredAnswer>('answers', answersRef => answersRef.where('categoriesRef', 'array-contains', categoryRef));
+    const selectedAnswersCollection = this.angularFirestore.collection<StoredAnswer>('answers', answersRef => answersRef.where('categoryRefs', 'array-contains', categoryRef));
     const answersObservable = selectedAnswersCollection.valueChanges({idField: 'id'}).pipe(map(storedAnswerWithIDTypeToAnswerType));
 
     return answersObservable;

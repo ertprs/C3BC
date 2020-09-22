@@ -18,8 +18,8 @@ export class CategoryService {
     this.categoriesCollection = angularFirestore.collection<StoredCategory>("categories");
   }
 
-  private adjustToCategoryRef(categoriesID: string[]): DocumentReference[] {
-    return categoriesID.map( categoryID => this.categoriesCollection.doc(categoryID).ref );
+  private adjustToCategoryRef(categoryIDs: string[]): DocumentReference[] {
+    return categoryIDs.map( categoryID => this.categoriesCollection.doc(categoryID).ref );
   }
 
   private adjustCategoryToFirestore(category: Category | Omit<Category, "id">): StoredCategory {
