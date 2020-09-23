@@ -16,8 +16,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class CategoriesTabComponent implements OnInit {
   private _contentScriptJustClosedSubscription: Subscription;
-  categoriesWithAnswersObservable: Observable<Observable<CategoryWithAnswers>[]>
-  step = 0;
+  categoriesWithAnswersObservable: Observable<Observable<CategoryWithAnswers>[]>;
+  step;
 
   constructor(
     private _dialog: MatDialog,
