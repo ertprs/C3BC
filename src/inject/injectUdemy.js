@@ -101,19 +101,24 @@ function setCSSToReplyFormOpen() {
 	proseMirrorElement.classList.add(style2);
 }
 
-function insertAnswer(answer) {
-		const answerContentSelector = "#br > div.main-content-wrapper > div.main-content > div > div > div.main_container > div > div > div.question-answer--question-answer-content--s7QRB.question-answer--two-pane-mode--1Biaw > div > div.two-pane--container__right-pane--2xMVx > div > div.reply-form--reply-form--GZtNK > form > div.form-group > div > div.rt-editor.rt-editor--wysiwyg-mode > div > p:last-child";
+function removeMisplacedLineBreaksInPreCode(answerHTML) {
+	return answerHTML.replace(/\s(?=<\/pre>)/gm, '');
+}
+
+function insertAnswer(answerHTML) {
+		const answerContentSelector = "#br > div.main-content-wrapper > div.main-content > div > div > div.main_container > div > div > div.question-answer--question-answer-content--s7QRB.question-answer--two-pane-mode--1Biaw > div > div.two-pane--container__right-pane--2xMVx > div > div.reply-form--reply-form--GZtNK > form > div.form-group > div > div.rt-editor.rt-editor--wysiwyg-mode > div";
 		const answerContentElement = document.querySelector(answerContentSelector);
+		const correctedAnswerHTML = removeMisplacedLineBreaksInPreCode(answerHTML);
 
-		if(answerContentElement.querySelector("br"))
-			answerContentElement.innerHTML = answer;
+		if(answerContentElement.querySelector("p:first-child > br"))
+			answerContentElement.innerHTML = correctedAnswerHTML;
 		else
-			answerContentElement.innerHTML += answer;
+			answerContentElement.innerHTML += correctedAnswerHTML;
 
-		const breakRowElement = document.createElement('p')
-		breakRowElement.appendChild(document.createElement('br'))
+		const breakRowElement = document.createElement('p');
+		breakRowElement.appendChild(document.createElement('br'));
 
-		answerContentElement.parentElement.appendChild(breakRowElement)
+		answerContentElement.appendChild(breakRowElement);
 
 		setCSSToReplyFormOpen();
 }
