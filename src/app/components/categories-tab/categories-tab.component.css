@@ -2,7 +2,7 @@
     color: grey;
     font-size: small;
     max-height: 200px;
-    overflow: scroll;
+    overflow: overlay;
 }
 
 .answer-content-card {
