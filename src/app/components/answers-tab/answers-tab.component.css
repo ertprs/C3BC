@@ -16,6 +16,10 @@
     padding: 0;
 }
 
+.disabled-pointer {
+    pointer-events: none;
+}
+
 .mat-line, :host ::ng-deep div.answer-content-preview > * {
     width: 236px;
     overflow: hidden;
