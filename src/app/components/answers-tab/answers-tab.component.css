@@ -14,9 +14,6 @@
     height: 20px;
     margin: 0;
     padding: 0;
-}
-
-.disabled-pointer {
     pointer-events: none;
 }
 
