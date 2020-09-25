@@ -70,6 +70,8 @@ function addC3BCButton() {
 		cod3rButton.classList.add("btn");
 		cod3rButton.setAttribute("type", "button");
 		cod3rButton.setAttribute("id", "cod3r-button");
+		cod3rButton.setAttribute("aria-label", "Adicionar respostas padrões");
+		cod3rButton.setAttribute("title", "Adicionar respostas padrões");
 		cod3rButton.onclick = clickEvent => {
 			clickEvent.preventDefault();
 			showC3CBDialog();
