@@ -17,7 +17,7 @@
           "https://www.udemy.com/instructor/communication/qa/*"
         ],
         "js": [
-          "inject/injectUdemy.js"
+          "scripts/udemy-content-script.js"
         ],
         "run_at":"document_end"
       }
