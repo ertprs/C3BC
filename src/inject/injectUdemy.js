@@ -89,6 +89,10 @@ const addC3CBButtonAndDialogCheckInterval = setInterval( () => {
 	}
 }, 20);
 
+function removeMisplacedLineBreaksInPreCode(answerHTML) {
+	return answerHTML.replace(/\s(?=<\/pre>)/gm, '');
+}
+
 function setCSSToReplyFormOpen() {
 	const replyFormSelector = "#br > div.main-content-wrapper > div.main-content > div > div > div.main_container > div > div > div.question-answer--question-answer-content--s7QRB.question-answer--two-pane-mode--1Biaw > div > div.two-pane--container__right-pane--2xMVx > div > div.reply-form--reply-form--GZtNK";
 	const replyFormElement = document.querySelector(replyFormSelector);
@@ -101,8 +105,8 @@ function setCSSToReplyFormOpen() {
 	proseMirrorElement.classList.add(style2);
 }
 
-function removeMisplacedLineBreaksInPreCode(answerHTML) {
-	return answerHTML.replace(/\s(?=<\/pre>)/gm, '');
+function scrollAnswerContentToTheBottom(answerContentElement) {
+	answerContentElement.scrollTo(0, answerContentElement.scrollHeight);
 }
 
 function insertAnswer(answerHTML) {
@@ -121,6 +125,7 @@ function insertAnswer(answerHTML) {
 		answerContentElement.appendChild(breakRowElement);
 
 		setCSSToReplyFormOpen();
+		scrollAnswerContentToTheBottom(answerContentElement);
 }
 
 chrome.runtime.onMessage.addListener(
