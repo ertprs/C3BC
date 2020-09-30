@@ -1,5 +1,7 @@
 const contentScriptHeight = 476;
 const contentScriptWidth = 360;
+const answerContentSelector = "#br > div.main-content-wrapper > div.main-content > div > div > div.main_container > div > div > div.question-answer--question-answer-content--s7QRB.question-answer--two-pane-mode--1Biaw > div > div.two-pane--container__right-pane--2xMVx > div > div.reply-form--reply-form--GZtNK > form > div.form-group > div > div.rt-editor.rt-editor--wysiwyg-mode > div";
+let answerContentElement
 
 function checkIfTheFormWasLoaded() {
 	return document.querySelector('#br > div.main-content-wrapper > div.main-content > div > div > div.main_container > div > div > div.question-answer--question-answer-content--s7QRB.question-answer--two-pane-mode--1Biaw > div > div.two-pane--container__right-pane--2xMVx > div > div.reply-form--reply-form--GZtNK.reply-form--reply-form--content--1eWln > form');
@@ -28,7 +30,9 @@ function checkIfTheC3BCDialogIsOpen() {
 	);
 
 	C3CBDialogElement.innerHTML = `<iframe src=${chrome.extension.getURL("index.html")} style="height:100%; width:100%;" frameBorder="0"></iframe>`;
+	
 	C3CBDialogElement.addEventListener("click", dialogClickOutsideHandler);
+	C3CBDialogElement.addEventListener('close', cancelScrollListennerForAnswerContentElement);
 	
 	document.body.appendChild(C3CBDialogElement);
 })();
@@ -55,9 +59,10 @@ function showC3CBDialog() {
 	positionDialog();
 	window.addEventListener("resize", positionDialog);
 	C3CBDDialogElementInDOM.showModal();
-
+	
 	const C3BCDialogIsOpenCheckInterval = setInterval( () => {
 		if(checkIfTheC3BCDialogIsOpen()){
+			makeSureTheSrollAnswerContentIsAtTheBottomWhenInsertAnswer();
 			setTimeout(setCSSToReplyFormOpen, 30);
 			clearInterval(C3BCDialogIsOpenCheckInterval);
 		}
@@ -72,6 +77,7 @@ function addC3BCButton() {
 		cod3rButton.setAttribute("id", "cod3r-button");
 		cod3rButton.setAttribute("aria-label", "Adicionar respostas padrões");
 		cod3rButton.setAttribute("title", "Adicionar respostas padrões");
+
 		cod3rButton.onclick = clickEvent => {
 			clickEvent.preventDefault();
 			showC3CBDialog();
@@ -83,11 +89,12 @@ function addC3BCButton() {
 		formButtonsGroup.insertAdjacentElement("beforeend", cod3rButton);
 	}
 	
-const addC3CBButtonAndDialogCheckInterval = setInterval( () => {
+const addC3CBButtonAndDialogAndInitializeAnswerContentElementCheckInterval = setInterval( () => {
 	if (document.readyState === "complete" && checkIfTheFormWasLoaded()) {
 		addC3BCButton();
+		answerContentElement = document.querySelector(answerContentSelector);
 
-		clearInterval(addC3CBButtonAndDialogCheckInterval);
+		clearInterval(addC3CBButtonAndDialogAndInitializeAnswerContentElementCheckInterval);
 	}
 }, 20);
 
@@ -107,13 +114,21 @@ function setCSSToReplyFormOpen() {
 	proseMirrorElement.classList.add(style2);
 }
 
-function scrollAnswerContentToTheBottom(answerContentElement) {
+function scrollAnswerContentToTheBottom() {
 	answerContentElement.scrollTo(0, answerContentElement.scrollHeight);
 }
 
+// esse código extra para forçar que a rolagem esteja embaixo é necessário, pois um script da Udemy, quando percebe que há um iframte e que houve
+// mudança no conteúdo da caixa de resposta, move a rolagem para cima.
+function makeSureTheSrollAnswerContentIsAtTheBottomWhenInsertAnswer() {
+	answerContentElement.addEventListener('scroll', scrollAnswerContentToTheBottom);
+}
+
+function cancelScrollListennerForAnswerContentElement() {
+	answerContentElement.removeEventListener('scroll', scrollAnswerContentToTheBottom);
+}
+
 function insertAnswer(answerHTML) {
-		const answerContentSelector = "#br > div.main-content-wrapper > div.main-content > div > div > div.main_container > div > div > div.question-answer--question-answer-content--s7QRB.question-answer--two-pane-mode--1Biaw > div > div.two-pane--container__right-pane--2xMVx > div > div.reply-form--reply-form--GZtNK > form > div.form-group > div > div.rt-editor.rt-editor--wysiwyg-mode > div";
-		const answerContentElement = document.querySelector(answerContentSelector);
 		const correctedAnswerHTML = removeMisplacedLineBreaksInPreCode(answerHTML);
 
 		if(answerContentElement.querySelector("p:first-child > br"))
@@ -127,7 +142,7 @@ function insertAnswer(answerHTML) {
 		answerContentElement.appendChild(breakRowElement);
 
 		setCSSToReplyFormOpen();
-		scrollAnswerContentToTheBottom(answerContentElement);
+		scrollAnswerContentToTheBottom();
 }
 
 chrome.runtime.onMessage.addListener(
