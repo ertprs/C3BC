@@ -82,10 +82,10 @@ function addC3BCButton() {
 	cod3rButton.setAttribute("aria-label", "Adicionar respostas padrões");
 	cod3rButton.setAttribute("title", "Adicionar respostas padrões");
 
-	cod3rButton.onclick = clickEvent => {
+	cod3rButton.addEventListener("click", clickEvent => {
 		clickEvent.preventDefault();
 		showC3CBDialog();
-	}
+	})
 
 	// aqui está sendo capturado um botão e depois pegando o seu pai porque, dentro da div abaixo cuja propriedade data-purpose é igual a "menu-bar",
 	// há duas divs que têm como classe btn-group. A que apresenta algum botão dentro é o nosso alvo. 
