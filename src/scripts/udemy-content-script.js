@@ -67,7 +67,7 @@ function showC3CBDialog() {
 	const C3BCDialogIsOpenCheckInterval = setInterval( () => {
 		if(checkIfTheC3BCDialogIsOpen()){
 			makeSureTheSrollAnswerContentIsAtTheBottomWhenInsertAnswer();
-			setTimeout(setCSSToReplyFormOpen, 30);
+			setTimeout(setCSSToReplyFormOpen, 200);
 			clearInterval(C3BCDialogIsOpenCheckInterval);
 		}
 	}, 10)
@@ -82,14 +82,14 @@ function addC3BCButton() {
 	cod3rButton.setAttribute("aria-label", "Adicionar respostas padrões");
 	cod3rButton.setAttribute("title", "Adicionar respostas padrões");
 
-	cod3rButton.addEventListener("click", clickEvent => {
+	cod3rButton.addEventListener("mousedown", clickEvent => {
 		clickEvent.preventDefault();
 		showC3CBDialog();
-	})
+	});
 
 	// aqui está sendo capturado um botão e depois pegando o seu pai porque, dentro da div abaixo cuja propriedade data-purpose é igual a "menu-bar",
 	// há duas divs que têm como classe btn-group. A que apresenta algum botão dentro é o nosso alvo. 
-	const formButtonsGroup = document.querySelector("div[data-purpose='menu-bar'] div.btn-group button").parentNode;
+	const formButtonsGroup = document.querySelector("div[data-purpose='menu-bar'] > div.btn-group > button").parentNode;
 	formButtonsGroup.insertAdjacentElement("beforeend", cod3rButton);
 }
 	
