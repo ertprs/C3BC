@@ -1,3 +1,5 @@
+// A organização por módulos não foi feita, já que o content-script não oferece suporte. Soluções alternativas podem quebrar as APIs que Chrome disponibiliza
+
 const contentScriptHeight = 476;
 const contentScriptWidth = 360;
 const formSelector = 			"div.two-pane--container__right-pane--2xMVx > div > div.reply-form--reply-form--GZtNK > form";
@@ -164,7 +166,7 @@ function cancelScrollListennerForAnswerContentElement() {
 	answerContentElement.removeEventListener('scroll', scrollAnswerContentToTheBottom);
 }
 
-// O editor rico do C3BC adiciona um espaço a mais no final de um bloco de código. Isso fica bem esteticamente na Udemy 
+// O editor rico do C3BC adiciona um espaço a mais no final de um bloco de código. Isso não fica bem esteticamente na Udemy 
 function removeMisplacedLineBreaksInPreCode(answerHTML) {
 	return answerHTML.replace(/\s(?=<\/pre>)/gm, '');
 }
