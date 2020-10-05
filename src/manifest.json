@@ -20,6 +20,15 @@
           "scripts/udemy-content-script.js"
         ],
         "run_at":"document_end"
+      },
+      {
+        "matches": [
+          "https://www.cod3r.com.br/courses/take/*/discussions/*"
+        ],
+        "js": [
+          "scripts/cod3r-content-script.js"
+        ],
+        "run_at":"document_end"
       }
     ],
     "web_accessible_resources": ["*.html"]

@@ -1,4 +1,4 @@
-// A organização por módulos não foi feita, já que o content-script não oferece suporte. Soluções alternativas podem quebrar as APIs que Chrome disponibiliza
+// A organização por módulos não foi feita, já que o content-script não oferece suporte. Soluções alternativas podem quebrar as APIs que o Chrome disponibiliza
 
 const contentScriptHeight = 476;
 const contentScriptWidth = 360;
