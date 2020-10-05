@@ -53,6 +53,8 @@ function addC3BCButton() {
 	cod3rButton.setAttribute("title", "Adicionar respostas padrões");
 
 	cod3rButton.addEventListener("mousedown", clickEvent => {
+		if(clickEvent.button !== 0) return;
+
 		clickEvent.preventDefault();
 		showC3CBDialog();
 	});
