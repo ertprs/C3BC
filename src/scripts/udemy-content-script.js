@@ -185,7 +185,7 @@ function insertAnswerInDOM(answerHTML) {
 	answerContentElement.appendChild(breakRowElement);
 }
 
-function insertAnswer(answerHTML) {
+function addAnswer(answerHTML) {
 	const correctedAnswerHTML = removeMisplacedLineBreaksInPreCode(answerHTML);
 
 	insertAnswerInDOM(correctedAnswerHTML)
@@ -197,7 +197,7 @@ chrome.runtime.onMessage.addListener(
 		console.log(sender.tab ?
 					"from a content script:" + sender.tab.url :
 					"from the extension");
-		insertAnswer(request.answerContent);
+		addAnswer(request.answerContent);
 		sendResponse({farewell: "Resposta adicionada"});
 });
 

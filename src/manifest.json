@@ -1,35 +1,35 @@
 {
-    "name": "C3BC",
-    "version": "0.0.1",
-    "manifest_version": 2,
-    "icons": {
-      "16": "assets/icons/logo16.png",
-      "48": "assets/icons/logo48.png",
-      "128": "assets/icons/logo128.png"
+  "name": "C3BC",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "icons": {
+    "16": "assets/icons/logo16.png",
+    "48": "assets/icons/logo48.png",
+    "128": "assets/icons/logo128.png"
+  },
+  "browser_action": {
+    "default_icon": "assets/icons/logo128.png",
+    "default_popup": "index.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.udemy.com/instructor/communication/qa/*"
+      ],
+      "js": [
+        "scripts/udemy-content-script.js"
+      ],
+      "run_at":"document_end"
     },
-    "browser_action": {
-      "default_icon": "assets/icons/logo128.png",
-      "default_popup": "index.html"
-    },
-    "content_scripts": [
-      {
-        "matches": [
-          "https://www.udemy.com/instructor/communication/qa/*"
-        ],
-        "js": [
-          "scripts/udemy-content-script.js"
-        ],
-        "run_at":"document_end"
-      },
-      {
-        "matches": [
-          "https://www.cod3r.com.br/courses/take/*/discussions/*"
-        ],
-        "js": [
-          "scripts/cod3r-content-script.js"
-        ],
-        "run_at":"document_end"
-      }
-    ],
-    "web_accessible_resources": ["*.html"]
-  }
+    {
+      "matches": [
+        "https://www.cod3r.com.br/courses/take/*/discussions/*"
+      ],
+      "js": [
+        "scripts/cod3r-content-script.js"
+      ],
+      "run_at":"document_end"
+    }
+  ],
+  "web_accessible_resources": ["*.html"]
+}
