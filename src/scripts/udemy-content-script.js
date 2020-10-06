@@ -173,19 +173,22 @@ function removeMisplacedLineBreaksInPreCode(answerHTML) {
 	return answerHTML.replace(/\s(?=<\/pre>)/gm, '');
 }
 
-function insertAnswer(answerHTML) {
-	const correctedAnswerHTML = removeMisplacedLineBreaksInPreCode(answerHTML);
-
+function insertAnswerInDOM(answerHTML) {
 	if(answerContentElement.querySelector("p:first-child > br"))
-		answerContentElement.innerHTML = correctedAnswerHTML;
+		answerContentElement.innerHTML = answerHTML;
 	else
-		answerContentElement.innerHTML += correctedAnswerHTML;
+		answerContentElement.innerHTML += answerHTML;
 
 	const breakRowElement = document.createElement('p');
 	breakRowElement.appendChild(document.createElement('br'));
 
 	answerContentElement.appendChild(breakRowElement);
-	
+}
+
+function insertAnswer(answerHTML) {
+	const correctedAnswerHTML = removeMisplacedLineBreaksInPreCode(answerHTML);
+
+	insertAnswerInDOM(correctedAnswerHTML)
 	scrollAnswerContentToTheBottom();
 }
 
