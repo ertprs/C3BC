@@ -3,6 +3,7 @@
 const contentScriptHeight = 476;
 const contentScriptWidth = 360;
 const buttonsToolbarSelector = "div.fr-toolbar"
+const answerContentSelector = 	"div.fr-wrapper > div.fr-view";
 
 // Observer para lançar evento customizado quando um diálogo abrir, pois o evento "open" para diálogo não existe nativamente
 const dialogObserver = new MutationObserver( mutations => {
@@ -11,7 +12,7 @@ const dialogObserver = new MutationObserver( mutations => {
 
 		if(mutation.target.hasAttribute("open"))
 			mutation.target.dispatchEvent(new CustomEvent('open'));
-	} );
+	});
 });
 
 function checkIfTheButtonsToolbarWasLoaded() {
@@ -97,6 +98,7 @@ function CheckAndMakeSureThatC3BCButtomIsVisible(mutations) {
 
 function positionDialog() {
 	// Essa checagem é necessária, pois os cálculos a seguir dependem da posição do botão da cod3r, que, por sua vez, só estará disponível se o toolbar-buttons tiver sido carregado
+	// e ele só é carregado após o primeiro clique em "escreva uma resposta"
 	if( !checkIfTheButtonsToolbarWasLoaded() ) return;
 
 	const C3CBDialogElement = document.getElementById("C3BC-dialog");
@@ -125,6 +127,45 @@ function showC3CBDialog() {
 	const C3CBDDialogElement = document.getElementById("C3BC-dialog");
 	C3CBDDialogElement.showModal();
 }
+
+function hideAnswerContentPlaceholder() {
+	const answerContenParentElement = document.querySelector(answerContentSelector).parentNode;
+	answerContenParentElement.classList.remove("show-placeholder");
+}
+
+function insertAnswerInDOM(answerHTML) {
+	const answerContentElement = document.querySelector(answerContentSelector);
+
+	if(answerContentElement.querySelector("p:first-child > br"))
+		answerContentElement.innerHTML = answerHTML;
+	else
+		answerContentElement.innerHTML += answerHTML;
+
+	const breakRowElement = document.createElement('p');
+	breakRowElement.appendChild(document.createElement('br'));
+
+	answerContentElement.appendChild(breakRowElement);
+}
+
+function scrollAnswerContentToTheBottom() {
+	const answerContenParentElement = document.querySelector(answerContentSelector).parentNode;
+	answerContenParentElement.scrollTo(0, answerContenParentElement.scrollHeight);
+}
+
+function insertAnswer(answerHTML) {
+	hideAnswerContentPlaceholder();
+	insertAnswerInDOM(answerHTML);
+	scrollAnswerContentToTheBottom();
+}
+
+chrome.runtime.onMessage.addListener(
+	function(request, sender, sendResponse) {
+		console.log(sender.tab ?
+					"from a content script:" + sender.tab.url :
+					"from the extension");
+		insertAnswer(request.answerContent);
+		sendResponse({farewell: "Resposta adicionada"});
+});
 
 // fonte: https://stackoverflow.com/questions/50037663/how-to-close-a-native-html-dialog-when-clicking-outside-with-javascript
 function dialogClickOutsideHandler(event) {
