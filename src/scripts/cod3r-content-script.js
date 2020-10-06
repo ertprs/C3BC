@@ -4,6 +4,16 @@ const contentScriptHeight = 476;
 const contentScriptWidth = 360;
 const buttonsToolbarSelector = "div.fr-toolbar"
 
+// Observer para lançar evento customizado quando um diálogo abrir, pois o evento "open" para diálogo não existe nativamente
+const dialogObserver = new MutationObserver( mutations => {
+	mutations.forEach( (mutation) => {
+		if(mutation.attributeName !== "open") { return; }
+
+		if(mutation.target.hasAttribute("open"))
+			mutation.target.dispatchEvent(new CustomEvent('open'));
+	} );
+});
+
 function checkIfTheButtonsToolbarWasLoaded() {
 	return document.querySelector(buttonsToolbarSelector);
 }
@@ -72,10 +82,29 @@ function CheckAndMakeSureThatC3BCButtomIsVisible(mutations) {
 
 	C3CBDialogElement.innerHTML = `<iframe src=${chrome.extension.getURL("index.html")} style="height:100%; width:100%;" frameBorder="0"></iframe>`;
 
+	// usando o Observer para observar o díalogo C3BC e emitir o evento "open"
+	dialogObserver.observe(C3CBDialogElement, {attributes: true});
+
+	C3CBDialogElement.addEventListener("open", () => {
+		console.log("Entrou aqui no listener")
+		positionDialog();
+	});
+
 	C3CBDialogElement.addEventListener("click", dialogClickOutsideHandler);
+	window.addEventListener("resize", positionDialog);
 
 	document.body.appendChild(C3CBDialogElement);
 })();
+
+function positionDialog() {
+	const C3CBDialogElement = document.getElementById("C3BC-dialog");
+	const buttonsToolbarElement = document.querySelector(buttonsToolbarSelector)
+	
+	const buttonsToolbarRect = buttonsToolbarElement.getBoundingClientRect();
+
+	C3CBDialogElement.style.top = buttonsToolbarRect.top-contentScriptHeight < 0 ? `0px` : `${buttonsToolbarRect.top-contentScriptHeight}px`;
+	C3CBDialogElement.style.left = `${buttonsToolbarRect.right - contentScriptWidth}px`;
+}
 
 function showC3CBDialog() {
 	const C3CBDDialogElement = document.getElementById("C3BC-dialog");
