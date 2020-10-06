@@ -86,7 +86,6 @@ function CheckAndMakeSureThatC3BCButtomIsVisible(mutations) {
 	dialogObserver.observe(C3CBDialogElement, {attributes: true});
 
 	C3CBDialogElement.addEventListener("open", () => {
-		console.log("Entrou aqui no listener")
 		positionDialog();
 	});
 
@@ -97,13 +96,29 @@ function CheckAndMakeSureThatC3BCButtomIsVisible(mutations) {
 })();
 
 function positionDialog() {
-	const C3CBDialogElement = document.getElementById("C3BC-dialog");
-	const buttonsToolbarElement = document.querySelector(buttonsToolbarSelector)
-	
-	const buttonsToolbarRect = buttonsToolbarElement.getBoundingClientRect();
+	// Essa checagem é necessária, pois os cálculos a seguir dependem da posição do botão da cod3r, que, por sua vez, só estará disponível se o toolbar-buttons tiver sido carregado
+	if( !checkIfTheButtonsToolbarWasLoaded() ) return;
 
-	C3CBDialogElement.style.top = buttonsToolbarRect.top-contentScriptHeight < 0 ? `0px` : `${buttonsToolbarRect.top-contentScriptHeight}px`;
-	C3CBDialogElement.style.left = `${buttonsToolbarRect.right - contentScriptWidth}px`;
+	const C3CBDialogElement = document.getElementById("C3BC-dialog");
+	const cod3rButtonElement = document.getElementById("cod3r-button")
+
+	const cod3rButtonRect = cod3rButtonElement.getBoundingClientRect();
+
+	// quando a página tem tamanho menor maior que 767, a visuação é diferente
+	if(document.body.getBoundingClientRect().width > 767) {
+		C3CBDialogElement.style.top = cod3rButtonRect.top-contentScriptHeight < 0 ? `0px` : `${cod3rButtonRect.top-contentScriptHeight}px`;
+		C3CBDialogElement.style.left = `${cod3rButtonRect.right - contentScriptWidth}px`;
+	} else {
+		C3CBDialogElement.style.top = `${cod3rButtonRect.bottom}px`;
+
+		// 17 é a largura do scroolbar. Usamos aqui para o diálogo não o sobrepor
+		if( (cod3rButtonRect.right + contentScriptWidth) < document.body.getBoundingClientRect().width - 17)
+			C3CBDialogElement.style.left = `${cod3rButtonRect.right}px`;
+		else if( (cod3rButtonRect.right - cod3rButtonRect.width/2 + contentScriptWidth/2) < document.body.getBoundingClientRect().width - 17 )
+			C3CBDialogElement.style.left = `${cod3rButtonRect.right - cod3rButtonRect.width/2 - contentScriptWidth/2}px`;
+		else
+			C3CBDialogElement.style.left = `12px`;
+	}
 }
 
 function showC3CBDialog() {
