@@ -2,7 +2,7 @@
 
 const contentScriptHeight = 476;
 const contentScriptWidth = 360;
-const buttonsToolbarSelector = "div.fr-toolbar"
+const buttonsToolbarSelector =	"div.fr-toolbar"
 const answerContentSelector = 	"div.fr-wrapper > div.fr-view";
 
 // Observer para lançar evento customizado quando um diálogo abrir, pois o evento "open" para diálogo não existe nativamente
@@ -128,11 +128,6 @@ function showC3CBDialog() {
 	C3CBDDialogElement.showModal();
 }
 
-function hideAnswerContentPlaceholder() {
-	const answerContenParentElement = document.querySelector(answerContentSelector).parentNode;
-	answerContenParentElement.classList.remove("show-placeholder");
-}
-
 function insertAnswerInDOM(answerHTML) {
 	const answerContentElement = document.querySelector(answerContentSelector);
 
@@ -148,14 +143,30 @@ function insertAnswerInDOM(answerHTML) {
 }
 
 function scrollAnswerContentToTheBottom() {
-	const answerContenParentElement = document.querySelector(answerContentSelector).parentNode;
-	answerContenParentElement.scrollTo(0, answerContenParentElement.scrollHeight);
+	const answerContentParentElement = document.querySelector(answerContentSelector).parentNode;
+	answerContentParentElement.scrollTo(0, answerContentParentElement.scrollHeight);
 }
 
-function insertAnswer(answerHTML) {
-	hideAnswerContentPlaceholder();
+function injectScript(functionToBeExecuted) {
+    const scriptCode = '(' + functionToBeExecuted + ')();'
+	const scriptElement = document.createElement('script');
+	scriptElement.textContent = scriptCode;
+
+	(document.head||document.documentElement).appendChild(scriptElement);
+	scriptElement.remove();
+}
+
+// É preciso injetar essa função, pois, assim, a instância do JQuery em execução na página será utilizada, então haverá acesso à função froalaEditor
+function HidePlaceholderAndEnableReplySendByMarkingRichEditorContentAsChanged() {
+	const froalaRichEditorSelector = "div.froala-editor-instance"
+
+	$(froalaRichEditorSelector).froalaEditor('events.trigger', 'contentChanged');
+}
+
+function addAnswer(answerHTML) {
 	insertAnswerInDOM(answerHTML);
 	scrollAnswerContentToTheBottom();
+	injectScript(HidePlaceholderAndEnableReplySendByMarkingRichEditorContentAsChanged);
 }
 
 chrome.runtime.onMessage.addListener(
@@ -163,7 +174,7 @@ chrome.runtime.onMessage.addListener(
 		console.log(sender.tab ?
 					"from a content script:" + sender.tab.url :
 					"from the extension");
-		insertAnswer(request.answerContent);
+		addAnswer(request.answerContent);
 		sendResponse({farewell: "Resposta adicionada"});
 });
 
