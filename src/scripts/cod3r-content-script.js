@@ -121,17 +121,38 @@ function positionDialog() {
 
 	// quando a página tem tamanho menor maior que 767, a visuação é diferente
 	if(document.body.getBoundingClientRect().width > 767) {
-		C3CBDialogElement.style.top = cod3rButtonRect.top-contentScriptHeight < 0 ? `0px` : `${cod3rButtonRect.top-contentScriptHeight}px`;
+		// alinha Diálogo à direita do botão
 		C3CBDialogElement.style.left = `${cod3rButtonRect.right - contentScriptWidth}px`;
+
+		if(cod3rButtonRect.top-contentScriptHeight < 0) {
+			// alinha Diálogo abaixo ou ao topo da viewport
+			C3CBDialogElement.style.top = cod3rButtonRect.bottom + contentScriptHeight < window.innerHeight ? `${cod3rButtonRect.bottom}px` : `0px`;
+
+			if(C3CBDialogElement.style.left = C3CBDialogElement.style.top === `0px`)
+				// alinha Diálogo à esquerda do botão
+				C3CBDialogElement.style.left = `${cod3rButtonRect.left - contentScriptWidth}px`;
+		}
+		else
+			// alinha Diálogo acima do viewport
+			C3CBDialogElement.style.top = `${cod3rButtonRect.top-contentScriptHeight}px`;
 	} else {
+		const scrollbarWidth = 17;
+		const rightLimitInViewport = document.body.getBoundingClientRect().width - scrollbarWidth;
+		const leftBorderOfPortView = 0;
+
+		// alinha Diálogo abaixo do botão
 		C3CBDialogElement.style.top = `${cod3rButtonRect.bottom}px`;
 
-		// 17 é a largura do scroolbar. Usamos aqui para o diálogo não o sobrepor
-		if( (cod3rButtonRect.right + contentScriptWidth) < document.body.getBoundingClientRect().width - 17)
+		// alinha Diálogo à direita do botão
+		if( (cod3rButtonRect.right + contentScriptWidth) < rightLimitInViewport)
 			C3CBDialogElement.style.left = `${cod3rButtonRect.right}px`;
-		else if( (cod3rButtonRect.right - cod3rButtonRect.width/2 + contentScriptWidth/2) < document.body.getBoundingClientRect().width - 17 )
-			C3CBDialogElement.style.left = `${cod3rButtonRect.right - cod3rButtonRect.width/2 - contentScriptWidth/2}px`;
 		else
+			if( (cod3rButtonRect.left + cod3rButtonRect.width/2 - contentScriptWidth/2) > leftBorderOfPortView &&
+				(cod3rButtonRect.right - cod3rButtonRect.width/2 + contentScriptWidth/2) < rightLimitInViewport)
+					// alinha Diálogo ao meio do botão
+					C3CBDialogElement.style.left = `${cod3rButtonRect.right - cod3rButtonRect.width/2 - contentScriptWidth/2}px`;
+		else
+			// alinha Diálogo na borda esquerda da viewport
 			C3CBDialogElement.style.left = `12px`;
 	}
 }
