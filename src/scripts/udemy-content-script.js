@@ -11,17 +11,10 @@ let formParentElement
 let answerContentElement
 
 // Observer para lançar evento customizado quando um diálogo abrir, pois o evento "open" para diálogo não existe nativamente
-const dialogObserver = new MutationObserver( mutations => {
-	mutations.forEach( (mutation) => {
-		if(mutation.attributeName !== "open") { return; }
-
-		if(mutation.target.hasAttribute("open"))
-			mutation.target.dispatchEvent(new CustomEvent('open'));
-	} );
-});
+const dialogObserver = new MutationObserver(checkForMutationsToMakeSureTheOpenEventIsDispatchedWhenADialogOpens);
 
 // Observer para checar mudanças na aparência da caixa de resposta
-const ReplyFormOpenclassChangesObserver = new MutationObserver(checkAndApplyClassesToKeepReplyFormOpen);
+const ReplyFormOpenObserver = new MutationObserver(checkForMutationsToMakeSureTheClassesToKeepReplyFormOpenAreApllied);
 
 function checkIfTheFormWasLoaded() {
 	return document.querySelector(formSelector);
@@ -63,6 +56,15 @@ function addC3BCButton() {
 	// há duas divs que têm como classe btn-group. A que apresenta algum botão dentro é o nosso alvo. 
 	const formButtonsGroup = document.querySelector("div[data-purpose='menu-bar'] > div.btn-group > button").parentNode;
 	formButtonsGroup.insertAdjacentElement("beforeend", cod3rButton);
+}
+
+function checkForMutationsToMakeSureTheOpenEventIsDispatchedWhenADialogOpens(mutations) {
+	mutations.forEach( mutation => {
+		if(mutation.attributeName !== "open") return;
+
+		if(mutation.target.hasAttribute("open"))
+			mutation.target.dispatchEvent(new CustomEvent('open'));
+	});
 }
 
 (function addC3CBDialog() {
@@ -127,7 +129,7 @@ function showC3CBDialog() {
 }
 
 // função que garante que o formulário de resposta esteja aberto
-function checkAndApplyClassesToKeepReplyFormOpen(mutations) {
+function checkForMutationsToMakeSureTheClassesToKeepReplyFormOpenAreApllied(mutations) {
 	mutations.forEach( mutationRecord => {
 		const mutatedElement = mutationRecord.target
 		if(mutatedElement.isSameNode(formParentElement)) {
@@ -146,12 +148,12 @@ function makeSureTheReplyFormIsSetToOpen() {
 	formParentElement.classList.add(formParentClassForReplyFormOpen);
 	answerContentElement.classList.add(answerContentClassForReplyFormOpen);
 
-	ReplyFormOpenclassChangesObserver.observe(formParentElement, { attributes : true, attributeFilter : ['class'] });
-	ReplyFormOpenclassChangesObserver.observe(answerContentElement, { attributes : true, attributeFilter : ['class'] });
+	ReplyFormOpenObserver.observe(formParentElement, { attributes : true, attributeFilter : ['class'] });
+	ReplyFormOpenObserver.observe(answerContentElement, { attributes : true, attributeFilter : ['class'] });
 }
 
 function cancelObserverForReplyFormOpenClassesChangeObserver() {
-	ReplyFormOpenclassChangesObserver.disconnect();
+	ReplyFormOpenObserver.disconnect();
 }
 
 function scrollAnswerContentToTheBottom() {
