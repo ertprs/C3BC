@@ -2,42 +2,56 @@
 
 const contentScriptHeight = 476;
 const contentScriptWidth = 360;
-const buttonsToolbarSelector =	"div.fr-toolbar"
-const answerContentSelector = 	"div.fr-wrapper > div.fr-view";
+const cod3rButtonID = 				"cod3r-button";
+const C3BCDialogID = 				"C3BC-dialog";
+const buttonsToolbarSelector =		"div.fr-toolbar";
+const answerContentSelector = 		"div.fr-wrapper > div.fr-view";
+const discussionContentSelector = 	".course-player__course-discussions";
+const pageContentElement = document.getElementById("page-content");
+
+const pageContentObserver = new MutationObserver(checkForMutationsToEnableDiscussionContentObserverIfItWasLoaded);
+pageContentObserver.observe(pageContentElement, { childList: true, subtree: true });
+
+const discussionContentObserver = new MutationObserver(checkForMutationsToMakeSureTheC3BCButtonIsAdded);
+
+function checkForMutationsToEnableDiscussionContentObserverIfItWasLoaded() {
+	const discussionContentElement = pageContentElement.querySelector(discussionContentSelector);
+	
+	if(discussionContentElement) {
+		discussionContentObserver.observe(discussionContentElement, { childList: true });
+		pageContentObserver.disconnect();
+	}
+}
+
+function checkForMutationsToMakeSureTheC3BCButtonIsAdded() {
+	const cod3rButtonElement = document.getElementById(cod3rButtonID);
+	const buttonsToolbarElement = document.querySelector(buttonsToolbarSelector);
+	
+	if(buttonsToolbarElement && !cod3rButtonElement) addC3BCButton();
+}
 
 // Observer para lançar evento customizado quando um diálogo abrir, pois o evento "open" para diálogo não existe nativamente
 const dialogObserver = new MutationObserver( mutations => {
 	mutations.forEach( (mutation) => {
-		if(mutation.attributeName !== "open") { return; }
+		if(mutation.attributeName !== "open") return;
 
 		if(mutation.target.hasAttribute("open"))
 			mutation.target.dispatchEvent(new CustomEvent('open'));
 	});
 });
 
-function checkIfTheButtonsToolbarWasLoaded() {
-	return document.querySelector(buttonsToolbarSelector);
-}
-
-const initialize = setInterval( () => {
-	if (document.readyState === "complete" && checkIfTheButtonsToolbarWasLoaded()) {
-		addC3BCButton();
-		clearInterval(initialize);
-	}
-}, 20);
-
 function addC3BCButton() {
-	const cod3rButton = document.createElement("button");
-	cod3rButton.innerHTML = "Cod3r";
-	cod3rButton.setAttribute("id", "cod3r-button");
-	cod3rButton.setAttribute("type", "button");
-	cod3rButton.setAttribute("tabindex", -1);
-	cod3rButton.setAttribute("role", "button");
-	cod3rButton.setAttribute("title", "Adicionar respostas padrões");
-	cod3rButton.classList.add("fr-command", "fr-btn", "fr-btn-font_awesome");
-	cod3rButton.setAttribute("style", "font-weight: bold; padding: 12px; width: auto;");
+	const cod3rButtonElement = document.createElement("button");
+	cod3rButtonElement.innerHTML = "Cod3r";
+	cod3rButtonElement.setAttribute("id", cod3rButtonID);
+	cod3rButtonElement.setAttribute("type", "button");
+	cod3rButtonElement.setAttribute("tabindex", -1);
+	cod3rButtonElement.setAttribute("role", "button");
+	cod3rButtonElement.setAttribute("title", "Adicionar respostas padrões");
+	cod3rButtonElement.classList.add("fr-command", "fr-btn", "fr-btn-font_awesome");
+	cod3rButtonElement.setAttribute("style", "font-weight: bold; padding: 12px; width: auto;");
 
-	cod3rButton.addEventListener("mousedown", clickEvent => {
+	cod3rButtonElement.addEventListener("mousedown", clickEvent => {
 		if(clickEvent.button !== 0) return;
 
 		clickEvent.preventDefault();
@@ -45,19 +59,20 @@ function addC3BCButton() {
 	});
 
 	const buttonsToolbarElement = document.querySelector(buttonsToolbarSelector);
-	buttonsToolbarElement.insertAdjacentElement("beforeend", cod3rButton);
+	buttonsToolbarElement.insertAdjacentElement("beforeend", cod3rButtonElement);
 
 	// Observer para checar mudanças no toolbar de botões. É necessário, pois, sempre que o usuário redimenciona o browser, o botão adicionado é movido para o ínicio e recebe uma classe
 	// que o deixa invisível
-	const checkAndMakeSureThatC3BCButtomIsVisibleObserver = new MutationObserver(CheckAndMakeSureThatC3BCButtomIsVisible);
-	checkAndMakeSureThatC3BCButtomIsVisibleObserver.observe(cod3rButton, { attributes : true })
+	const CheckAndMakeSureThatC3BCButtomIsVisibleWhenThePageIsResizedObserver = new MutationObserver(CheckAndMakeSureThatC3BCButtomIsVisibleWhenThePageIsResized);
+	CheckAndMakeSureThatC3BCButtomIsVisibleWhenThePageIsResizedObserver.observe(cod3rButtonElement, { attributes : true })
 }
 
-function CheckAndMakeSureThatC3BCButtomIsVisible(mutations) {
+function CheckAndMakeSureThatC3BCButtomIsVisibleWhenThePageIsResized(mutations) {
 	mutations.forEach( mutationRecord => {
 		const mutatedElement = mutationRecord.target
 		if(mutatedElement.classList.contains("fr-hidden")) {
 			mutatedElement.classList.remove("fr-hidden")
+			//aqui, movemos o botão novamente para final
     		mutatedElement.parentNode.appendChild(mutatedElement.parentNode.firstElementChild);
 		}
 	});
@@ -65,7 +80,7 @@ function CheckAndMakeSureThatC3BCButtomIsVisible(mutations) {
 
 (function addC3CBDialog() {
 	const C3CBDialogElement = document.createElement("dialog");
-	C3CBDialogElement.id = "C3BC-dialog";
+	C3CBDialogElement.id = C3BCDialogID;
 	C3CBDialogElement.setAttribute(
 		"style",
 		`	
@@ -96,15 +111,13 @@ function CheckAndMakeSureThatC3BCButtomIsVisible(mutations) {
 	document.body.appendChild(C3CBDialogElement);
 })();
 
+// o posicionamento do diálogo será relativo ao posicionamento do botão
 function positionDialog() {
-	// Essa checagem é necessária, pois os cálculos a seguir dependem da posição do botão da cod3r, que, por sua vez, só estará disponível se o toolbar-buttons tiver sido carregado
-	// e ele só é carregado após o primeiro clique em "escreva uma resposta"
-	if( !checkIfTheButtonsToolbarWasLoaded() ) return;
-
-	const C3CBDialogElement = document.getElementById("C3BC-dialog");
-	const cod3rButtonElement = document.getElementById("cod3r-button")
+	const cod3rButtonElement = document.getElementById(cod3rButtonID);
+	if( !cod3rButtonElement ) return;
 
 	const cod3rButtonRect = cod3rButtonElement.getBoundingClientRect();
+	const C3CBDialogElement = document.getElementById(C3BCDialogID);
 
 	// quando a página tem tamanho menor maior que 767, a visuação é diferente
 	if(document.body.getBoundingClientRect().width > 767) {
@@ -124,7 +137,7 @@ function positionDialog() {
 }
 
 function showC3CBDialog() {
-	const C3CBDDialogElement = document.getElementById("C3BC-dialog");
+	const C3CBDDialogElement = document.getElementById(C3BCDialogID);
 	C3CBDDialogElement.showModal();
 }
 
@@ -156,11 +169,12 @@ function injectScript(functionToBeExecuted) {
 	scriptElement.remove();
 }
 
-// É preciso injetar essa função, pois, assim, a instância do JQuery em execução na página será utilizada, então haverá acesso à função froalaEditor
+// É preciso injetar essa função, pois, assim, a instância do JQuery em execução na página será utilizada, então haverá acesso à função froalaEditor, pertencente ao editor rico da Cod3r
+// é necessário que o seletor do editor rico esteja aqui literalmente, pois, como essa função será injetada, perderá a referência a qualquer variável fora do escopo da própria função 
 function HidePlaceholderAndEnableReplySendByMarkingRichEditorContentAsChanged() {
-	const froalaRichEditorSelector = "div.froala-editor-instance"
+	const answerRichEditorSelector = ".froala-editor-instance"
 
-	$(froalaRichEditorSelector).froalaEditor('events.trigger', 'contentChanged');
+	$(answerRichEditorSelector).froalaEditor('events.trigger', 'contentChanged');
 }
 
 function addAnswer(answerHTML) {
