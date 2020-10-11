@@ -24,8 +24,8 @@ function checkForMutationsToEnableDiscussionContentObserverIfItWasLoaded() {
 }
 
 function checkForMutationsToMakeSureTheC3BCButtonIsAdded() {
-	const cod3rButtonElement = document.getElementById(cod3rButtonID);
 	const buttonsToolbarElement = document.querySelector(buttonsToolbarSelector);
+	const cod3rButtonElement = document.getElementById(cod3rButtonID);
 	
 	if(buttonsToolbarElement && !cod3rButtonElement) addC3BCButton();
 }
@@ -64,14 +64,16 @@ function addC3BCButton() {
 	// Observer para checar mudanças no toolbar de botões. É necessário, pois, sempre que o usuário redimenciona o browser, o botão adicionado é movido para o ínicio e recebe uma classe
 	// que o deixa invisível
 	const CheckAndMakeSureThatC3BCButtomIsVisibleWhenThePageIsResizedObserver = new MutationObserver(CheckAndMakeSureThatC3BCButtomIsVisibleWhenThePageIsResized);
-	CheckAndMakeSureThatC3BCButtomIsVisibleWhenThePageIsResizedObserver.observe(cod3rButtonElement, { attributes : true })
+	CheckAndMakeSureThatC3BCButtomIsVisibleWhenThePageIsResizedObserver.observe(cod3rButtonElement, { attributes : true });
 }
 
-function CheckAndMakeSureThatC3BCButtomIsVisibleWhenThePageIsResized(mutations) {
+function CheckAndMakeSureThatC3BCButtomIsVisibleWhenThePageIsResized(mutations, mutationObserver) {
 	mutations.forEach( mutationRecord => {
-		const mutatedElement = mutationRecord.target
+		const mutatedElement = mutationRecord.target;
 		if(mutatedElement.classList.contains("fr-hidden")) {
-			mutatedElement.classList.remove("fr-hidden")
+			mutatedElement.classList.remove("fr-hidden");
+			mutationObserver.takeRecords();
+
 			//aqui, movemos o botão novamente para final
     		mutatedElement.parentNode.appendChild(mutatedElement.parentNode.firstElementChild);
 		}
@@ -193,7 +195,7 @@ function injectScript(functionToBeExecuted) {
 // É preciso injetar essa função, pois, assim, a instância do JQuery em execução na página será utilizada, então haverá acesso à função froalaEditor, pertencente ao editor rico da Cod3r
 // é necessário que o seletor do editor rico esteja aqui literalmente, pois, como essa função será injetada, perderá a referência a qualquer variável fora do escopo da própria função 
 function HidePlaceholderAndEnableReplySendByMarkingRichEditorContentAsChanged() {
-	const answerRichEditorSelector = ".froala-editor-instance"
+	const answerRichEditorSelector = ".froala-editor-instance";
 
 	$(answerRichEditorSelector).froalaEditor('events.trigger', 'contentChanged');
 }

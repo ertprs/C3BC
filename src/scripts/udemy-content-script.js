@@ -7,14 +7,18 @@ const formParentSelector =		"div.two-pane--container__right-pane--2xMVx > div > 
 const answerContentSelector = 	"div.two-pane--container__right-pane--2xMVx > div > div.reply-form--reply-form--GZtNK > form > div.form-group > div > div.rt-editor.rt-editor--wysiwyg-mode > div.ProseMirror";
 const formParentClassForReplyFormOpen = 	"reply-form--reply-form--content--1eWln";
 const answerContentClassForReplyFormOpen =	"ProseMirror-focused";
-let formParentElement
-let answerContentElement
+const mainContentElement = document.querySelector(".main-content");
+let formParentElement;
+let answerContentElement;
 
 // Observer para lançar evento customizado quando um diálogo abrir, pois o evento "open" para diálogo não existe nativamente
 const dialogObserver = new MutationObserver(checkForMutationsToMakeSureTheOpenEventIsDispatchedWhenADialogOpens);
 
 // Observer para checar mudanças na aparência da caixa de resposta
 const ReplyFormOpenObserver = new MutationObserver(checkForMutationsToMakeSureTheClassesToKeepReplyFormOpenAreApllied);
+
+const mainContentObserver = new MutationObserver(checkForMutationsToInitializeVariablesAndAddButton);
+mainContentObserver.observe(mainContentElement, { childList: true, subtree: true });
 
 function checkIfTheFormWasLoaded() {
 	return document.querySelector(formSelector);
@@ -26,15 +30,18 @@ function checkIfTheAnswerContentWasLoaded() {
 	return document.querySelector(answerContentSelector + ' > :not(span)');
 }
 
-const initialize = setInterval( () => {
-	if (document.readyState === "complete" && checkIfTheFormWasLoaded() && checkIfTheAnswerContentWasLoaded()) {
+function checkForMutationsToInitializeVariablesAndAddButton() {
+	const formWasLoaded = checkIfTheFormWasLoaded();
+	const answerContentWasLoaded = checkIfTheAnswerContentWasLoaded();
+
+	if(formWasLoaded && answerContentWasLoaded) {
 		formParentElement = document.querySelector(formParentSelector);
 		answerContentElement = document.querySelector(answerContentSelector);
 
 		addC3BCButton();
-		clearInterval(initialize);
+		mainContentObserver.disconnect();
 	}
-}, 20);
+}
 
 function addC3BCButton() {
 	const cod3rButton = document.createElement("button");
