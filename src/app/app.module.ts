@@ -39,6 +39,7 @@ import { CreateCategoryComponent } from './pages/create-category/create-category
 import { EditAnswerComponent } from './pages/edit-answer/edit-answer.component';
 import { EditCategoryComponent } from './pages/edit-category/edit-category.component';
 import { QuillModule } from 'ngx-quill'
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { QuillModule } from 'ngx-quill'
     EditCategoryComponent
   ],
   imports: [
+    Ng2SearchPipeModule,
     MatCheckboxModule,
     MatSelectModule,
     MatDialogModule,

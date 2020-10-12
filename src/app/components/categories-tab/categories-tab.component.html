@@ -9,7 +9,7 @@
         </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <mat-list *ngFor="let answer of (category | async)?.answers; let answerIndex = index">
+        <mat-list *ngFor="let answer of (category | async)?.answers | filter: searchService.searchText; let answerIndex = index">
             <mat-divider *ngIf="answerIndex != 0"></mat-divider>
 
             <mat-list-item>

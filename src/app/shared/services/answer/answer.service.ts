@@ -19,27 +19,6 @@ export class AnswerService {
     this.categoriesCollection = angularFirestore.collection<Category>("categories")
   }
 
-  // palavras-chaves serão úteis para propósito de pesquisa
-  private generateAnswerKeyWords(string: string): Set<string> {
-    // usamos conjuntos para não termos elementos repetidos
-    let keyWords = new Set<string>()
-    // captura o restante da string que segue o primeiro espaço
-    const substring = string.match(/(?<=\ ).*/)
-
-    // irá gerar substrings que correspondem a string digitada de forma incompleta
-    for (let index = 1; index <= string.length; index++) {
-        keyWords.add( string.substr(0, index).toLowerCase() );
-    }
-
-    if(substring) {
-        // se houver uma substring conforme a regex definida, passaremos a função nessa substring, assim conseguiremos gerar mais possibilidades.
-        // geramos um novo conjunto para unir com outro conjunto
-        keyWords = new Set<string>([...keyWords, ...this.generateAnswerKeyWords(substring[0])])
-    }
-
-    return keyWords
-  }
-
   private adjustToCategoryRef(categoryIDs: string[]): DocumentReference[] {
     return categoryIDs.map( categoryID => this.categoriesCollection.doc(categoryID).ref );
   }
@@ -50,10 +29,7 @@ export class AnswerService {
     const name = answer.name.replace(/\s{2,}/g, " ").trim();
     const categories = this.adjustToCategoryRef(answer.categoryIDs);
 
-    // convertemos o conjunto para array
-    const keyWords = [...this.generateAnswerKeyWords(name)];
-
-    const adjustedAnswer: StoredAnswer = {name, content: answer.content, categoryRefs: categories, keyWords};
+    const adjustedAnswer: StoredAnswer = {name, content: answer.content, categoryRefs: categories};
 
     return adjustedAnswer;
   }

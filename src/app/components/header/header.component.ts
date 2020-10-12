@@ -16,15 +16,15 @@ export class HeaderComponent implements OnInit {
   userIsLogged: boolean = true;
 
   constructor(
-    private _searchService: SearchService,
     private _angularFireAuth: AngularFireAuth,
-    public scriptContext: ScriptContextService
+    public scriptContext: ScriptContextService,
+    public searchService: SearchService,
   ) {
-    this.showSearchToolbar = _searchService.showSearchToolbar.value
+    this.showSearchToolbar = searchService.showSearchToolbar.value
   }
 
   ngOnInit(): void {
-    this._showSearchToolbarSubscription = this._searchService.showSearchToolbar.subscribe( newValue => {
+    this._showSearchToolbarSubscription = this.searchService.showSearchToolbar.subscribe( newValue => {
       this.showSearchToolbar = newValue;
     })
 

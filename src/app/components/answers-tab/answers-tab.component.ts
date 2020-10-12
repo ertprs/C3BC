@@ -7,6 +7,7 @@ import { DeleteAnswerDialogComponent } from '../delete-answer-dialog/delete-answ
 import { Router } from '@angular/router';
 import { ScriptContextService } from 'src/app/shared/services/scriptContext/script-context.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { SearchService } from 'src/app/shared/services/search/search.service';
 
 @Component({
   selector: 'app-answers-tab',
@@ -24,6 +25,7 @@ export class AnswersTabComponent implements OnInit {
     private _changeDetector: ChangeDetectorRef,
     private _domSanitizer: DomSanitizer,
     public scriptContext: ScriptContextService,
+    public searchService: SearchService,
     answerService: AnswerService,
   ) {
     this.answersObservable = answerService.readAnswers();

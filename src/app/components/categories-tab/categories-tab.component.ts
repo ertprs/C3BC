@@ -8,6 +8,7 @@ import { DeleteCategoryDialogComponent } from '../delete-category-dialog/delete-
 import { Router } from '@angular/router';
 import { ScriptContextService } from 'src/app/shared/services/scriptContext/script-context.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { SearchService } from 'src/app/shared/services/search/search.service';
 
 @Component({
   selector: 'app-categories-tab',
@@ -25,6 +26,7 @@ export class CategoriesTabComponent implements OnInit {
     private _changeDetector: ChangeDetectorRef,
     private _domSanitizer: DomSanitizer,
     public scriptContext: ScriptContextService,
+    public searchService: SearchService,
     categoryService: CategoryService
   ) {
     this.categoriesWithAnswersObservable = categoryService.readCategoriesWithAnswers();

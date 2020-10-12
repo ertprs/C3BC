@@ -1,6 +1,6 @@
 <mat-accordion>
     <mat-expansion-panel    #answerPainel
-                            *ngFor="let answer of answersObservable | async; let i = index"
+                            *ngFor="let answer of answersObservable | async | filter:searchService.searchText; let i = index"
                             (opened)="setStep(i)"
                             [expanded]="step === i">
         <mat-expansion-panel-header>

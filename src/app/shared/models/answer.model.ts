@@ -20,7 +20,6 @@ export interface StoredAnswer {
     name: string;
     content: string;
     categoryRefs: DocumentReference[];
-    keyWords: Array<string>
 }
 
 export interface AnswerDialogData {
