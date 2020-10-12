@@ -1,23 +1,20 @@
 // A organização por módulos não foi feita, já que o content-script não oferece suporte. Soluções alternativas podem quebrar as APIs que o Chrome disponibiliza
 
-const contentScriptHeight = 476;
-const contentScriptWidth = 360;
-const formSelector = 			"div.two-pane--container__right-pane--2xMVx > div > div.reply-form--reply-form--GZtNK > form";
-const formParentSelector =		"div.two-pane--container__right-pane--2xMVx > div > div.reply-form--reply-form--GZtNK";
-const answerContentSelector = 	"div.two-pane--container__right-pane--2xMVx > div > div.reply-form--reply-form--GZtNK > form > div.form-group > div > div.rt-editor.rt-editor--wysiwyg-mode > div.ProseMirror";
-const formParentClassForReplyFormOpen = 	"reply-form--reply-form--content--1eWln";
-const answerContentClassForReplyFormOpen =	"ProseMirror-focused";
-const mainContentElement = document.querySelector(".main-content");
-let formParentElement;
-let answerContentElement;
+const 	contentScriptHeight = 476,
+		contentScriptWidth = 360,
+		formSelector = 							"div.two-pane--container__right-pane--2xMVx > div > div.reply-form--reply-form--GZtNK > form",
+		formParentSelector =					"div.two-pane--container__right-pane--2xMVx > div > div.reply-form--reply-form--GZtNK",
+		answerContentSelector = 				"div.two-pane--container__right-pane--2xMVx > div > div.reply-form--reply-form--GZtNK > form > div.form-group > div > div.rt-editor.rt-editor--wysiwyg-mode > div.ProseMirror",
+		formParentClassForReplyFormOpen = 		"reply-form--reply-form--content--1eWln",
+		answerContentClassForReplyFormOpen =	"ProseMirror-focused",
+		mainContentElement = 					document.querySelector(".main-content"),
+		// Observer para lançar evento customizado quando um diálogo abrir, pois o evento "open" para diálogo não existe nativamente
+		dialogObserver = 						new MutationObserver(checkForMutationsToMakeSureTheOpenEventIsDispatchedWhenADialogOpens),
+		ReplyFormObserver = 					new MutationObserver(checkForMutationsToMakeSureTheClassesToKeepReplyFormOpenAreApllied),
+		mainContentObserver = 					new MutationObserver(checkForMutationsToInitializeVariablesAndAddButton);
+let 	formParentElement,
+		answerContentElement;
 
-// Observer para lançar evento customizado quando um diálogo abrir, pois o evento "open" para diálogo não existe nativamente
-const dialogObserver = new MutationObserver(checkForMutationsToMakeSureTheOpenEventIsDispatchedWhenADialogOpens);
-
-// Observer para checar mudanças na aparência da caixa de resposta
-const ReplyFormOpenObserver = new MutationObserver(checkForMutationsToMakeSureTheClassesToKeepReplyFormOpenAreApllied);
-
-const mainContentObserver = new MutationObserver(checkForMutationsToInitializeVariablesAndAddButton);
 mainContentObserver.observe(mainContentElement, { childList: true, subtree: true });
 
 function checkIfTheFormWasLoaded() {
@@ -155,12 +152,12 @@ function makeSureTheReplyFormIsSetToOpen() {
 	formParentElement.classList.add(formParentClassForReplyFormOpen);
 	answerContentElement.classList.add(answerContentClassForReplyFormOpen);
 
-	ReplyFormOpenObserver.observe(formParentElement, { attributes : true, attributeFilter : ['class'] });
-	ReplyFormOpenObserver.observe(answerContentElement, { attributes : true, attributeFilter : ['class'] });
+	ReplyFormObserver.observe(formParentElement, { attributes : true, attributeFilter : ['class'] });
+	ReplyFormObserver.observe(answerContentElement, { attributes : true, attributeFilter : ['class'] });
 }
 
 function cancelObserverForReplyFormOpenClassesChangeObserver() {
-	ReplyFormOpenObserver.disconnect();
+	ReplyFormObserver.disconnect();
 }
 
 function scrollAnswerContentToTheBottom() {

@@ -1,18 +1,17 @@
 // A organização por módulos não foi feita, já que o content-script não oferece suporte. Soluções alternativas podem quebrar as APIs que o Chrome disponibiliza
 
-const contentScriptHeight = 476;
-const contentScriptWidth = 360;
-const cod3rButtonID = 				"cod3r-button";
-const C3BCDialogID = 				"C3BC-dialog";
-const buttonsToolbarSelector =		"div.fr-toolbar";
-const answerContentSelector = 		"div.fr-wrapper > div.fr-view";
-const discussionContentSelector = 	".course-player__course-discussions";
-const pageContentElement = document.getElementById("page-content");
+const 	contentScriptHeight = 476,
+		contentScriptWidth = 360,
+		cod3rButtonID = 				"cod3r-button",
+		C3BCDialogID = 					"C3BC-dialog",
+		buttonsToolbarSelector =		"div.fr-toolbar",
+		answerContentSelector = 		"div.fr-wrapper > div.fr-view",
+		discussionContentSelector = 	".course-player__course-discussions",
+		pageContentElement = 			document.getElementById("page-content"),
+		pageContentObserver = 			new MutationObserver(checkForMutationsToEnableDiscussionContentObserverIfItWasLoaded),
+		discussionContentObserver = 	new MutationObserver(checkForMutationsToMakeSureTheC3BCButtonIsAdded);
 
-const pageContentObserver = new MutationObserver(checkForMutationsToEnableDiscussionContentObserverIfItWasLoaded);
 pageContentObserver.observe(pageContentElement, { childList: true, subtree: true });
-
-const discussionContentObserver = new MutationObserver(checkForMutationsToMakeSureTheC3BCButtonIsAdded);
 
 function checkForMutationsToEnableDiscussionContentObserverIfItWasLoaded() {
 	const discussionContentElement = pageContentElement.querySelector(discussionContentSelector);
