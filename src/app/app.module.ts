@@ -40,6 +40,7 @@ import { EditAnswerComponent } from './pages/edit-answer/edit-answer.component';
 import { EditCategoryComponent } from './pages/edit-category/edit-category.component';
 import { QuillModule } from 'ngx-quill'
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { SearchComponent } from './components/search/search.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
     CreateAnswerComponent,
     CreateCategoryComponent,
     EditAnswerComponent,
-    EditCategoryComponent
+    EditCategoryComponent,
+    SearchComponent
   ],
   imports: [
     Ng2SearchPipeModule,

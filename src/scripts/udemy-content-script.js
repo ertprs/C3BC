@@ -222,7 +222,7 @@ function dialogClickOutsideHandler(event) {
     );
 
     if (!clickedInDialog) {
-		chrome.runtime.sendMessage({message: "resetar tabGroup"});
+		chrome.runtime.sendMessage({message: "C3BC_CLOSED"});
 		event.target.close();
 	}
 }

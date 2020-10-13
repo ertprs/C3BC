@@ -12,7 +12,7 @@ import { FormControl } from '@angular/forms';
 })
 export class HomeComponent implements OnInit {
   private _selectedTabChangeSubscription: Subscription;
-  private _contentScriptJustClosedSubscription: Subscription;
+  private _C3BCDialogJustClosedSubscription: Subscription;
   private _currentTabTextLabel: string;
   @ViewChild("tabGroup") tabGroup: MatTabGroup;
   selectedTab = new FormControl(0);
@@ -34,21 +34,14 @@ export class HomeComponent implements OnInit {
       this._currentTabTextLabel = selectedTabChange.tab.textLabel;
     })
 
-    if(this.scriptContext.isContentScript) {
-      this._contentScriptJustClosedSubscription = this.scriptContext.contentScriptJustClosed.subscribe( () => {
-        // a primeira aba é selecionada novamente quando o usuário abrir o content script novamente após fechá-lo
-        this.selectedTab.setValue(0);
-
-        // como as mudanças partem de um outro contexto, é necessário que forcemos a detecção de mudanças, para que haja também atualização no template
-        this._changeDetector.detectChanges();
-      })
-    }
+    if(this.scriptContext.isContentScript) 
+      this._C3BCDialogJustClosedSubscription = this.scriptContext.C3BCDialogJustClosed.subscribe(this.resetSelectedTab.bind(this))
   }
 
   ngOnDestroy() {
     this._searchService.disableSearchToolbar();
     this._selectedTabChangeSubscription.unsubscribe();
-    this._contentScriptJustClosedSubscription?.unsubscribe()
+    this._C3BCDialogJustClosedSubscription?.unsubscribe()
   }
 
   get buttonMessage(): string {
@@ -67,5 +60,13 @@ export class HomeComponent implements OnInit {
     };
 
     return route;
+  }
+
+  resetSelectedTab() {
+    const firstTab = 0;
+    this.selectedTab.setValue(firstTab);
+
+    // como as mudanças partem de um outro contexto, é necessário que forcemos a detecção de mudanças, para que haja também atualização no template
+    this._changeDetector.detectChanges();
   }
 }

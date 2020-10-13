@@ -13,14 +13,9 @@
         <mat-icon>menu</mat-icon>
       </button>
     </mat-toolbar-row>
-
+    
     <mat-toolbar-row  *ngIf="userIsLogged && showSearchToolbar"
                       [class]="scriptContext.isBroswerActionScript ? 'second-toolbar-row-browser-script' : 'second-toolbar-row-content-script'">
-      <form class="full-width">
-        <mat-form-field id="search-input" class="full-width">
-          <input matInput type="search" name="search" placeholder="Pesquisar" [(ngModel)]="searchService.searchText" autocomplete="off">
-          <mat-icon matSuffix>search</mat-icon>
-        </mat-form-field>
-      </form>
+      <app-search class="full-width"></app-search>
     </mat-toolbar-row>
 </mat-toolbar>

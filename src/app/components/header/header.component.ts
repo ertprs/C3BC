@@ -18,24 +18,20 @@ export class HeaderComponent implements OnInit {
   constructor(
     private _angularFireAuth: AngularFireAuth,
     public scriptContext: ScriptContextService,
-    public searchService: SearchService,
+    public _searchService: SearchService,
   ) {
-    this.showSearchToolbar = searchService.showSearchToolbar.value
+    this.showSearchToolbar = _searchService.showSearchToolbar.value
   }
 
   ngOnInit(): void {
-    this._showSearchToolbarSubscription = this.searchService.showSearchToolbar.subscribe( newValue => {
-      this.showSearchToolbar = newValue;
-    })
+    this._showSearchToolbarSubscription = this._searchService.showSearchToolbar.subscribe( newValue => this.showSearchToolbar = newValue );
 
-    this._userIsLoggedSubscription = this._angularFireAuth.authState.subscribe( auth => {
-      this.userIsLogged = auth ? true : false;
-    })
+    this._userIsLoggedSubscription = this._angularFireAuth.authState.subscribe( auth => this.userIsLogged = auth ? true : false );
   }
 
   ngOnDestroy() {
-    this._showSearchToolbarSubscription.unsubscribe()
-    this._userIsLoggedSubscription.unsubscribe()
+    this._showSearchToolbarSubscription.unsubscribe();
+    this._userIsLoggedSubscription.unsubscribe();
   }
 
   get logoClass() {

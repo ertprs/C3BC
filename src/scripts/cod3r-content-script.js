@@ -104,6 +104,11 @@ function CheckAndMakeSureThatC3BCButtomIsVisibleWhenThePageIsResized(mutations, 
 
 	C3CBDialogElement.addEventListener("open", () => {
 		positionDialog();
+		sendMessageThatC3BCDialogWasOpen();
+	});
+
+	C3CBDialogElement.addEventListener("close", () => {
+		sendMessageThatC3BCDialogWasClosed();
 	});
 
 	C3CBDialogElement.addEventListener("click", dialogClickOutsideHandler);
@@ -214,22 +219,32 @@ chrome.runtime.onMessage.addListener(
 		sendResponse({farewell: "Resposta adicionada"});
 });
 
-// fonte: https://stackoverflow.com/questions/50037663/how-to-close-a-native-html-dialog-when-clicking-outside-with-javascript
-function dialogClickOutsideHandler(event) {
-    if (event.target.tagName !== 'DIALOG') // previne problema com formulários
-        return;
+// inspiração: https://stackoverflow.com/questions/50037663/how-to-close-a-native-html-dialog-when-clicking-outside-with-javascript
+function checkIfClickWasInTheC3BCDialog(clickEvent) {
+	if (clickEvent.target.tagName !== 'DIALOG') return; // previne problema com formulários
 
-    const rect = event.target.getBoundingClientRect();
+    const C3BCDialogRect = clickEvent.target.getBoundingClientRect();
 
     const clickedInDialog = (
-        rect.top <= event.clientY &&
-        event.clientY <= rect.top + rect.height &&
-        rect.left <= event.clientX &&
-        event.clientX <= rect.left + rect.width
-    );
+        C3BCDialogRect.top <= clickEvent.clientY &&
+        clickEvent.clientY <= C3BCDialogRect.top + C3BCDialogRect.height &&
+        C3BCDialogRect.left <= clickEvent.clientX &&
+        clickEvent.clientX <= C3BCDialogRect.left + C3BCDialogRect.width
+	);
+	
+	return clickedInDialog
+}
 
-    if (!clickedInDialog) {
-		chrome.runtime.sendMessage({message: "resetar tabGroup"});
-		event.target.close();
-	}
+function dialogClickOutsideHandler(clickEvent) {
+	const C3BCDialog = 	clickEvent.target;
+
+	if( !checkIfClickWasInTheC3BCDialog(clickEvent) ) C3BCDialog.close();
+}
+
+function sendMessageThatC3BCDialogWasClosed() {
+	chrome.runtime.sendMessage({message: "C3BC_CLOSED"});
+}
+
+function sendMessageThatC3BCDialogWasOpen() {
+	chrome.runtime.sendMessage({message: "C3BC_OPEN"});
 }

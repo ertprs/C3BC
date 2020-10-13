@@ -34,7 +34,7 @@ export class AnswersTabComponent implements OnInit {
   ngOnInit(): void {
     // sempre que o usuário fechar contentScript, a seleção voltará para a primeira resposta
     if(this.scriptContext.isContentScript) {
-      this._contentScriptJustClosedSubscription = this.scriptContext.contentScriptJustClosed.subscribe( () => {
+      this._contentScriptJustClosedSubscription = this.scriptContext.C3BCDialogJustClosed.subscribe( () => {
         this.step = 0;
 
         // como as mudanças partem de um outro contexto, é necessário que forcemos a detecção de mudanças, para que haja também atualização no template

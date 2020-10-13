@@ -6,7 +6,8 @@ import { Subject } from 'rxjs';
 export class ScriptContextService {
   isBroswerActionScript: boolean;
   isContentScript: boolean;
-  contentScriptJustClosed = new Subject();
+  C3BCDialogJustOpened = new Subject();
+  C3BCDialogJustClosed = new Subject();
 
   // teremos a altura de window como indicadora de que o script está rodando no browser action ou no content script. Para que funcione, a altura do
   // browser action terá que ser sempre igual a 600, enquanto que isContentScript deverá ser sempre diferente desse valor
@@ -14,12 +15,18 @@ export class ScriptContextService {
     this.isBroswerActionScript = window.innerHeight == 600
     this.isContentScript = !this.isBroswerActionScript
 
-    // aqui, definimos uma procedimento que irá pôr o tabGroup em seu estado inicial novamente
-    chrome.runtime.onMessage.addListener( (request) => {
-      if (request.message == "resetar tabGroup"){
-        this.contentScriptJustClosed.next()
-      };
-    });
+    chrome.runtime.onMessage.addListener(this.checkExtensionMessage.bind(this));
+  }
+
+  // aqui, definimos uma procedimento que irá pôr o tabGroup em seu estado inicial novamente
+  checkExtensionMessage({message}) {
+    switch (message) {
+      case "C3BC_OPEN":
+        this.C3BCDialogJustOpened.next();
+        break;
+      case "C3BC_CLOSED":
+        this.C3BCDialogJustClosed.next();
+    }
   }
 
   insertAnswer(answerContent: string) {
