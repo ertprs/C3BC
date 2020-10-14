@@ -11,14 +11,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MatCardModule} from '@angular/material/card';
 import {MatInputModule} from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-
-import { AngularFireModule } from "@angular/fire";
-import { AngularFireAuthModule } from "@angular/fire/auth";
-
-import { environment } from "src/environments/environment";
-import { HomeComponent } from './pages/home/home.component';
-
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
@@ -26,6 +18,14 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatListModule} from '@angular/material/list';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatExpansionModule} from '@angular/material/expansion';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+
+import { AngularFireModule } from "@angular/fire";
+import { AngularFireAuthModule } from "@angular/fire/auth";
+
+import { environment } from "src/environments/environment";
+
+import { HomeComponent } from './pages/home/home.component';
 import { AnswersTabComponent } from './components/answers-tab/answers-tab.component';
 import { CategoriesTabComponent } from './components/categories-tab/categories-tab.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -59,6 +59,7 @@ import { SearchComponent } from './components/search/search.component';
     SearchComponent
   ],
   imports: [
+    MatProgressSpinnerModule,
     Ng2SearchPipeModule,
     MatCheckboxModule,
     MatSelectModule,

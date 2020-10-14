@@ -39,3 +39,12 @@ mat-panel-title {
     display: block;
     flex-grow: 0;
 }
+
+#spinner-wrapper {
+    display: flex;
+    height: 256px;
+    justify-content: center;
+    align-items: center;
+    padding-top: 32px;
+    overflow: hidden;
+}

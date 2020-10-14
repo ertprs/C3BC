@@ -1,44 +1,52 @@
-<mat-accordion>
-    <mat-expansion-panel  #categoryPainel
-                            *ngFor="let category of categoriesWithAnswersObservable | async; let categoryIndex = index"
-                            (opened)="setStep(categoryIndex)"
-                            [expanded]="step === categoryIndex">
-        <mat-expansion-panel-header>
-        <mat-panel-title>
-            {{(category | async)?.name}}
-        </mat-panel-title>
-        </mat-expansion-panel-header>
+<div *ngIf="categoriesWithAnswersObservable | async as categoriesWithAnswers; else loading">
+    <mat-accordion>
+        <mat-expansion-panel  #categoryPainel
+                                *ngFor="let category of categoriesWithAnswers; let categoryIndex = index"
+                                (opened)="setStep(categoryIndex)"
+                                [expanded]="step === categoryIndex">
+            <mat-expansion-panel-header>
+            <mat-panel-title>
+                {{(category | async)?.name}}
+            </mat-panel-title>
+            </mat-expansion-panel-header>
 
-        <mat-list *ngFor="let answer of (category | async)?.answers | filter: searchService.searchText; let answerIndex = index">
-            <mat-divider *ngIf="answerIndex != 0"></mat-divider>
+            <mat-list *ngFor="let answer of (category | async)?.answers | filter: searchService.searchText; let answerIndex = index">
+                <mat-divider *ngIf="answerIndex != 0"></mat-divider>
 
-            <mat-list-item>
-                <div mat-line>{{answer.name}}</div>
-                <button mat-icon-button class="answer-notes-button" (click)="$event.stopPropagation();" (click)="scriptContext.insertAnswer(answer.content)">
-                    <mat-icon>notes</mat-icon>
-                </button>
-            </mat-list-item>
-            
-            <div mat-line class="answer-content">
-                <div class="ql-container ql-snow" style="border-width: 0;">
-                    <div style="width: 100%" class="ql-editor" [innerHTML]="byPassHTML(answer.content)"></div>
+                <mat-list-item>
+                    <div mat-line>{{answer.name}}</div>
+                    <button mat-icon-button class="answer-notes-button" (click)="$event.stopPropagation();" (click)="scriptContext.insertAnswer(answer.content)">
+                        <mat-icon>notes</mat-icon>
+                    </button>
+                </mat-list-item>
+                
+                <div mat-line class="answer-content">
+                    <div class="ql-container ql-snow" style="border-width: 0;">
+                        <div style="width: 100%" class="ql-editor" [innerHTML]="byPassHTML(answer.content)"></div>
+                    </div>
                 </div>
-            </div>
-        </mat-list>
+            </mat-list>
 
-        <mat-action-row [class]="scriptContext.isBroswerActionScript ? 'mat-action-row-browser-action' : 'mat-action-row-content-script'">
-            <div *ngIf="scriptContext.isBroswerActionScript">
-                <button class="edit-button" mat-icon-button (click)="navigateToEditCategory(category)">
-                <mat-icon>edit</mat-icon>
-                </button>
-                <button class="delete-button" mat-icon-button (click)="openDialog(category)">
-                <mat-icon>delete</mat-icon>
-                </button>
-            </div>
-            <div>
-                <button *ngIf="step > 0" mat-button color="warn" (click)="prevCategory()">Anterior</button>
-                <button mat-button class="next-button" color="primary" (click)="nextCategory()">Próxima</button>
-            </div>
-        </mat-action-row>
-    </mat-expansion-panel>
-</mat-accordion>
+            <mat-action-row [class]="scriptContext.isBroswerActionScript ? 'mat-action-row-browser-action' : 'mat-action-row-content-script'">
+                <div *ngIf="scriptContext.isBroswerActionScript">
+                    <button class="edit-button" mat-icon-button (click)="navigateToEditCategory(category)">
+                    <mat-icon>edit</mat-icon>
+                    </button>
+                    <button class="delete-button" mat-icon-button (click)="openDialog(category)">
+                    <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+                <div>
+                    <button *ngIf="step > 0" mat-button color="warn" (click)="prevCategory()">Anterior</button>
+                    <button mat-button class="next-button" color="primary" (click)="nextCategory()">Próxima</button>
+                </div>
+            </mat-action-row>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
+
+<ng-template #loading>
+    <div id="spinner-wrapper">
+        <mat-spinner diameter="50"></mat-spinner>
+    </div>
+</ng-template>

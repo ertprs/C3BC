@@ -1,38 +1,46 @@
-<mat-accordion>
-    <mat-expansion-panel    #answerPainel
-                            *ngFor="let answer of answersObservable | async | filter:searchService.searchText; let i = index"
-                            (opened)="setStep(i)"
-                            [expanded]="step === i">
-        <mat-expansion-panel-header>
-            <mat-panel-title>
-                <mat-list-item>
-                    <div mat-line>{{answer.name}}</div>
-                    <div [hidden]="answerPainel.expanded" mat-line class="answer-content-preview" [innerHTML]="byPassHTML(answer.content)"></div>
-                </mat-list-item>
-            </mat-panel-title>
+<div *ngIf="answersObservable | async as answers; else loading">
+    <mat-accordion>
+        <mat-expansion-panel    #answerPainel
+                                *ngFor="let answer of answers | filter:searchService.searchText; let i = index"
+                                (opened)="setStep(i)"
+                                [expanded]="step === i">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <mat-list-item>
+                        <div mat-line>{{answer.name}}</div>
+                        <div [hidden]="answerPainel.expanded" mat-line class="answer-content-preview" [innerHTML]="byPassHTML(answer.content)"></div>
+                    </mat-list-item>
+                </mat-panel-title>
 
-            <button mat-icon-button class="answer-notes-button" (click)="$event.stopPropagation();" (click)="scriptContext.insertAnswer(answer.content)">
-                <mat-icon>notes</mat-icon>
-            </button>
-        </mat-expansion-panel-header>
-
-        <div class="answer-content ql-container ql-snow" style="border-width: 0;">
-            <div style="width: 100%" class="ql-editor" [innerHTML]="byPassHTML(answer.content)"></div>
-        </div>
-
-        <mat-action-row [class]="scriptContext.isBroswerActionScript ? 'mat-action-row-browser-action' : 'mat-action-row-content-script'">
-            <div *ngIf="scriptContext.isBroswerActionScript">
-                <button class="edit-button" mat-icon-button (click)="navigateToEditAnswer(answer)">
-                    <mat-icon>edit</mat-icon>
+                <button mat-icon-button class="answer-notes-button" (click)="$event.stopPropagation();" (click)="scriptContext.insertAnswer(answer.content)">
+                    <mat-icon>notes</mat-icon>
                 </button>
-                <button class="delete-button" mat-icon-button (click)="openDialog(answer.id)">
-                    <mat-icon>delete</mat-icon>
-                </button>
+            </mat-expansion-panel-header>
+
+            <div class="answer-content ql-container ql-snow" style="border-width: 0;">
+                <div style="width: 100%" class="ql-editor" [innerHTML]="byPassHTML(answer.content)"></div>
             </div>
-            <div>
-                <button *ngIf="step > 0" mat-button color="warn" (click)="prevAnswer()">Anterior</button>
-                <button mat-button class="next-button" color="primary" (click)="nextAnswer()">Próxima</button>
-            </div>
-        </mat-action-row>
-    </mat-expansion-panel>
-</mat-accordion>
+
+            <mat-action-row [class]="scriptContext.isBroswerActionScript ? 'mat-action-row-browser-action' : 'mat-action-row-content-script'">
+                <div *ngIf="scriptContext.isBroswerActionScript">
+                    <button class="edit-button" mat-icon-button (click)="navigateToEditAnswer(answer)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button class="delete-button" mat-icon-button (click)="openDialog(answer.id)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+                <div>
+                    <button *ngIf="step > 0" mat-button color="warn" (click)="prevAnswer()">Anterior</button>
+                    <button mat-button class="next-button" color="primary" (click)="nextAnswer()">Próxima</button>
+                </div>
+            </mat-action-row>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
+
+<ng-template #loading>
+    <div id="spinner-wrapper">
+        <mat-spinner diameter="50"></mat-spinner>
+    </div>
+</ng-template>

@@ -45,3 +45,12 @@
     margin-left: 0px;
     padding-left: 12px;
 }
+
+#spinner-wrapper {
+    display: flex;
+    height: 256px;
+    justify-content: center;
+    align-items: center;
+    padding-top: 32px;
+    overflow: hidden;
+}
