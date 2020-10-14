@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CategoryService } from 'src/app/shared/services/category/category.service';
 import { Observable } from 'rxjs';
 import { Category } from 'src/app/shared/models/category.model';
@@ -20,6 +20,7 @@ export class EditAnswerComponent implements OnInit {
   answer: Answer;
   richEditorConfig: QuillModule;
   useCustomInvalidClass: boolean;
+  @ViewChild('answerName') answerNameInputElement: ElementRef;
 
   constructor(
     private _answerService: AnswerService,
@@ -58,6 +59,11 @@ export class EditAnswerComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  ngAfterContentInit() {
+    // Usar setTimeout evita problemas com detecção de mudanças. Essa técnica é documentada aqui: https://angular.io/guide/component-interaction#!#parent-to-view-child
+    setTimeout(() => this.answerNameInputElement.nativeElement.focus(), 0);
   }
 
   editAnswer() {

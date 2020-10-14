@@ -4,7 +4,7 @@
     <form [formGroup]="answerFormGroup">
       <mat-form-field>
         <mat-label>Nome</mat-label>
-        <input formControlName="name" matInput placeholder="Ex. Como o this funciona" autocomplete="off">
+        <input #answerName formControlName="name" matInput placeholder="Ex. Como o this funciona" autocomplete="off">
       </mat-form-field>
 
       <mat-form-field>

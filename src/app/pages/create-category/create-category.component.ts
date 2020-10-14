@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { Category } from 'src/app/shared/models/category.model';
@@ -13,6 +13,7 @@ import { CategoryService } from 'src/app/shared/services/category/category.servi
 export class CreateCategoryComponent implements OnInit {
   categoryFormGroup: FormGroup;
   categoriesObservable: Observable<Category[]>;
+  @ViewChild('categoryName') categoryNameInputElement: ElementRef;
 
   constructor(
     private _categoryService: CategoryService,
@@ -28,6 +29,11 @@ export class CreateCategoryComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  ngAfterViewInit() {
+    // Usar setTimeout evita problemas com detecção de mudanças. Essa técnica é documentada aqui: https://angular.io/guide/component-interaction#!#parent-to-view-child
+    setTimeout(() => this.categoryNameInputElement.nativeElement.focus(), 0);
   }
 
   createCategory() {

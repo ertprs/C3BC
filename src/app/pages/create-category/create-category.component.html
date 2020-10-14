@@ -4,7 +4,7 @@
       <form [formGroup]="categoryFormGroup">
         <mat-form-field>
           <mat-label>Nome</mat-label>
-          <input id="nameInput" formControlName="name" matInput placeholder="Ex. WEB" autocomplete="off">
+          <input #categoryName id="nameInput" formControlName="name" matInput placeholder="Ex. WEB" autocomplete="off">
         </mat-form-field>
   
         <mat-form-field>
