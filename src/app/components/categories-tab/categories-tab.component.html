@@ -5,9 +5,9 @@
                                 (opened)="setStep(categoryIndex)"
                                 [expanded]="step === categoryIndex">
             <mat-expansion-panel-header>
-            <mat-panel-title>
-                {{(category | async)?.name}}
-            </mat-panel-title>
+                <mat-panel-title class="disable-text-selection">
+                    {{(category | async)?.name}}
+                </mat-panel-title>
             </mat-expansion-panel-header>
 
             <mat-list *ngFor="let answer of (category | async)?.answers | filter: searchService.searchText; let answerIndex = index">

@@ -5,7 +5,7 @@
                                 (opened)="setStep(i)"
                                 [expanded]="step === i">
             <mat-expansion-panel-header>
-                <mat-panel-title>
+                <mat-panel-title class="disable-text-selection">
                     <mat-list-item>
                         <div mat-line>{{answer.name}}</div>
                         <div [hidden]="answerPainel.expanded" mat-line class="answer-content-preview" [innerHTML]="byPassHTML(answer.content)"></div>

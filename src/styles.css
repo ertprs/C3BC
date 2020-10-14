@@ -73,3 +73,7 @@ div.ql-editor.ql-blank::before {
 div.ql-editor {
     padding-right: 15px;
 }
+
+.disable-text-selection {
+    user-select: none;
+}
