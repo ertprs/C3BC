@@ -37,7 +37,8 @@ export class SearchComponent implements OnInit {
   }
 
   focusOnTheSearchInput() {
-    this.searchInputElement.nativeElement.focus();
+    // Usar setTimeout evita problemas com detecção de mudanças. Essa técnica é documentada aqui: https://angular.io/guide/component-interaction#!#parent-to-view-child
+    setTimeout(() => this.searchInputElement.nativeElement.focus(), 0);
 
     // como as mudanças podem partir de um outro contexto, é necessário que forcemos a detecção de mudanças, para que haja também atualização no template
     this._changeDetector.detectChanges();
