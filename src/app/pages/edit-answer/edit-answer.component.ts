@@ -8,6 +8,7 @@ import { AnswerService } from 'src/app/shared/services/answer/answer.service';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
 import { QuillModule } from 'ngx-quill';
+import 'quill-emoji/dist/quill-emoji.js'
 
 @Component({
   selector: 'app-edit-answer',
@@ -53,8 +54,12 @@ export class EditAnswerComponent implements OnInit {
           ['code-block'],
           // [{ 'indent': '-1'}, { 'indent': '+1' }],
           ['clean'],                                  // botão para remover formatação
+          ['emoji']
         ]
-      }
+      },
+      "emoji-shortname": true,
+      "emoji-textarea": false,
+      "emoji-toolbar": true,
     }
   }
 
