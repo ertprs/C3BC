@@ -11,65 +11,11 @@ const 	contentScriptHeight = 476,
 		// Observer para lançar evento customizado quando um diálogo abrir, pois o evento "open" para diálogo não existe nativamente
 		dialogObserver = 						new MutationObserver(checkForMutationsToMakeSureTheOpenEventIsDispatchedWhenADialogOpens),
 		ReplyFormObserver = 					new MutationObserver(checkForMutationsToMakeSureTheClassesToKeepReplyFormOpenAreApllied),
-		mainContentObserver = 					new MutationObserver(checkForMutationsToInitializeVariablesAndAddButton);
+		mainContentObserver = 					new MutationObserver(checkForMutationsToInitialize);
 let 	formParentElement,
 		answerContentElement;
 
 mainContentObserver.observe(mainContentElement, { childList: true, subtree: true });
-
-function checkIfTheFormWasLoaded() {
-	return document.querySelector(formSelector);
-}
-
-// o :not(span) é necessário, pois, num primeiro momento, a Udemy carrega o a div.ProseMirror e fica mostrando uma tela de carregamento, isso é caracterizado por um filho span dentro deste
-// elemento, mas, quando os dados da resposta chegam de forma assíncrona, este elemento é recriado, fazendo com que percamos a sua referência caso o peguemos de início
-function checkIfTheAnswerContentWasLoaded() {
-	return document.querySelector(answerContentSelector + ' > :not(span)');
-}
-
-function checkForMutationsToInitializeVariablesAndAddButton() {
-	const formWasLoaded = checkIfTheFormWasLoaded();
-	const answerContentWasLoaded = checkIfTheAnswerContentWasLoaded();
-
-	if(formWasLoaded && answerContentWasLoaded) {
-		formParentElement = document.querySelector(formParentSelector);
-		answerContentElement = document.querySelector(answerContentSelector);
-
-		addC3BCButton();
-		mainContentObserver.disconnect();
-	}
-}
-
-function addC3BCButton() {
-	const cod3rButton = document.createElement("button");
-	cod3rButton.innerHTML = "Cod3r";
-	cod3rButton.classList.add("btn");
-	cod3rButton.setAttribute("type", "button");
-	cod3rButton.setAttribute("id", "cod3r-button");
-	cod3rButton.setAttribute("aria-label", "Adicionar respostas padrões");
-	cod3rButton.setAttribute("title", "Adicionar respostas padrões");
-
-	cod3rButton.addEventListener("mousedown", clickEvent => {
-		if(clickEvent.button !== 0) return;
-
-		clickEvent.preventDefault();
-		showC3CBDialog();
-	});
-
-	// aqui está sendo capturado um botão e depois pegando o seu pai porque, dentro da div abaixo cuja propriedade data-purpose é igual a "menu-bar",
-	// há duas divs que têm como classe btn-group. A que apresenta algum botão dentro é o nosso alvo. 
-	const formButtonsGroup = document.querySelector("div[data-purpose='menu-bar'] > div.btn-group > button").parentNode;
-	formButtonsGroup.insertAdjacentElement("beforeend", cod3rButton);
-}
-
-function checkForMutationsToMakeSureTheOpenEventIsDispatchedWhenADialogOpens(mutations) {
-	mutations.forEach( mutation => {
-		if(mutation.attributeName !== "open") return;
-
-		if(mutation.target.hasAttribute("open"))
-			mutation.target.dispatchEvent(new CustomEvent('open'));
-	});
-}
 
 (function addC3CBDialog() {
 	const C3CBDialogElement = document.createElement("dialog");
@@ -110,6 +56,73 @@ function checkForMutationsToMakeSureTheOpenEventIsDispatchedWhenADialogOpens(mut
 	
 	document.body.appendChild(C3CBDialogElement);
 })();
+
+(function addCustomFonts() {
+	const styleElement = document.createElement('style');
+	styleElement.textContent =
+	`
+		@font-face {
+			font-family: 'Oxanium';
+			src: url( ${ chrome.extension.getURL('assets/fonts/Oxanium-SemiBold.ttf') } ) format("truetype");
+		};
+	`
+	document.head.appendChild(styleElement);
+})();
+
+function checkIfTheFormWasLoaded() {
+	return document.querySelector(formSelector);
+}
+
+// o :not(span) é necessário, pois, num primeiro momento, a Udemy carrega o a div.ProseMirror e fica mostrando uma tela de carregamento, isso é caracterizado por um filho span dentro deste
+// elemento, mas, quando os dados da resposta chegam de forma assíncrona, este elemento é recriado, fazendo com que percamos a sua referência caso o peguemos de início
+function checkIfTheAnswerContentWasLoaded() {
+	return document.querySelector(answerContentSelector + ' > :not(span)');
+}
+
+function checkForMutationsToInitialize() {
+	const formWasLoaded = checkIfTheFormWasLoaded();
+	const answerContentWasLoaded = checkIfTheAnswerContentWasLoaded();
+
+	if(formWasLoaded && answerContentWasLoaded) {
+		formParentElement = document.querySelector(formParentSelector);
+		answerContentElement = document.querySelector(answerContentSelector);
+
+		addC3BCButton();
+		mainContentObserver.disconnect();
+	}
+}
+
+function addC3BCButton() {
+	const cod3rButton = document.createElement("button");
+	cod3rButton.innerHTML = "COD3R";
+	cod3rButton.classList.add("btn");
+	cod3rButton.setAttribute("type", "button");
+	cod3rButton.setAttribute("id", "cod3r-button");
+	cod3rButton.setAttribute("aria-label", "Adicionar respostas padrões");
+	cod3rButton.setAttribute("title", "Adicionar respostas padrões");
+	cod3rButton.setAttribute("style", "font-family: 'Oxanium', cursive;");
+	
+	cod3rButton.addEventListener("mousedown", clickEvent => {
+		if(clickEvent.button !== 0) return;
+
+		clickEvent.preventDefault();
+		showC3CBDialog();
+	});
+
+	// aqui está sendo capturado um botão e depois pegando o seu pai porque, dentro da div abaixo cuja propriedade data-purpose é igual a "menu-bar",
+	// há duas divs que têm como classe btn-group. A que apresenta algum botão dentro é o nosso alvo. 
+	const formButtonsGroup = document.querySelector("div[data-purpose='menu-bar'] > div.btn-group > button").parentNode;
+	formButtonsGroup.insertAdjacentElement("beforeend", cod3rButton);
+}
+
+function checkForMutationsToMakeSureTheOpenEventIsDispatchedWhenADialogOpens(mutations) {
+	mutations.forEach( mutation => {
+		if(mutation.attributeName !== "open") return;
+
+		if(mutation.target.hasAttribute("open"))
+			mutation.target.dispatchEvent(new CustomEvent('open'));
+	});
+}
 
 function positionDialog() {
 	const C3CBDialogElement = document.getElementById("C3BC-dialog");

@@ -31,5 +31,8 @@
       "run_at":"document_end"
     }
   ],
-  "web_accessible_resources": ["*.html"]
+  "web_accessible_resources": [
+    "*.html",
+    "assets/fonts/*"
+  ]
 }
