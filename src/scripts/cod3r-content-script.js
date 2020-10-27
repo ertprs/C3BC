@@ -8,76 +8,12 @@ const 	contentScriptHeight = 476,
 		answerContentSelector = 		"div.fr-wrapper > div.fr-view",
 		discussionContentSelector = 	".course-player__course-discussions",
 		pageContentElement = 			document.getElementById("page-content"),
+		// Observer para lançar evento customizado quando um diálogo abrir, pois o evento "open" para diálogo não existe nativamente
+		dialogObserver = 				new MutationObserver(checkForMutationsToMakeSureTheOpenEventIsDispatchedWhenADialogOpens),
 		pageContentObserver = 			new MutationObserver(checkForMutationsToEnableDiscussionContentObserverIfItWasLoaded),
 		discussionContentObserver = 	new MutationObserver(checkForMutationsToMakeSureTheC3BCButtonIsAdded);
 
 pageContentObserver.observe(pageContentElement, { childList: true, subtree: true });
-
-function checkForMutationsToEnableDiscussionContentObserverIfItWasLoaded() {
-	const discussionContentElement = pageContentElement.querySelector(discussionContentSelector);
-	
-	if(discussionContentElement) {
-		discussionContentObserver.observe(discussionContentElement, { childList: true });
-		pageContentObserver.disconnect();
-	}
-}
-
-function checkForMutationsToMakeSureTheC3BCButtonIsAdded() {
-	const buttonsToolbarElement = document.querySelector(buttonsToolbarSelector);
-	const cod3rButtonElement = document.getElementById(cod3rButtonID);
-	
-	if(buttonsToolbarElement && !cod3rButtonElement) addC3BCButton();
-}
-
-// Observer para lançar evento customizado quando um diálogo abrir, pois o evento "open" para diálogo não existe nativamente
-const dialogObserver = new MutationObserver( mutations => {
-	mutations.forEach( (mutation) => {
-		if(mutation.attributeName !== "open") return;
-
-		if(mutation.target.hasAttribute("open"))
-			mutation.target.dispatchEvent(new CustomEvent('open'));
-	});
-});
-
-function addC3BCButton() {
-	const cod3rButtonElement = document.createElement("button");
-	cod3rButtonElement.innerHTML = "Cod3r";
-	cod3rButtonElement.setAttribute("id", cod3rButtonID);
-	cod3rButtonElement.setAttribute("type", "button");
-	cod3rButtonElement.setAttribute("tabindex", -1);
-	cod3rButtonElement.setAttribute("role", "button");
-	cod3rButtonElement.setAttribute("title", "Adicionar respostas padrões");
-	cod3rButtonElement.classList.add("fr-command", "fr-btn", "fr-btn-font_awesome");
-	cod3rButtonElement.setAttribute("style", "font-weight: bold; padding: 12px; width: auto;");
-
-	cod3rButtonElement.addEventListener("mousedown", clickEvent => {
-		if(clickEvent.button !== 0) return;
-
-		clickEvent.preventDefault();
-		showC3CBDialog();
-	});
-
-	const buttonsToolbarElement = document.querySelector(buttonsToolbarSelector);
-	buttonsToolbarElement.insertAdjacentElement("beforeend", cod3rButtonElement);
-
-	// Observer para checar mudanças no toolbar de botões. É necessário, pois, sempre que o usuário redimenciona o browser, o botão adicionado é movido para o ínicio e recebe uma classe
-	// que o deixa invisível
-	const CheckAndMakeSureThatC3BCButtomIsVisibleWhenThePageIsResizedObserver = new MutationObserver(CheckAndMakeSureThatC3BCButtomIsVisibleWhenThePageIsResized);
-	CheckAndMakeSureThatC3BCButtomIsVisibleWhenThePageIsResizedObserver.observe(cod3rButtonElement, { attributes : true });
-}
-
-function CheckAndMakeSureThatC3BCButtomIsVisibleWhenThePageIsResized(mutations, mutationObserver) {
-	mutations.forEach( mutationRecord => {
-		const mutatedElement = mutationRecord.target;
-		if(mutatedElement.classList.contains("fr-hidden")) {
-			mutatedElement.classList.remove("fr-hidden");
-			mutationObserver.takeRecords();
-
-			//aqui, movemos o botão novamente para final
-    		mutatedElement.parentNode.appendChild(mutatedElement.parentNode.firstElementChild);
-		}
-	});
-}
 
 (function addC3CBDialog() {
 	const C3CBDialogElement = document.createElement("dialog");
@@ -116,6 +52,83 @@ function CheckAndMakeSureThatC3BCButtomIsVisibleWhenThePageIsResized(mutations, 
 
 	document.body.appendChild(C3CBDialogElement);
 })();
+
+(function addCustomFonts() {
+	const styleElement = document.createElement('style');
+	styleElement.textContent =
+	`
+		@font-face {
+			font-family: 'Oxanium';
+			src: url( ${ chrome.extension.getURL('assets/fonts/Oxanium-SemiBold.ttf') } ) format("truetype");
+		};
+	`
+	document.head.appendChild(styleElement);
+})();
+
+function checkForMutationsToEnableDiscussionContentObserverIfItWasLoaded() {
+	const discussionContentElement = pageContentElement.querySelector(discussionContentSelector);
+	
+	if(discussionContentElement) {
+		discussionContentObserver.observe(discussionContentElement, { childList: true });
+		pageContentObserver.disconnect();
+	}
+}
+
+function checkForMutationsToMakeSureTheC3BCButtonIsAdded() {
+	const buttonsToolbarElement = document.querySelector(buttonsToolbarSelector);
+	const cod3rButtonElement = document.getElementById(cod3rButtonID);
+	
+	if(buttonsToolbarElement && !cod3rButtonElement) addC3BCButton();
+}
+
+function addC3BCButton() {
+	const cod3rButtonElement = document.createElement("button");
+	cod3rButtonElement.innerHTML = "COD3R";
+	cod3rButtonElement.setAttribute("id", cod3rButtonID);
+	cod3rButtonElement.setAttribute("type", "button");
+	cod3rButtonElement.setAttribute("tabindex", -1);
+	cod3rButtonElement.setAttribute("role", "button");
+	cod3rButtonElement.setAttribute("title", "Adicionar respostas padrões");
+	cod3rButtonElement.classList.add("fr-command", "fr-btn", "fr-btn-font_awesome");
+	cod3rButtonElement.setAttribute("style", "font-family: 'Oxanium', cursive; font-weight: bold; padding: 12px; width: auto;");
+
+	cod3rButtonElement.addEventListener("mousedown", clickEvent => {
+		if(clickEvent.button !== 0) return;
+
+		clickEvent.preventDefault();
+		showC3CBDialog();
+	});
+
+	const buttonsToolbarElement = document.querySelector(buttonsToolbarSelector);
+	buttonsToolbarElement.insertAdjacentElement("beforeend", cod3rButtonElement);
+
+	// Observer para checar mudanças no toolbar de botões. É necessário, pois, sempre que o usuário redimenciona o browser, o botão adicionado é movido para o ínicio e recebe uma classe
+	// que o deixa invisível
+	const CheckAndMakeSureThatC3BCButtomIsVisibleWhenThePageIsResizedObserver = new MutationObserver(CheckAndMakeSureThatC3BCButtomIsVisibleWhenThePageIsResized);
+	CheckAndMakeSureThatC3BCButtomIsVisibleWhenThePageIsResizedObserver.observe(cod3rButtonElement, { attributes : true });
+}
+
+function CheckAndMakeSureThatC3BCButtomIsVisibleWhenThePageIsResized(mutations, mutationObserver) {
+	mutations.forEach( mutationRecord => {
+		const mutatedElement = mutationRecord.target;
+		if(mutatedElement.classList.contains("fr-hidden")) {
+			mutatedElement.classList.remove("fr-hidden");
+			mutationObserver.takeRecords();
+
+			//aqui, movemos o botão novamente para final
+    		mutatedElement.parentNode.appendChild(mutatedElement.parentNode.firstElementChild);
+		}
+	});
+}
+
+function checkForMutationsToMakeSureTheOpenEventIsDispatchedWhenADialogOpens(mutations) {
+	mutations.forEach( mutation => {
+		if(mutation.attributeName !== "open") return;
+
+		if(mutation.target.hasAttribute("open"))
+			mutation.target.dispatchEvent(new CustomEvent('open'));
+	});
+}
 
 // o posicionamento do diálogo será relativo ao posicionamento do botão
 function positionDialog() {

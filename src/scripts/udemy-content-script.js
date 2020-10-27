@@ -93,16 +93,16 @@ function checkForMutationsToInitialize() {
 }
 
 function addC3BCButton() {
-	const cod3rButton = document.createElement("button");
-	cod3rButton.innerHTML = "COD3R";
-	cod3rButton.classList.add("btn");
-	cod3rButton.setAttribute("type", "button");
-	cod3rButton.setAttribute("id", "cod3r-button");
-	cod3rButton.setAttribute("aria-label", "Adicionar respostas padrões");
-	cod3rButton.setAttribute("title", "Adicionar respostas padrões");
-	cod3rButton.setAttribute("style", "font-family: 'Oxanium', cursive;");
+	const cod3rButtonElement = document.createElement("button");
+	cod3rButtonElement.innerHTML = "COD3R";
+	cod3rButtonElement.classList.add("btn");
+	cod3rButtonElement.setAttribute("type", "button");
+	cod3rButtonElement.setAttribute("id", "cod3r-button");
+	cod3rButtonElement.setAttribute("aria-label", "Adicionar respostas padrões");
+	cod3rButtonElement.setAttribute("title", "Adicionar respostas padrões");
+	cod3rButtonElement.setAttribute("style", "font-family: 'Oxanium', cursive;");
 	
-	cod3rButton.addEventListener("mousedown", clickEvent => {
+	cod3rButtonElement.addEventListener("mousedown", clickEvent => {
 		if(clickEvent.button !== 0) return;
 
 		clickEvent.preventDefault();
@@ -112,7 +112,7 @@ function addC3BCButton() {
 	// aqui está sendo capturado um botão e depois pegando o seu pai porque, dentro da div abaixo cuja propriedade data-purpose é igual a "menu-bar",
 	// há duas divs que têm como classe btn-group. A que apresenta algum botão dentro é o nosso alvo. 
 	const formButtonsGroup = document.querySelector("div[data-purpose='menu-bar'] > div.btn-group > button").parentNode;
-	formButtonsGroup.insertAdjacentElement("beforeend", cod3rButton);
+	formButtonsGroup.insertAdjacentElement("beforeend", cod3rButtonElement);
 }
 
 function checkForMutationsToMakeSureTheOpenEventIsDispatchedWhenADialogOpens(mutations) {
