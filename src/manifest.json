@@ -34,5 +34,18 @@
   "web_accessible_resources": [
     "*.html",
     "assets/fonts/*"
-  ]
+  ],
+  "background": {
+    "scripts": ["scripts/background.js"],
+    "persistent": false
+  },
+  "commands": {
+    "toggle_dialog": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+V",
+        "mac": "Command+Shift+V"
+      },
+      "description": "Toggle C3BC dialog in content script"
+    }
+  }
 }

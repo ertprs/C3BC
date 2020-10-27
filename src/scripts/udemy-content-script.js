@@ -41,8 +41,8 @@ mainContentObserver.observe(mainContentElement, { childList: true, subtree: true
 	dialogObserver.observe(C3CBDialogElement, {attributes: true});
 
 	C3CBDialogElement.addEventListener("open", () => {
-		positionDialog();
 		makeSureTheReplyFormIsSetToOpen();
+		positionDialog();
 		makeSureTheSrollAnswerContentIsAtTheBottomWhenInsertAnswer();
 	});
 
@@ -211,15 +211,6 @@ function addAnswer(answerHTML) {
 	scrollAnswerContentToTheBottom();
 }
 
-chrome.runtime.onMessage.addListener(
-	function(request, sender, sendResponse) {
-		console.log(sender.tab ?
-					"from a content script:" + sender.tab.url :
-					"from the extension");
-		addAnswer(request.answerContent);
-		sendResponse({farewell: "Resposta adicionada"});
-});
-
 // fonte: https://stackoverflow.com/questions/50037663/how-to-close-a-native-html-dialog-when-clicking-outside-with-javascript
 function dialogClickOutsideHandler(event) {
     if (event.target.tagName !== 'DIALOG') // previne problema com formulários
@@ -235,7 +226,30 @@ function dialogClickOutsideHandler(event) {
     );
 
     if (!clickedInDialog) {
-		chrome.runtime.sendMessage({message: "C3BC_CLOSED"});
 		event.target.close();
+		sendMessage({info: "C3BC_closed"});
 	}
 }
+
+function toggleC3CBDialog() {
+	const C3BCDialog = document.getElementById("C3BC-dialog");
+
+	if( C3BCDialog.hasAttribute("open") )
+		C3BCDialog.close();
+	else
+		showC3CBDialog();
+}
+
+function sendMessage(message) {
+	chrome.runtime.sendMessage({action: "transfer_to_the_current_tab", message});
+}
+
+chrome.runtime.onMessage.addListener( request => {
+	switch (request.action) {
+		case "toggle_dialog":
+			toggleC3CBDialog();
+			break;
+		case "add_answer":
+			addAnswer(request.answerContent);
+	}
+});

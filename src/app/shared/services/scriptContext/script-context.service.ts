@@ -19,21 +19,21 @@ export class ScriptContextService {
   }
 
   // aqui, definimos uma procedimento que irá pôr o tabGroup em seu estado inicial novamente
-  checkExtensionMessage({message}) {
-    switch (message) {
-      case "C3BC_OPEN":
+  checkExtensionMessage(message) {
+    switch (message.info) {
+      case "C3BC_open":
         this.C3BCDialogJustOpened.next();
         break;
-      case "C3BC_CLOSED":
+      case "C3BC_closed":
         this.C3BCDialogJustClosed.next();
     }
   }
 
+  sendMessage(message) {
+    chrome.runtime.sendMessage({action: "transfer_to_the_current_tab", message});
+  }
+
   insertAnswer(answerContent: string) {
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-      chrome.tabs.sendMessage(tabs[0].id, {answerContent}, function(response) {
-        console.log(response.farewell);
-      });
-    });
+    this.sendMessage({action: "add_answer", answerContent});
   }
 }
