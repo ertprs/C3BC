@@ -245,6 +245,15 @@ function dialogClickOutsideHandler(clickEvent) {
 	if( !checkIfClickWasInTheC3BCDialog(clickEvent) ) C3BCDialog.close();
 }
 
+function toggleC3CBDialog() {
+	const C3BCDialogElement = document.getElementById("C3BC-dialog");
+
+	if( C3BCDialogElement.hasAttribute("open") )
+		C3BCDialogElement.close();
+	else
+		showC3CBDialog();
+}
+
 function sendMessage(message) {
 	chrome.runtime.sendMessage({action: "transfer_to_the_current_tab", message});
 }
@@ -258,5 +267,11 @@ function sendMessageThatC3BCDialogWasOpen() {
 }
 
 chrome.runtime.onMessage.addListener( request => {
-	addAnswer(request.answerContent);
+	switch (request.action) {
+		case "toggle_dialog":
+			toggleC3CBDialog();
+			break;
+		case "add_answer":
+			addAnswer(request.answerContent);
+	}
 });

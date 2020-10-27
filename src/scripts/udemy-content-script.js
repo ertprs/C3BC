@@ -232,10 +232,10 @@ function dialogClickOutsideHandler(event) {
 }
 
 function toggleC3CBDialog() {
-	const C3BCDialog = document.getElementById("C3BC-dialog");
+	const C3BCDialogElement = document.getElementById("C3BC-dialog");
 
-	if( C3BCDialog.hasAttribute("open") )
-		C3BCDialog.close();
+	if( C3BCDialogElement.hasAttribute("open") )
+		C3BCDialogElement.close();
 	else
 		showC3CBDialog();
 }
