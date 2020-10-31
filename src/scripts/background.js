@@ -1,3 +1,14 @@
+const   UdemyURLExp = /udemy\.com\/instructor\/communication\/qa\//,
+        Cod3rURLExp = /cod3r\.com\.br\/courses\/take\/.+\/discussions\//,
+        showPageActionRule = {
+            conditions: [
+                new chrome.declarativeContent.PageStateMatcher({
+                    pageUrl: { urlMatches: UdemyURLExp.source + "|" + Cod3rURLExp.source }
+                })
+            ],
+            actions: [ new chrome.declarativeContent.ShowPageAction() ]
+        };
+
 function sendMessageToTheCurrentTab(message) {
     chrome.tabs.query({active: true, currentWindow: true}, tabs => {
         const currentTabID = tabs[0].id;
@@ -5,6 +16,13 @@ function sendMessageToTheCurrentTab(message) {
         chrome.tabs.sendMessage(currentTabID, message);
     });
 }
+
+// aqui, aplicamos as regras para pageAction estar disponível somente na Cod3r e Udemy
+chrome.runtime.onInstalled.addListener(() => {
+    chrome.declarativeContent.onPageChanged.removeRules(undefined, () => {
+        chrome.declarativeContent.onPageChanged.addRules([rule]);
+    });
+});
 
 chrome.commands.onCommand.addListener( command => sendMessageToTheCurrentTab({action: command}) );
 

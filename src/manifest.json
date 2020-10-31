@@ -7,7 +7,14 @@
     "48": "assets/icons/logo48.png",
     "128": "assets/icons/logo128.png"
   },
-  "browser_action": {
+  "background": {
+    "scripts": ["scripts/background.js"],
+    "persistent": false
+  },
+  "permissions": [
+    "declarativeContent"
+  ],
+  "page_action": {
     "default_icon": "assets/icons/logo128.png",
     "default_popup": "index.html"
   },
@@ -35,10 +42,6 @@
     "*.html",
     "assets/fonts/*"
   ],
-  "background": {
-    "scripts": ["scripts/background.js"],
-    "persistent": false
-  },
   "commands": {
     "toggle_dialog": {
       "suggested_key": {
