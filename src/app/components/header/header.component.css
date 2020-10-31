@@ -35,3 +35,17 @@
     width: 50vw;
     margin: auto;
 }
+
+mat-menu {
+    display: none;
+}
+
+::ng-deep .mat-menu-content {
+    padding: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+::ng-deep .mat-menu-panel {
+    min-height: 48px !important;
+    min-width: 96px !important;
+}

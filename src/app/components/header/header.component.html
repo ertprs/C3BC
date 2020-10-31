@@ -9,9 +9,15 @@
         <img [class]="logoClass" src="assets\icons\logotipo-cod3r-white.png">
       </a>
 
-      <button *ngIf="userIsLogged" mat-icon-button>
+      <button *ngIf="userIsLogged" mat-icon-button [matMenuTriggerFor]="menu">
         <mat-icon>menu</mat-icon>
       </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item>
+          <mat-icon>logout</mat-icon>
+          <span>Sair</span>
+        </button>
+      </mat-menu>
     </mat-toolbar-row>
     
     <mat-toolbar-row  *ngIf="userIsLogged && showSearchToolbar"
