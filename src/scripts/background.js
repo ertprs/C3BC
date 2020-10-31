@@ -1,9 +1,9 @@
-const   UdemyURLExp = /udemy\.com\/instructor\/communication\/qa\//,
-        Cod3rURLExp = /cod3r\.com\.br\/courses\/take\/.+\/discussions\//,
+const   UdemyURLExp = /www\.udemy\.com\/instructor\/communication\/qa\//,
+        Cod3rURLExp = /www\.cod3r\.com\.br\/courses\/take\/.+\/discussions\//,
         showPageActionRule = {
             conditions: [
                 new chrome.declarativeContent.PageStateMatcher({
-                    pageUrl: { urlMatches: UdemyURLExp.source + "|" + Cod3rURLExp.source }
+                    pageUrl: { urlMatches: UdemyURLExp.source + "|" + Cod3rURLExp.source, schemes: ['https']}
                 })
             ],
             actions: [ new chrome.declarativeContent.ShowPageAction() ]
