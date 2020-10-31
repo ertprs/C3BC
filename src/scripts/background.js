@@ -20,7 +20,7 @@ function sendMessageToTheCurrentTab(message) {
 // aqui, aplicamos as regras para pageAction estar disponível somente na Cod3r e Udemy
 chrome.runtime.onInstalled.addListener(() => {
     chrome.declarativeContent.onPageChanged.removeRules(undefined, () => {
-        chrome.declarativeContent.onPageChanged.addRules([rule]);
+        chrome.declarativeContent.onPageChanged.addRules([showPageActionRule]);
     });
 });
 
