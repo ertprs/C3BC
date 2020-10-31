@@ -9,13 +9,21 @@ export interface LoginCredentials {
 @Injectable({
   providedIn: 'root'
 })
-export class LoginService {
-  constructor(private _angularFireAuth: AngularFireAuth) { }
+export class AuthService {
+  public authState
+  
+  constructor(private _angularFireAuth: AngularFireAuth) {
+    this.authState = this._angularFireAuth.authState
+  }
 
-  login(credentials: LoginCredentials): Promise<any>{
+  signIn(credentials: LoginCredentials): Promise<firebase.auth.UserCredential>{
     return this._angularFireAuth.signInWithEmailAndPassword(
       credentials.email,
       credentials.password
     )
+  }
+
+  signOut(): Promise<void>{
+    return this._angularFireAuth.signOut()
   }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { AngularFireAuth } from '@angular/fire/auth';
+import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { map } from "rxjs/operators";
 
 @Injectable({
@@ -9,7 +9,7 @@ import { map } from "rxjs/operators";
 })
 export class CanEnterLoginGuard implements CanActivate {
   constructor(
-    private _angularFireAuth: AngularFireAuth,
+    private _authService: AuthService,
     private _router: Router
   ) {}
 
@@ -17,7 +17,7 @@ export class CanEnterLoginGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-    const isLogged: Observable<boolean> = this._angularFireAuth.authState.pipe(
+    const isLogged: Observable<boolean> = this._authService.authState.pipe(
       map( auth => {
         if(auth) {
           this._router.navigate(["/home"])
@@ -29,5 +29,4 @@ export class CanEnterLoginGuard implements CanActivate {
 
     return isLogged;
   }
-  
 }

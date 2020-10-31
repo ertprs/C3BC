@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { SearchService } from '../../shared/services/search/search.service';
 import { Subscription } from 'rxjs';
-import { AngularFireAuth } from '@angular/fire/auth';
 import { ScriptContextService } from '../../shared/services/scriptContext/script-context.service';
+import { AuthService } from 'src/app/shared/services/auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -16,9 +17,10 @@ export class HeaderComponent implements OnInit {
   userIsLogged: boolean = true;
 
   constructor(
-    private _angularFireAuth: AngularFireAuth,
-    public scriptContext: ScriptContextService,
+    private _authService: AuthService,
     public _searchService: SearchService,
+    private _router: Router,
+    public scriptContext: ScriptContextService,
   ) {
     this.showSearchToolbar = _searchService.showSearchToolbar.value
   }
@@ -26,7 +28,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     this._showSearchToolbarSubscription = this._searchService.showSearchToolbar.subscribe( newValue => this.showSearchToolbar = newValue );
 
-    this._userIsLoggedSubscription = this._angularFireAuth.authState.subscribe( auth => this.userIsLogged = auth ? true : false );
+    this._userIsLoggedSubscription = this._authService.authState.subscribe( auth => this.userIsLogged = auth ? true : false );
   }
 
   ngOnDestroy() {
@@ -42,4 +44,13 @@ export class HeaderComponent implements OnInit {
     return this.userIsLogged ? "main-toolbar-home-page" : "main-toobar-login-page"
   }
 
+  logout() {
+    this._authService.signOut()
+      .then( () => {
+        this._router.navigate(["/login"])
+      })
+      .catch( authError => {
+        console.log(`Error: ${authError}`)
+      })
+  }
 }
