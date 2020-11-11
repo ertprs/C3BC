@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 
@@ -15,16 +15,12 @@ export class AuthService {
 
   constructor(
     private _angularFireAuth: AngularFireAuth,
-    private _router: Router
+    private _router: Router,
+    private _ngZone: NgZone
   ) {
     this.authState = this._angularFireAuth.authState
 
-    this._angularFireAuth.onAuthStateChanged(user => {
-      if (!user)
-        this._router.navigate(["/login"]);
-      else
-        this._router.navigate(["/home"]);
-    });
+    this._angularFireAuth.onAuthStateChanged(this.redirect.bind(this));
   }
 
   signIn(credentials: LoginCredentials): Promise<firebase.auth.UserCredential>{
@@ -36,5 +32,15 @@ export class AuthService {
 
   signOut(): Promise<void>{
     return this._angularFireAuth.signOut()
+  }
+
+  // como a mudança de rota poderá ser disparada por um evento externo ao código da aplicação, é necessário a execução da mudança de rota por meio do _ngZone.run
+  redirect(currentUser) {
+    this._ngZone.run(() => {
+      if (currentUser)
+        this._router.navigate(["/home"]);
+      else
+        this._router.navigate(["/login"]);
+    });
   }
 }
