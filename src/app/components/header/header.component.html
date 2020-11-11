@@ -2,24 +2,26 @@
                 class="mat-elevation-z2"
                 [class.header-in-content-script]="scriptContext.isContentScript"
                 color="primary">
-    <mat-toolbar-row    *ngIf="scriptContext.isBroswerActionScript"
+    <mat-toolbar-row    *ngIf="scriptContext.isBroswerActionScript || !userIsLogged"
                         id="main-toolbar-row"
                         [class]="mainToolbarClass">
       <a [class.logo-login-page]="!userIsLogged" href="https://www.cod3r.com.br/" target="_blank">
         <img [class]="logoClass" src="assets\icons\logotipo-cod3r-white.png">
       </a>
 
-      <button *ngIf="userIsLogged" mat-icon-button [matMenuTriggerFor]="menu">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <mat-menu #menu="matMenu">
-        <button mat-menu-item (click)="logout()">
-          <mat-icon>logout</mat-icon>
-          <span>Sair</span>
+      <div *ngIf="userIsLogged">
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon>menu</mat-icon>
         </button>
-      </mat-menu>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="logout()">
+            <mat-icon>logout</mat-icon>
+            <span>Sair</span>
+          </button>
+        </mat-menu>
+      </div>
     </mat-toolbar-row>
-    
+
     <mat-toolbar-row  *ngIf="userIsLogged && showSearchToolbar"
                       [class]="scriptContext.isBroswerActionScript ? 'second-toolbar-row-browser-script' : 'second-toolbar-row-content-script'">
       <app-search class="full-width"></app-search>
