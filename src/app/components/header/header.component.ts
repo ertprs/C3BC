@@ -46,9 +46,6 @@ export class HeaderComponent implements OnInit {
 
   logout() {
     this._authService.signOut()
-      .then( () => {
-        this._router.navigate(["/login"])
-      })
       .catch( authError => {
         console.log(`Error: ${authError}`)
       })

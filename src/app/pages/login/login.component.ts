@@ -29,10 +29,6 @@ export class LoginComponent implements OnInit {
     const loginCredentials: LoginCredentials = this.loginFormGroup.value;
 
     this._authService.signIn(loginCredentials)
-      .then( authData => {
-        this._router.navigate(["/home"])
-        console.log(authData)
-      })
       .catch( authError => {
         console.log(`Error: ${authError}`)
       })
