@@ -19,7 +19,7 @@
                         <mat-icon>notes</mat-icon>
                     </button>
                 </mat-list-item>
-                
+
                 <div mat-line class="answer-content">
                     <div class="ql-container ql-snow" style="border-width: 0;">
                         <div style="width: 100%" class="ql-editor" [innerHTML]="byPassHTML(answer.content)"></div>
@@ -27,8 +27,8 @@
                 </div>
             </mat-list>
 
-            <mat-action-row [class]="scriptContext.isBroswerActionScript ? 'mat-action-row-browser-action' : 'mat-action-row-content-script'">
-                <div *ngIf="scriptContext.isBroswerActionScript">
+            <mat-action-row [class]="scriptContext.isPageActionScript ? 'mat-action-row-page-action-script' : 'mat-action-row-content-script'">
+                <div *ngIf="scriptContext.isPageActionScript">
                     <button class="edit-button" mat-icon-button (click)="navigateToEditCategory(category)">
                     <mat-icon>edit</mat-icon>
                     </button>

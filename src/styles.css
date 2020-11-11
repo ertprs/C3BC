@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
-/* Tamanho do browser action */
+/* Tamanho do page action */
 html, body { width:360px; height:600px; overflow-y: hidden;}
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 

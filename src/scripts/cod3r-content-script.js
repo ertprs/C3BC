@@ -20,7 +20,7 @@ pageContentObserver.observe(pageContentElement, { childList: true, subtree: true
 	C3CBDialogElement.id = C3BCDialogID;
 	C3CBDialogElement.setAttribute(
 		"style",
-		`	
+		`
 			position: fixed;
 			height:${contentScriptHeight}px;
 			width:${contentScriptWidth}px;
@@ -67,7 +67,7 @@ pageContentObserver.observe(pageContentElement, { childList: true, subtree: true
 
 function checkForMutationsToEnableDiscussionContentObserverIfItWasLoaded() {
 	const discussionContentElement = pageContentElement.querySelector(discussionContentSelector);
-	
+
 	if(discussionContentElement) {
 		discussionContentObserver.observe(discussionContentElement, { childList: true });
 		pageContentObserver.disconnect();
@@ -77,7 +77,7 @@ function checkForMutationsToEnableDiscussionContentObserverIfItWasLoaded() {
 function checkForMutationsToMakeSureTheC3BCButtonIsAdded() {
 	const buttonsToolbarElement = document.querySelector(buttonsToolbarSelector);
 	const cod3rButtonElement = document.getElementById(cod3rButtonID);
-	
+
 	if(buttonsToolbarElement && !cod3rButtonElement) addC3BCButton();
 }
 
@@ -102,7 +102,7 @@ function addC3BCButton() {
 	const buttonsToolbarElement = document.querySelector(buttonsToolbarSelector);
 	buttonsToolbarElement.insertAdjacentElement("beforeend", cod3rButtonElement);
 
-	// Observer para checar mudanças no toolbar de botões. É necessário, pois, sempre que o usuário redimenciona o browser, o botão adicionado é movido para o ínicio e recebe uma classe
+	// Observer para checar mudanças no toolbar de botões. É necessário, pois, sempre que o usuário redimensiona o browser, o botão adicionado é movido para o ínicio e recebe uma classe
 	// que o deixa invisível
 	const CheckAndMakeSureThatC3BCButtomIsVisibleWhenThePageIsResizedObserver = new MutationObserver(CheckAndMakeSureThatC3BCButtomIsVisibleWhenThePageIsResized);
 	CheckAndMakeSureThatC3BCButtomIsVisibleWhenThePageIsResizedObserver.observe(cod3rButtonElement, { attributes : true });
@@ -210,7 +210,7 @@ function injectScript(functionToBeExecuted) {
 }
 
 // É preciso injetar essa função, pois, assim, a instância do JQuery em execução na página será utilizada, então haverá acesso à função froalaEditor, pertencente ao editor rico da Cod3r
-// é necessário que o seletor do editor rico esteja aqui literalmente, pois, como essa função será injetada, perderá a referência a qualquer variável fora do escopo da própria função 
+// é necessário que o seletor do editor rico esteja aqui literalmente, pois, como essa função será injetada, perderá a referência a qualquer variável fora do escopo da própria função
 function HidePlaceholderAndEnableReplySendByMarkingRichEditorContentAsChanged() {
 	const answerRichEditorSelector = ".froala-editor-instance";
 
@@ -235,7 +235,7 @@ function checkIfClickWasInTheC3BCDialog(clickEvent) {
         C3BCDialogRect.left <= clickEvent.clientX &&
         clickEvent.clientX <= C3BCDialogRect.left + C3BCDialogRect.width
 	);
-	
+
 	return clickedInDialog
 }
 

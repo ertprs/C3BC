@@ -3,7 +3,7 @@
                 class="mat-elevation-z4"
                 [selectedIndex]="selectedTab.value"
                 (selectedIndexChange)="selectedTab.setValue($event)">
-  <mat-tab label="Respostas">  
+  <mat-tab label="Respostas">
     <app-answers-tab></app-answers-tab>
   </mat-tab>
 
@@ -12,6 +12,6 @@
   </mat-tab>
 </mat-tab-group>
 
-<mat-toolbar *ngIf="scriptContext.isBroswerActionScript"  id="add-button">
+<mat-toolbar *ngIf="scriptContext.isPageActionScript"  id="add-button">
   <button mat-stroked-button class="full-width" color="primary" [routerLink]="currentTabRoute">{{buttonMessage }}</button>
 </mat-toolbar>

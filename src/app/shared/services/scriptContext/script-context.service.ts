@@ -4,16 +4,16 @@ import { Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class ScriptContextService {
-  isBroswerActionScript: boolean;
+  isPageActionScript: boolean;
   isContentScript: boolean;
   C3BCDialogJustOpened = new Subject();
   C3BCDialogJustClosed = new Subject();
 
-  // teremos a altura de window como indicadora de que o script está rodando no browser action ou no content script. Para que funcione, a altura do
-  // browser action terá que ser sempre igual a 600, enquanto que isContentScript deverá ser sempre diferente desse valor
+  // teremos a altura de window como indicadora de que o script está rodando no page action ou no content script. Para que funcione, a altura do
+  // page action terá que ser sempre igual a 600, enquanto que isContentScript deverá ser sempre diferente desse valor
   constructor() {
-    this.isBroswerActionScript = window.innerHeight == 600
-    this.isContentScript = !this.isBroswerActionScript
+    this.isPageActionScript = window.innerHeight == 600
+    this.isContentScript = !this.isPageActionScript
 
     chrome.runtime.onMessage.addListener(this.checkExtensionMessage.bind(this));
   }

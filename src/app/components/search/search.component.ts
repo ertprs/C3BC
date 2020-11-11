@@ -28,7 +28,7 @@ export class SearchComponent implements OnInit {
     if(this.scriptContext.isContentScript)
       this._C3BCDialogJustOpenedSubscription = this.scriptContext.C3BCDialogJustOpened.subscribe(this.focusOnTheSearchInput.bind(this));
     else
-      if(this.scriptContext.isBroswerActionScript) this.focusOnTheSearchInput.bind(this)();
+      if(this.scriptContext.isPageActionScript) this.focusOnTheSearchInput.bind(this)();
   }
 
   ngOnDestroy() {

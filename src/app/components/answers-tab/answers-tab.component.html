@@ -21,8 +21,8 @@
                 <div style="width: 100%" class="ql-editor" [innerHTML]="byPassHTML(answer.content)"></div>
             </div>
 
-            <mat-action-row [class]="scriptContext.isBroswerActionScript ? 'mat-action-row-browser-action' : 'mat-action-row-content-script'">
-                <div *ngIf="scriptContext.isBroswerActionScript">
+            <mat-action-row [class]="scriptContext.isPageActionScript ? 'mat-action-row-page-action-script' : 'mat-action-row-content-script'">
+                <div *ngIf="scriptContext.isPageActionScript">
                     <button class="edit-button" mat-icon-button (click)="navigateToEditAnswer(answer)">
                         <mat-icon>edit</mat-icon>
                     </button>

@@ -2,7 +2,7 @@
                 class="mat-elevation-z2"
                 [class.header-in-content-script]="scriptContext.isContentScript"
                 color="primary">
-    <mat-toolbar-row    *ngIf="scriptContext.isBroswerActionScript || !userIsLogged"
+    <mat-toolbar-row    *ngIf="scriptContext.isPageActionScript || !userIsLogged"
                         id="main-toolbar-row"
                         [class]="mainToolbarClass">
       <a [class.logo-login-page]="!userIsLogged" href="https://www.cod3r.com.br/" target="_blank">
@@ -23,7 +23,7 @@
     </mat-toolbar-row>
 
     <mat-toolbar-row  *ngIf="userIsLogged && showSearchToolbar"
-                      [class]="scriptContext.isBroswerActionScript ? 'second-toolbar-row-browser-script' : 'second-toolbar-row-content-script'">
+                      [class]="scriptContext.isPageActionScript ? 'second-toolbar-row-page-action-script' : 'second-toolbar-row-content-script'">
       <app-search class="full-width"></app-search>
     </mat-toolbar-row>
 </mat-toolbar>
