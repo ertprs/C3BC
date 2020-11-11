@@ -22,7 +22,7 @@ mainContentObserver.observe(mainContentElement, { childList: true, subtree: true
 	C3CBDialogElement.id = "C3BC-dialog";
 	C3CBDialogElement.setAttribute(
 		"style",
-		`	
+		`
 			position: fixed;
 			height:${contentScriptHeight}px;
 			width:${contentScriptWidth}px;
@@ -36,24 +36,26 @@ mainContentObserver.observe(mainContentElement, { childList: true, subtree: true
 	);
 
 	C3CBDialogElement.innerHTML = `<iframe src=${chrome.extension.getURL("index.html")} style="height:100%; width:100%;" frameBorder="0"></iframe>`;
-	
+
 	// usando o Observer para observar o díalogo C3BC e emitir o evento "open"
 	dialogObserver.observe(C3CBDialogElement, {attributes: true});
 
 	C3CBDialogElement.addEventListener("open", () => {
 		makeSureTheReplyFormIsSetToOpen();
 		positionDialog();
-		makeSureTheSrollAnswerContentIsAtTheBottomWhenInsertAnswer();
+    makeSureTheSrollAnswerContentIsAtTheBottomWhenInsertAnswer();
+		sendMessage({info: "C3BC_opened"});
 	});
 
 	C3CBDialogElement.addEventListener('close', () => {
 		cancelObserverForReplyFormOpenClassesChangeObserver();
-		cancelScrollListennerForAnswerContentElement();
+    cancelScrollListennerForAnswerContentElement();
+		sendMessage({info: "C3BC_closed"});
 	});
 
 	C3CBDialogElement.addEventListener("click", dialogClickOutsideHandler);
 	window.addEventListener("resize", positionDialog);
-	
+
 	document.body.appendChild(C3CBDialogElement);
 })();
 
@@ -101,7 +103,7 @@ function addC3BCButton() {
 	cod3rButtonElement.setAttribute("aria-label", "Adicionar respostas padrões");
 	cod3rButtonElement.setAttribute("title", "Adicionar respostas padrões");
 	cod3rButtonElement.setAttribute("style", "font-family: 'Oxanium', cursive;");
-	
+
 	cod3rButtonElement.addEventListener("mousedown", clickEvent => {
 		if(clickEvent.button !== 0) return;
 
@@ -110,7 +112,7 @@ function addC3BCButton() {
 	});
 
 	// aqui está sendo capturado um botão e depois pegando o seu pai porque, dentro da div abaixo cuja propriedade data-purpose é igual a "menu-bar",
-	// há duas divs que têm como classe btn-group. A que apresenta algum botão dentro é o nosso alvo. 
+	// há duas divs que têm como classe btn-group. A que apresenta algum botão dentro é o nosso alvo.
 	const formButtonsGroup = document.querySelector("div[data-purpose='menu-bar'] > div.btn-group > button").parentNode;
 	formButtonsGroup.insertAdjacentElement("beforeend", cod3rButtonElement);
 }
@@ -126,7 +128,7 @@ function checkForMutationsToMakeSureTheOpenEventIsDispatchedWhenADialogOpens(mut
 
 function positionDialog() {
 	const C3CBDialogElement = document.getElementById("C3BC-dialog");
-	
+
 	const formParentRect = formParentElement.getBoundingClientRect();
 	const cod3rButtonRect = document.getElementById("cod3r-button").getBoundingClientRect();
 
@@ -187,7 +189,7 @@ function cancelScrollListennerForAnswerContentElement() {
 	answerContentElement.removeEventListener('scroll', scrollAnswerContentToTheBottom);
 }
 
-// O editor rico do C3BC adiciona um espaço a mais no final de um bloco de código. Isso não fica bem esteticamente na Udemy 
+// O editor rico do C3BC adiciona um espaço a mais no final de um bloco de código. Isso não fica bem esteticamente na Udemy
 function removeMisplacedLineBreaksInPreCode(answerHTML) {
 	return answerHTML.replace(/\s(?=<\/pre>)/gm, '');
 }
@@ -216,7 +218,8 @@ function dialogClickOutsideHandler(event) {
     if (event.target.tagName !== 'DIALOG') // previne problema com formulários
         return;
 
-    const rect = event.target.getBoundingClientRect();
+    const dialog = event.target;
+    const rect = dialog.getBoundingClientRect();
 
     const clickedInDialog = (
         rect.top <= event.clientY &&
@@ -225,10 +228,7 @@ function dialogClickOutsideHandler(event) {
         event.clientX <= rect.left + rect.width
     );
 
-    if (!clickedInDialog) {
-		event.target.close();
-		sendMessage({info: "C3BC_closed"});
-	}
+    if (!clickedInDialog) dialog.close();
 }
 
 function toggleC3CBDialog() {

@@ -21,7 +21,7 @@ export class ScriptContextService {
   // aqui, definimos uma procedimento que irá pôr o tabGroup em seu estado inicial novamente
   checkExtensionMessage(message) {
     switch (message.info) {
-      case "C3BC_open":
+      case "C3BC_opened":
         this.C3BCDialogJustOpened.next();
         break;
       case "C3BC_closed":
