@@ -15,8 +15,15 @@
 
                 <mat-list-item>
                     <div mat-line>{{answer.name}}</div>
-                    <button mat-icon-button class="answer-notes-button" (click)="$event.stopPropagation();" (click)="scriptContext.insertAnswer(answer.content)">
-                        <mat-icon>notes</mat-icon>
+                    <button mat-button
+                            mat-icon-button
+                            class="answer-notes-button"
+                            matTooltip="Adicionar resposta"
+                            [matTooltipShowDelay]="tooltipShowDelay.value"
+                            matTooltipPosition="left"
+                            (click)="$event.stopPropagation()"
+                            (click)="scriptContext.insertAnswer(answer.content)">
+                      <mat-icon>notes</mat-icon>
                     </button>
                 </mat-list-item>
 
@@ -29,10 +36,22 @@
 
             <mat-action-row [class]="scriptContext.isPageActionScript ? 'mat-action-row-page-action-script' : 'mat-action-row-content-script'">
                 <div *ngIf="scriptContext.isPageActionScript">
-                    <button class="edit-button" mat-icon-button (click)="navigateToEditCategory(category)">
-                    <mat-icon>edit</mat-icon>
+                    <button mat-button
+                            mat-icon-button
+                            class="edit-button"
+                            matTooltip="Editar categoria"
+                            [matTooltipShowDelay]="tooltipShowDelay.value"
+                            matTooltipPosition="above"
+                            (click)="navigateToEditCategory(category)">
+                      <mat-icon>edit</mat-icon>
                     </button>
-                    <button class="delete-button" mat-icon-button (click)="openDialog(category)">
+                    <button mat-button
+                            mat-icon-button
+                            class="delete-button"
+                            matTooltip="Apagar categoria"
+                            [matTooltipShowDelay]="tooltipShowDelay.value"
+                            matTooltipPosition="above"
+                            (click)="openDialog(category)">
                     <mat-icon>delete</mat-icon>
                     </button>
                 </div>

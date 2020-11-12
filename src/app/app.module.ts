@@ -5,6 +5,8 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { environment } from "src/environments/environment";
+
 import { LoginComponent } from './pages/login/login.component';
 import { HomeComponent } from './pages/home/home.component';
 import { AnswersTabComponent } from './components/answers-tab/answers-tab.component';
@@ -16,6 +18,7 @@ import { CreateAnswerComponent } from './pages/create-answer/create-answer.compo
 import { CreateCategoryComponent } from './pages/create-category/create-category.component';
 import { EditAnswerComponent } from './pages/edit-answer/edit-answer.component';
 import { EditCategoryComponent } from './pages/edit-category/edit-category.component';
+import { SearchComponent } from './components/search/search.component';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
@@ -32,15 +35,14 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { AngularFireModule } from "@angular/fire";
 import { AngularFireAuthModule } from "@angular/fire/auth";
 
-import { environment } from "src/environments/environment";
-
 import { QuillModule } from 'ngx-quill'
+
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
-import { SearchComponent } from './components/search/search.component';
 
 
 @NgModule({
@@ -60,6 +62,7 @@ import { SearchComponent } from './components/search/search.component';
     SearchComponent
   ],
   imports: [
+    MatTooltipModule,
     MatMenuModule,
     MatProgressSpinnerModule,
     Ng2SearchPipeModule,

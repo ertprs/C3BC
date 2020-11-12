@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { ScriptContextService } from 'src/app/shared/services/scriptContext/script-context.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SearchService } from 'src/app/shared/services/search/search.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-answers-tab',
@@ -16,6 +17,7 @@ import { SearchService } from 'src/app/shared/services/search/search.service';
 })
 export class AnswersTabComponent implements OnInit {
   private _contentScriptJustClosedSubscription: Subscription;
+  tooltipShowDelay = new FormControl(1000);
   answersObservable: Observable<Answer[]>;
   step = 0;
 

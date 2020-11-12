@@ -34,7 +34,7 @@ export class HomeComponent implements OnInit {
       this._currentTabTextLabel = selectedTabChange.tab.textLabel;
     })
 
-    if(this.scriptContext.isContentScript) 
+    if(this.scriptContext.isContentScript)
       this._C3BCDialogJustClosedSubscription = this.scriptContext.C3BCDialogJustClosed.subscribe(this.resetSelectedTab.bind(this))
   }
 
@@ -45,7 +45,7 @@ export class HomeComponent implements OnInit {
   }
 
   get buttonMessage(): string {
-    return `Adicionar ${this._currentTabTextLabel.slice(0, -1).toLowerCase()}`;
+    return `Adicionar nova ${this._currentTabTextLabel.slice(0, -1).toLowerCase()}`;
   }
 
   get currentTabRoute() {

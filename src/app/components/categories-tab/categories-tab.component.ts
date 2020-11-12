@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { ScriptContextService } from 'src/app/shared/services/scriptContext/script-context.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SearchService } from 'src/app/shared/services/search/search.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-categories-tab',
@@ -18,6 +19,7 @@ import { SearchService } from 'src/app/shared/services/search/search.service';
 export class CategoriesTabComponent implements OnInit {
   private _contentScriptJustClosedSubscription: Subscription;
   categoriesWithAnswersObservable: Observable<Observable<CategoryWithAnswers>[]>;
+  tooltipShowDelay = new FormControl(1000);
   step;
 
   constructor(

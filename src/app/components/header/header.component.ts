@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { ScriptContextService } from '../../shared/services/scriptContext/script-context.service';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { Router } from '@angular/router';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-header',
@@ -13,6 +14,7 @@ import { Router } from '@angular/router';
 export class HeaderComponent implements OnInit {
   private _showSearchToolbarSubscription: Subscription;
   private _userIsLoggedSubscription: Subscription;
+  tooltipShowDelay = new FormControl(1000);
   showSearchToolbar: boolean;
   userIsLogged: boolean = true;
 
