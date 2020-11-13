@@ -40,7 +40,7 @@ export class CategoryService {
               if(whereResult.empty){
                 resolve( this.categoriesCollection.add(newCategory) );
               } else
-                reject("Já há uma categoria com esse nome.");
+                reject("Já existe uma categoria com esse nome.");
             })
           })
   }
@@ -59,7 +59,7 @@ export class CategoryService {
                     .update(updatedCategory)
                 );
               } else {
-                reject("Já há uma categoria com esse nome.");
+                reject("Já existe uma categoria com esse nome.");
               }
             })
           })
@@ -71,7 +71,7 @@ export class CategoryService {
         return storedCategories.map( storedCategory => {
           const parentIDs = storedCategory.parentRefs.map( parentRef => parentRef.id);
           const category: Category = {id: storedCategory.id, name: storedCategory.name, parentIDs};
-          
+
           return category;
         });
       })

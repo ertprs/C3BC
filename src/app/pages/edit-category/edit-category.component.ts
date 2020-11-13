@@ -5,6 +5,7 @@ import { Category } from 'src/app/shared/models/category.model';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { tap, map } from 'rxjs/operators';
+import { NotificationService } from 'src/app/shared/services/notification/notification.service';
 
 @Component({
   selector: 'app-edit-category',
@@ -19,22 +20,23 @@ export class EditCategoryComponent implements OnInit {
 
   constructor(
     private _categoryService: CategoryService,
+    private _notificationService: NotificationService,
     private _router: Router,
     formBuilder: FormBuilder,
   ) {
     this.category = _router.getCurrentNavigation().extras.state.category;
-    
+
     this.categoryFormGroup = formBuilder.group({
       name: [this.category.name, Validators.required],
       parents: [ , ]
     })
-    
+
     this.categoriesObservable = _categoryService.readCategories().pipe(
       map( categories => categories.filter( category => this.category.id != category.id ) ),
       tap( categories => {
         if(this.category.parentIDs){
           const selectedParents: Category[] = categories.filter( category => this.category.parentIDs.includes(category.id) );
-          
+
           this.categoryFormGroup.controls['parents'].setValue(selectedParents);
         }
       })
@@ -54,6 +56,10 @@ export class EditCategoryComponent implements OnInit {
     const updatedCategory: Category = {id: this.category.id, name: this.categoryFormGroup.value.name, parentIDs}
 
     this._categoryService.updateCategory(updatedCategory)
-    this._router.navigate(["/home"])
+      .then(() => {
+        this._router.navigate(["/home"]);
+        this._notificationService.notify('Categoria alterada com sucesso.')
+      })
+      .catch(error => this._notificationService.notify(error, 7, 'top'));
   }
 }

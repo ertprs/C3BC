@@ -7,6 +7,7 @@ import { Answer } from 'src/app/shared/models/answer.model';
 import { AnswerService } from 'src/app/shared/services/answer/answer.service';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
+import { NotificationService } from 'src/app/shared/services/notification/notification.service';
 import { QuillModule } from 'ngx-quill';
 import 'quill-emoji/dist/quill-emoji.js'
 
@@ -25,6 +26,7 @@ export class EditAnswerComponent implements OnInit {
 
   constructor(
     private _answerService: AnswerService,
+    private _notificationService: NotificationService,
     private _router: Router,
     categoryService: CategoryService,
     formBuilder: FormBuilder,
@@ -41,7 +43,7 @@ export class EditAnswerComponent implements OnInit {
       tap( categories => {
         // aqui, estamos filtrando somente as categorias as quais a resposta pertence, para depois adicionarmos como valores ao formControl categories
         const selectedCategories: Category[] = categories.filter( category => this.answer.categoryIDs.includes(category.id) )
-        
+
         this.answerFormGroup.controls['categories'].setValue(selectedCategories)
       })
     )
@@ -76,7 +78,11 @@ export class EditAnswerComponent implements OnInit {
     const updatedAnswer: Answer = {id: this.answer.id, name: this.answerFormGroup.value.name, content: this.answerFormGroup.value.content,  categoryIDs}
 
     this._answerService.updateAnswer(updatedAnswer)
-    this._router.navigate(["/home"])
+      .then(() => {
+        this._router.navigate(["/home"]);
+        this._notificationService.notify('Resposta alterada com sucesso.')
+      })
+      .catch(error => this._notificationService.notify(error, 7, 'top'));
   }
 
   onSelectionChanged = (event) =>{

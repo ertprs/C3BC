@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Category } from 'src/app/shared/models/category.model';
 import { Router } from '@angular/router';
 import { CategoryService } from 'src/app/shared/services/category/category.service';
+import { NotificationService } from 'src/app/shared/services/notification/notification.service';
 
 @Component({
   selector: 'app-create-category',
@@ -17,6 +18,7 @@ export class CreateCategoryComponent implements OnInit {
 
   constructor(
     private _categoryService: CategoryService,
+    private _notificationService: NotificationService,
     private _router: Router,
     formBuilder: FormBuilder
   ) {
@@ -41,6 +43,10 @@ export class CreateCategoryComponent implements OnInit {
     const newCategory: Omit<Category, "id"> = { name: this.categoryFormGroup.value.name, parentIDs: parentIDs }
 
     this._categoryService.createCategory(newCategory)
-    this._router.navigate(["/home"])
+      .then(() => {
+        this._router.navigate(["/home"]);
+        this._notificationService.notify('Categoria adicionada com sucesso.')
+      })
+      .catch(error => this._notificationService.notify(error, 7, 'top'));
   }
 }

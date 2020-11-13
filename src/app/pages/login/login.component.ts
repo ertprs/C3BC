@@ -13,7 +13,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private _authService: AuthService,
-    private _notification: NotificationService,
+    private _notificationService: NotificationService,
     formBuilder: FormBuilder
   ){
     this.loginFormGroup = formBuilder.group({
@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
     const loginCredentials: LoginCredentials = this.loginFormGroup.value;
 
     this._authService.signIn(loginCredentials)
-      .then( () => this._notification.notify('Bem vindo!') )
+      .then( () => this._notificationService.notify('Bem vindo!') )
       .catch(this.notifyError.bind(this))
   }
 
@@ -62,6 +62,6 @@ export class LoginComponent implements OnInit {
         durationInSeconds = 5;
     }
 
-    this._notification.notify(message, durationInSeconds);
+    this._notificationService.notify(message, durationInSeconds);
   }
 }

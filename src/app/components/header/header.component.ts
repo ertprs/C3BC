@@ -3,8 +3,8 @@ import { SearchService } from '../../shared/services/search/search.service';
 import { Subscription } from 'rxjs';
 import { ScriptContextService } from '../../shared/services/scriptContext/script-context.service';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
-import { Router } from '@angular/router';
 import { FormControl } from '@angular/forms';
+import { NotificationService } from 'src/app/shared/services/notification/notification.service';
 
 @Component({
   selector: 'app-header',
@@ -21,7 +21,7 @@ export class HeaderComponent implements OnInit {
   constructor(
     private _authService: AuthService,
     public _searchService: SearchService,
-    private _router: Router,
+    private _notificationService: NotificationService,
     public scriptContext: ScriptContextService,
   ) {
     this.showSearchToolbar = _searchService.showSearchToolbar.value
@@ -48,8 +48,7 @@ export class HeaderComponent implements OnInit {
 
   logout() {
     this._authService.signOut()
-      .catch( authError => {
-        console.log(`Error: ${authError}`)
-      })
+      .then( () => this._notificationService.notify('Usuário desconectado.') )
+      .catch(error => this._notificationService.notify(error))
   }
 }

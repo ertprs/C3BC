@@ -6,6 +6,7 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Answer } from 'src/app/shared/models/answer.model';
 import { AnswerService } from 'src/app/shared/services/answer/answer.service';
 import { Router } from '@angular/router';
+import { NotificationService } from 'src/app/shared/services/notification/notification.service';
 import { QuillModule } from 'ngx-quill';
 import 'quill-emoji/dist/quill-emoji.js'
 
@@ -23,6 +24,7 @@ export class CreateAnswerComponent implements OnInit {
 
   constructor(
     private _answerService: AnswerService,
+    private _notificationService: NotificationService,
     private _router: Router,
     categoryService: CategoryService,
     formBuilder: FormBuilder
@@ -65,21 +67,18 @@ export class CreateAnswerComponent implements OnInit {
     const newAnswer: Omit<Answer, "id"> = { name: this.answerFormGroup.value.name, content: this.answerFormGroup.value.content, categoryIDs }
 
     this._answerService.createAnswer(newAnswer)
-    this._router.navigate(["/home"])
+      .then(() => {
+        this._router.navigate(["/home"]);
+        this._notificationService.notify('Resposta adicionada com sucesso.')
+      })
+      .catch(error => this._notificationService.notify(error, 7, 'top'));
   }
 
   onSelectionChanged = (event) =>{
-    // if(event.oldRange == null){
-    //   this.onFocus();
-    // }
     if(event.range == null){
       this.onBlur();
     }
   }
-
-  // onContentChanged = (event) =>{
-  //   console.log(event.html);
-  // }
 
   onBlur = () =>{
     this.useCustomInvalidClass = true;
