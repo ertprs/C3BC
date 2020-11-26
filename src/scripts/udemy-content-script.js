@@ -218,9 +218,6 @@ function addAnswer(answerHTML, origination) {
   insertAnswerInDOM(correctedAnswerHTML)
     .then(() => {
       scrollAnswerContentToTheBottom();
-      if(origination == 'page_action')
-        sendMessageToThePageAction({isNotification: true, content: 'sucesso'});
-      else sendMessageToTheCurrentTab({isNotification: true, content: 'sucesso'});
     })
     .catch( error => {
       if(origination == 'page_action')
