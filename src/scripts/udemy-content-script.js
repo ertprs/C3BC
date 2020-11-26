@@ -210,7 +210,7 @@ function addAnswer(answerHTML) {
 	const correctedAnswerHTML = removeMisplacedLineBreaksInPreCode(answerHTML);
 
 	insertAnswerInDOM(correctedAnswerHTML)
-	scrollAnswerContentToTheBottom();
+  scrollAnswerContentToTheBottom();
 }
 
 // fonte: https://stackoverflow.com/questions/50037663/how-to-close-a-native-html-dialog-when-clicking-outside-with-javascript
@@ -241,15 +241,17 @@ function toggleC3CBDialog() {
 }
 
 function sendMessage(message) {
-	chrome.runtime.sendMessage({action: "transfer_to_the_current_tab", message});
+	chrome.runtime.sendMessage({type: 'toTheCurrentTab', ...message});
 }
 
-chrome.runtime.onMessage.addListener( request => {
-	switch (request.action) {
+chrome.runtime.onMessage.addListener( message => {
+  if(message.type !== 'fromTheBackground') return;
+
+	switch (message.action) {
 		case "toggle_dialog":
 			toggleC3CBDialog();
 			break;
 		case "add_answer":
-			addAnswer(request.answerContent);
+			addAnswer(message.content);
 	}
 });

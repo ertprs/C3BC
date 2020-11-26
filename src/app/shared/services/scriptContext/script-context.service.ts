@@ -20,6 +20,8 @@ export class ScriptContextService {
 
   // aqui, definimos uma procedimento que irá pôr o tabGroup em seu estado inicial novamente
   checkExtensionMessage(message) {
+    if(message.type !== 'fromTheBackground') return;
+
     switch (message.info) {
       case "C3BC_opened":
         this.C3BCDialogJustOpened.next();
@@ -30,10 +32,10 @@ export class ScriptContextService {
   }
 
   sendMessage(message) {
-    chrome.runtime.sendMessage({action: "transfer_to_the_current_tab", message});
+    chrome.runtime.sendMessage({type: 'toTheCurrentTab',...message});
   }
 
-  insertAnswer(answerContent: string) {
-    this.sendMessage({action: "add_answer", answerContent});
+  insertAnswer(answer: string) {
+    this.sendMessage({action: "add_answer", content: answer});
   }
 }

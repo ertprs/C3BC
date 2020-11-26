@@ -6,12 +6,13 @@ const 	contentScriptHeight = 476,
 		C3BCDialogID = 					"C3BC-dialog",
 		buttonsToolbarSelector =		"div.fr-toolbar",
 		answerContentSelector = 		"div.fr-wrapper > div.fr-view",
-		discussionContentSelector = 	".course-player__course-discussions",
+    discussionContentSelector = 	".course-player__course-discussions",
+    answerBoxOpenButtonSelector = "button.course-player__course-discussion__reply-add",
 		pageContentElement = 			document.getElementById("page-content"),
 		// Observer para lançar evento customizado quando um diálogo abrir, pois o evento "open" para diálogo não existe nativamente
 		dialogObserver = 				new MutationObserver(checkForMutationsToMakeSureTheOpenEventIsDispatchedWhenADialogOpens),
 		pageContentObserver = 			new MutationObserver(checkForMutationsToEnableDiscussionContentObserverIfItWasLoaded),
-		discussionContentObserver = 	new MutationObserver(checkForMutationsToMakeSureTheC3BCButtonIsAdded);
+    discussionContentObserver = 	new MutationObserver(checkForMutationsToMakeSureTheC3BCButtonIsAdded);
 
 pageContentObserver.observe(pageContentElement, { childList: true, subtree: true });
 
@@ -176,8 +177,15 @@ function positionDialog() {
 	}
 }
 
+function openAnswerBox() {
+  const answerBoxOpenButton = document.querySelector(answerBoxOpenButtonSelector);
+
+  if(answerBoxOpenButton) answerBoxOpenButton.click();
+}
+
 function showC3CBDialog() {
-	const C3CBDDialogElement = document.getElementById(C3BCDialogID);
+  const C3CBDDialogElement = document.getElementById(C3BCDialogID);
+  openAnswerBox()
 	C3CBDDialogElement.showModal();
 }
 
@@ -201,7 +209,7 @@ function scrollAnswerContentToTheBottom() {
 }
 
 function injectScript(functionToBeExecuted) {
-    const scriptCode = '(' + functionToBeExecuted + ')();'
+  const scriptCode = '(' + functionToBeExecuted + ')();'
 	const scriptElement = document.createElement('script');
 	scriptElement.textContent = scriptCode;
 
@@ -218,6 +226,7 @@ function HidePlaceholderAndEnableReplySendByMarkingRichEditorContentAsChanged() 
 }
 
 function addAnswer(answerHTML) {
+  openAnswerBox()
 	insertAnswerInDOM(answerHTML);
 	scrollAnswerContentToTheBottom();
 	injectScript(HidePlaceholderAndEnableReplySendByMarkingRichEditorContentAsChanged);
@@ -251,11 +260,11 @@ function toggleC3CBDialog() {
 	if( C3BCDialogElement.hasAttribute("open") )
 		C3BCDialogElement.close();
 	else
-		showC3CBDialog();
+    showC3CBDialog();
 }
 
 function sendMessage(message) {
-	chrome.runtime.sendMessage({action: "transfer_to_the_current_tab", message});
+	chrome.runtime.sendMessage({type: 'toTheCurrentTab', ...message});
 }
 
 function sendMessageThatC3BCDialogWasClosed() {
@@ -266,12 +275,14 @@ function sendMessageThatC3BCDialogWasOpen() {
 	sendMessage({info: "C3BC_open"});
 }
 
-chrome.runtime.onMessage.addListener( request => {
-	switch (request.action) {
+chrome.runtime.onMessage.addListener( message => {
+  if(message.type !== 'fromTheBackground') return;
+
+	switch (message.action) {
 		case "toggle_dialog":
 			toggleC3CBDialog();
 			break;
 		case "add_answer":
-			addAnswer(request.answerContent);
+			addAnswer(message.content);
 	}
 });
