@@ -44,13 +44,13 @@ mainContentObserver.observe(mainContentElement, { childList: true, subtree: true
 		makeSureTheReplyFormIsSetToOpen();
 		positionDialog();
     makeSureTheSrollAnswerContentIsAtTheBottomWhenInsertAnswer();
-		sendMessage({info: "C3BC_opened"});
+		sendMessageThatC3BCDialogWasOpen();
 	});
 
 	C3CBDialogElement.addEventListener('close', () => {
 		cancelObserverForReplyFormOpenClassesChangeObserver();
     cancelScrollListennerForAnswerContentElement();
-		sendMessage({info: "C3BC_closed"});
+		sendMessageThatC3BCDialogWasClosed();
 	});
 
 	C3CBDialogElement.addEventListener("click", dialogClickOutsideHandler);
@@ -195,22 +195,38 @@ function removeMisplacedLineBreaksInPreCode(answerHTML) {
 }
 
 function insertAnswerInDOM(answerHTML) {
-	if(answerContentElement.querySelector("p:first-child > br"))
-		answerContentElement.innerHTML = answerHTML;
-	else
-		answerContentElement.innerHTML += answerHTML;
+  return new Promise( (resolve, reject) => {
+    if(!answerContentElement) reject(new Error('Pergunta não adicionada, pois não foi identificada uma caixa de resposta.'));
 
-	const breakRowElement = document.createElement('p');
-	breakRowElement.appendChild(document.createElement('br'));
+    if(answerContentElement.querySelector("p:first-child > br"))
+      answerContentElement.innerHTML = answerHTML;
+    else
+      answerContentElement.innerHTML += answerHTML;
 
-	answerContentElement.appendChild(breakRowElement);
+    const breakRowElement = document.createElement('p');
+    breakRowElement.appendChild(document.createElement('br'));
+
+    answerContentElement.appendChild(breakRowElement);
+
+    resolve();
+  });
 }
 
-function addAnswer(answerHTML) {
+function addAnswer(answerHTML, origination) {
 	const correctedAnswerHTML = removeMisplacedLineBreaksInPreCode(answerHTML);
 
-	insertAnswerInDOM(correctedAnswerHTML)
-  scrollAnswerContentToTheBottom();
+  insertAnswerInDOM(correctedAnswerHTML)
+    .then(() => {
+      scrollAnswerContentToTheBottom();
+      if(origination == 'page_action')
+        sendMessageToThePageAction({isNotification: true, content: 'sucesso'});
+      else sendMessageToTheCurrentTab({isNotification: true, content: 'sucesso'});
+    })
+    .catch( error => {
+      if(origination == 'page_action')
+        sendMessageToThePageAction({isNotification: true, content: error.message});
+      else sendMessageToTheCurrentTab({isNotification: true, content: error.message});
+    });
 }
 
 // fonte: https://stackoverflow.com/questions/50037663/how-to-close-a-native-html-dialog-when-clicking-outside-with-javascript
@@ -240,18 +256,30 @@ function toggleC3CBDialog() {
 		showC3CBDialog();
 }
 
-function sendMessage(message) {
-	chrome.runtime.sendMessage({type: 'toTheCurrentTab', ...message});
+function sendMessageToTheCurrentTab(message) {
+	chrome.runtime.sendMessage({type: 'to_the_current_tab', ...message});
+}
+
+function sendMessageToThePageAction(message) {
+	chrome.runtime.sendMessage({type: 'to_the_page_action', ...message});
+}
+
+function sendMessageThatC3BCDialogWasClosed() {
+	sendMessageToTheCurrentTab({info: "C3BC_closed"});
+}
+
+function sendMessageThatC3BCDialogWasOpen() {
+	sendMessageToTheCurrentTab({info: "C3BC_open"});
 }
 
 chrome.runtime.onMessage.addListener( message => {
-  if(message.type !== 'fromTheBackground') return;
+  if(message.type !== 'from_the_background') return;
 
 	switch (message.action) {
 		case "toggle_dialog":
 			toggleC3CBDialog();
 			break;
 		case "add_answer":
-			addAnswer(message.content);
+			addAnswer(message.content, message.origination);
 	}
 });

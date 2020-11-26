@@ -15,7 +15,7 @@ function sendMessageToTheCurrentTab(message) {
 
         const currentTabID = tabs[0].id;
 
-        chrome.tabs.sendMessage(currentTabID, {...message, type: "fromTheBackground"});
+        chrome.tabs.sendMessage(currentTabID, {...message, type: "from_the_background"});
     });
 }
 
@@ -29,6 +29,6 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.commands.onCommand.addListener( command => sendMessageToTheCurrentTab({action: command}) );
 
 chrome.runtime.onMessage.addListener( message => {
-    if(message.type === "toTheCurrentTab")
+    if(message.type === "to_the_current_tab");
         sendMessageToTheCurrentTab(message);
 });
