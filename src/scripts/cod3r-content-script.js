@@ -79,7 +79,12 @@ function checkForMutationsToMakeSureTheC3BCButtonIsAdded() {
 	const buttonsToolbarElement = document.querySelector(buttonsToolbarSelector);
 	const cod3rButtonElement = document.getElementById(cod3rButtonID);
 
-	if(buttonsToolbarElement && !cod3rButtonElement) addC3BCButton();
+	if(buttonsToolbarElement && !cod3rButtonElement) {
+    addC3BCButton();
+
+    // reposicionamos o diálogo, já que a posição dele é relativa ao botão
+    positionDialog();
+  }
 }
 
 function addC3BCButton() {
