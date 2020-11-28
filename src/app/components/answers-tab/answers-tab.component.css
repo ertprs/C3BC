@@ -21,7 +21,6 @@
     width: 236px;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .mat-action-row-page-action-script {

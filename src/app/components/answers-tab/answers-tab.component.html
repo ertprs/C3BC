@@ -7,7 +7,7 @@
             <mat-expansion-panel-header>
                 <mat-panel-title class="disable-text-selection">
                     <mat-list-item>
-                        <div mat-line>{{answer.name}}</div>
+                        <div mat-line [ngStyle]="{'white-space': (answerPainel.expanded) ? 'normal': 'nowrap'}">{{answer.name}}</div>
                         <div [hidden]="answerPainel.expanded" mat-line class="answer-content-preview" [innerHTML]="byPassHTML(answer.content)"></div>
                     </mat-list-item>
                 </mat-panel-title>

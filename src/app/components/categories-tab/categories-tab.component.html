@@ -5,7 +5,7 @@
                                 (opened)="setStep(categoryIndex)"
                                 [expanded]="step === categoryIndex">
             <mat-expansion-panel-header>
-                <mat-panel-title class="disable-text-selection">
+                <mat-panel-title class="disable-text-selection" [ngStyle]="{'white-space': (categoryPainel.expanded) ? 'normal': 'nowrap'}">
                     {{(category | async)?.name}}
                 </mat-panel-title>
             </mat-expansion-panel-header>
