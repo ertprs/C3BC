@@ -36,6 +36,7 @@ mat-panel-title {
     width: 260px;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
     display: block;
     flex-grow: 0;
 }
