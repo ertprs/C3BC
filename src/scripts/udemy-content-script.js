@@ -17,10 +17,10 @@ let 	formParentElement,
 
 mainContentObserver.observe(mainContentElement, { childList: true, subtree: true });
 
-(function addC3CBDialog() {
-	const C3CBDialogElement = document.createElement("dialog");
-	C3CBDialogElement.id = "C3BC-dialog";
-	C3CBDialogElement.setAttribute(
+(function addC3BCDialog() {
+	const C3BCDialogElement = document.createElement("dialog");
+	C3BCDialogElement.id = "C3BC-dialog";
+	C3BCDialogElement.setAttribute(
 		"style",
 		`
 			position: fixed;
@@ -35,28 +35,28 @@ mainContentObserver.observe(mainContentElement, { childList: true, subtree: true
 		`
 	);
 
-	C3CBDialogElement.innerHTML = `<iframe src=${chrome.extension.getURL("index.html")} style="height:100%; width:100%;" frameBorder="0"></iframe>`;
+	C3BCDialogElement.innerHTML = `<iframe src=${chrome.extension.getURL("index.html")} style="height:100%; width:100%;" frameBorder="0"></iframe>`;
 
 	// usando o Observer para observar o díalogo C3BC e emitir o evento "open"
-	dialogObserver.observe(C3CBDialogElement, {attributes: true});
+	dialogObserver.observe(C3BCDialogElement, {attributes: true});
 
-	C3CBDialogElement.addEventListener("open", () => {
+	C3BCDialogElement.addEventListener("open", () => {
 		makeSureTheReplyFormIsSetToOpen();
 		positionDialog();
     makeSureTheSrollAnswerContentIsAtTheBottomWhenInsertAnswer();
 		sendMessageThatC3BCDialogWasOpen();
 	});
 
-	C3CBDialogElement.addEventListener('close', () => {
+	C3BCDialogElement.addEventListener('close', () => {
 		cancelObserverForReplyFormOpenClassesChangeObserver();
     cancelScrollListennerForAnswerContentElement();
 		sendMessageThatC3BCDialogWasClosed();
 	});
 
-	C3CBDialogElement.addEventListener("click", dialogClickOutsideHandler);
+	C3BCDialogElement.addEventListener("click", dialogClickOutsideHandler);
 	window.addEventListener("resize", positionDialog);
 
-	document.body.appendChild(C3CBDialogElement);
+	document.body.appendChild(C3BCDialogElement);
 })();
 
 (function addCustomFonts() {
@@ -108,7 +108,7 @@ function addC3BCButton() {
 		if(clickEvent.button !== 0) return;
 
 		clickEvent.preventDefault();
-		showC3CBDialog();
+		showC3BCDialog();
 	});
 
 	// aqui está sendo capturado um botão e depois pegando o seu pai porque, dentro da div abaixo cuja propriedade data-purpose é igual a "menu-bar",
@@ -127,24 +127,24 @@ function checkForMutationsToMakeSureTheOpenEventIsDispatchedWhenADialogOpens(mut
 }
 
 function positionDialog() {
-	const C3CBDialogElement = document.getElementById("C3BC-dialog");
+	const C3BCDialogElement = document.getElementById("C3BC-dialog");
 
 	const formParentRect = formParentElement.getBoundingClientRect();
 	const cod3rButtonRect = document.getElementById("cod3r-button").getBoundingClientRect();
 
-	C3CBDialogElement.style.top = formParentRect.top-contentScriptHeight < 0 ? `0px` : `${formParentRect.top-contentScriptHeight}px`;
+	C3BCDialogElement.style.top = formParentRect.top-contentScriptHeight < 0 ? `0px` : `${formParentRect.top-contentScriptHeight}px`;
 
 	if( (cod3rButtonRect.right + contentScriptWidth) < document.body.getBoundingClientRect().width)
-		C3CBDialogElement.style.left = `${cod3rButtonRect.right}px`;
+		C3BCDialogElement.style.left = `${cod3rButtonRect.right}px`;
 	else if( (cod3rButtonRect.right - cod3rButtonRect.width/2 + contentScriptWidth/2) < document.body.getBoundingClientRect().width || (cod3rButtonRect.left - contentScriptWidth) < 0 )
-		C3CBDialogElement.style.left = `${cod3rButtonRect.right - cod3rButtonRect.width/2 - contentScriptWidth/2}px`;
+		C3BCDialogElement.style.left = `${cod3rButtonRect.right - cod3rButtonRect.width/2 - contentScriptWidth/2}px`;
 	else
-		C3CBDialogElement.style.left = `${cod3rButtonRect.left - contentScriptWidth}px`;
+		C3BCDialogElement.style.left = `${cod3rButtonRect.left - contentScriptWidth}px`;
 }
 
-function showC3CBDialog() {
-	const C3CBDDialogElement = document.getElementById("C3BC-dialog");
-	C3CBDDialogElement.showModal();
+function showC3BCDialog() {
+	const C3BCDialogElement = document.getElementById("C3BC-dialog");
+	C3BCDialogElement.showModal();
 }
 
 // função que garante que o formulário de resposta esteja aberto
@@ -244,13 +244,13 @@ function dialogClickOutsideHandler(event) {
     if (!clickedInDialog) dialog.close();
 }
 
-function toggleC3CBDialog() {
+function toggleC3BCDialog() {
 	const C3BCDialogElement = document.getElementById("C3BC-dialog");
 
 	if( C3BCDialogElement.hasAttribute("open") )
 		C3BCDialogElement.close();
 	else
-		showC3CBDialog();
+		showC3BCDialog();
 }
 
 function sendMessageToTheCurrentTab(message) {
@@ -274,7 +274,7 @@ chrome.runtime.onMessage.addListener( message => {
 
 	switch (message.action) {
 		case "toggle_dialog":
-			toggleC3CBDialog();
+			toggleC3BCDialog();
 			break;
 		case "add_answer":
 			addAnswer(message.content, message.origination);

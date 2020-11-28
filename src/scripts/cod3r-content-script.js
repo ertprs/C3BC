@@ -16,10 +16,10 @@ const 	contentScriptHeight = 476,
 
 pageContentObserver.observe(pageContentElement, { childList: true, subtree: true });
 
-(function addC3CBDialog() {
-	const C3CBDialogElement = document.createElement("dialog");
-	C3CBDialogElement.id = C3BCDialogID;
-	C3CBDialogElement.setAttribute(
+(function addC3BCDialog() {
+	const C3BCDialogElement = document.createElement("dialog");
+	C3BCDialogElement.id = C3BCDialogID;
+	C3BCDialogElement.setAttribute(
 		"style",
 		`
 			position: fixed;
@@ -34,24 +34,24 @@ pageContentObserver.observe(pageContentElement, { childList: true, subtree: true
 		`
 	);
 
-	C3CBDialogElement.innerHTML = `<iframe src=${chrome.extension.getURL("index.html")} style="height:100%; width:100%;" frameBorder="0"></iframe>`;
+	C3BCDialogElement.innerHTML = `<iframe src=${chrome.extension.getURL("index.html")} style="height:100%; width:100%;" frameBorder="0"></iframe>`;
 
 	// usando o Observer para observar o díalogo C3BC e emitir o evento "open"
-	dialogObserver.observe(C3CBDialogElement, {attributes: true});
+	dialogObserver.observe(C3BCDialogElement, {attributes: true});
 
-	C3CBDialogElement.addEventListener("open", () => {
+	C3BCDialogElement.addEventListener("open", () => {
 		positionDialog();
 		sendMessageThatC3BCDialogWasOpen();
 	});
 
-	C3CBDialogElement.addEventListener("close", () => {
+	C3BCDialogElement.addEventListener("close", () => {
 		sendMessageThatC3BCDialogWasClosed();
 	});
 
-	C3CBDialogElement.addEventListener("click", dialogClickOutsideHandler);
+	C3BCDialogElement.addEventListener("click", dialogClickOutsideHandler);
 	window.addEventListener("resize", positionDialog);
 
-	document.body.appendChild(C3CBDialogElement);
+	document.body.appendChild(C3BCDialogElement);
 })();
 
 (function addCustomFonts() {
@@ -102,7 +102,7 @@ function addC3BCButton() {
 		if(clickEvent.button !== 0) return;
 
 		clickEvent.preventDefault();
-		showC3CBDialog();
+		showC3BCDialog();
 	});
 
 	const buttonsToolbarElement = document.querySelector(buttonsToolbarSelector);
@@ -142,43 +142,43 @@ function positionDialog() {
 	if( !cod3rButtonElement ) return;
 
 	const cod3rButtonRect = cod3rButtonElement.getBoundingClientRect();
-	const C3CBDialogElement = document.getElementById(C3BCDialogID);
+	const C3BCDialogElement = document.getElementById(C3BCDialogID);
 
 	// quando a página tem tamanho menor maior que 767, a visuação é diferente
 	if(document.body.getBoundingClientRect().width > 767) {
 		// alinha Diálogo à direita do botão
-		C3CBDialogElement.style.left = `${cod3rButtonRect.right - contentScriptWidth}px`;
+		C3BCDialogElement.style.left = `${cod3rButtonRect.right - contentScriptWidth}px`;
 
 		if(cod3rButtonRect.top-contentScriptHeight < 0) {
 			// alinha Diálogo abaixo ou ao topo da viewport
-			C3CBDialogElement.style.top = cod3rButtonRect.bottom + contentScriptHeight < window.innerHeight ? `${cod3rButtonRect.bottom}px` : `0px`;
+			C3BCDialogElement.style.top = cod3rButtonRect.bottom + contentScriptHeight < window.innerHeight ? `${cod3rButtonRect.bottom}px` : `0px`;
 
-			if(C3CBDialogElement.style.left = C3CBDialogElement.style.top === `0px`)
+			if(C3BCDialogElement.style.left = C3BCDialogElement.style.top === `0px`)
 				// alinha Diálogo à esquerda do botão
-				C3CBDialogElement.style.left = `${cod3rButtonRect.left - contentScriptWidth}px`;
+				C3BCDialogElement.style.left = `${cod3rButtonRect.left - contentScriptWidth}px`;
 		}
 		else
 			// alinha Diálogo acima do viewport
-			C3CBDialogElement.style.top = `${cod3rButtonRect.top-contentScriptHeight}px`;
+			C3BCDialogElement.style.top = `${cod3rButtonRect.top-contentScriptHeight}px`;
 	} else {
 		const scrollbarWidth = 17;
 		const rightLimitInViewport = document.body.getBoundingClientRect().width - scrollbarWidth;
 		const leftBorderOfPortView = 0;
 
 		// alinha Diálogo abaixo do botão
-		C3CBDialogElement.style.top = `${cod3rButtonRect.bottom}px`;
+		C3BCDialogElement.style.top = `${cod3rButtonRect.bottom}px`;
 
 		// alinha Diálogo à direita do botão
 		if( (cod3rButtonRect.right + contentScriptWidth) < rightLimitInViewport)
-			C3CBDialogElement.style.left = `${cod3rButtonRect.right}px`;
+			C3BCDialogElement.style.left = `${cod3rButtonRect.right}px`;
 		else
 			if( (cod3rButtonRect.left + cod3rButtonRect.width/2 - contentScriptWidth/2) > leftBorderOfPortView &&
 				(cod3rButtonRect.right - cod3rButtonRect.width/2 + contentScriptWidth/2) < rightLimitInViewport)
 					// alinha Diálogo ao meio do botão
-					C3CBDialogElement.style.left = `${cod3rButtonRect.right - cod3rButtonRect.width/2 - contentScriptWidth/2}px`;
+					C3BCDialogElement.style.left = `${cod3rButtonRect.right - cod3rButtonRect.width/2 - contentScriptWidth/2}px`;
 		else
 			// alinha Diálogo na borda esquerda da viewport
-			C3CBDialogElement.style.left = `12px`;
+			C3BCDialogElement.style.left = `12px`;
 	}
 }
 
@@ -188,10 +188,10 @@ function openAnswerBox() {
   if(answerBoxOpenButton) answerBoxOpenButton.click();
 }
 
-function showC3CBDialog() {
-  const C3CBDDialogElement = document.getElementById(C3BCDialogID);
+function showC3BCDialog() {
+  const C3BCDialogElement = document.getElementById(C3BCDialogID);
   openAnswerBox()
-	C3CBDDialogElement.showModal();
+	C3BCDialogElement.showModal();
 }
 
 function insertAnswerInDOM(answerHTML) {
@@ -272,13 +272,13 @@ function dialogClickOutsideHandler(clickEvent) {
 	if( !checkIfClickWasInTheC3BCDialog(clickEvent) ) C3BCDialog.close();
 }
 
-function toggleC3CBDialog() {
+function toggleC3BCDialog() {
 	const C3BCDialogElement = document.getElementById("C3BC-dialog");
 
 	if( C3BCDialogElement.hasAttribute("open") )
 		C3BCDialogElement.close();
 	else
-    showC3CBDialog();
+    showC3BCDialog();
 }
 
 function sendMessageToTheCurrentTab(message) {
@@ -302,7 +302,7 @@ chrome.runtime.onMessage.addListener( message => {
 
 	switch (message.action) {
 		case "toggle_dialog":
-			toggleC3CBDialog();
+			toggleC3BCDialog();
 			break;
 		case "add_answer":
 			addAnswer(message.content, message.origination);
