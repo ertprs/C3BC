@@ -2,7 +2,8 @@
                 mat-stretch-tabs
                 class="mat-elevation-z4"
                 [selectedIndex]="selectedTab.value"
-                (selectedIndexChange)="selectedTab.setValue($event)">
+                (selectedIndexChange)="selectedTab.setValue($event)"
+                animationDuration="0">
   <mat-tab label="Respostas">
     <app-answers-tab></app-answers-tab>
   </mat-tab>
